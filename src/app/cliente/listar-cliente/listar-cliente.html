@@ -79,6 +79,7 @@
           <td>
             <div class="acciones">
               <a [routerLink]="['/clientes', cliente.id]" class="btn-accion">Ver</a>
+              <a [routerLink]="['/clientes', cliente.id, 'mismascotas']" class="btn-accion">Mis mascotas</a>
               <a [routerLink]="['/clientes', cliente.id, 'editar']" class="btn-accion">Editar</a>
               <button type="button" class="btn-eliminar" (click)="eliminarCliente(cliente)">
                 Eliminar

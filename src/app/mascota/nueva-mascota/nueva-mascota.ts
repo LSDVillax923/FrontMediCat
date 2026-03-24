@@ -30,13 +30,11 @@ interface NuevaMascotaForm {
 
 @Component({
   selector: 'app-nueva-mascota',
-  imports: [],
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './nueva-mascota.html',
   styleUrl: './nueva-mascota.css',
 })
-export class NuevaMascota {}
 export class NuevaMascota {
   clientes: Cliente[] = [
     { id: 1, nombre: 'María', apellido: 'Gómez' },

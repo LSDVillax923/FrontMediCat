@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 type EstadoMascota = 'activa' | 'tratamiento' | 'inactiva';
 
 interface Cliente {
+  id: number;
   nombre: string;
   apellido: string;
 }
@@ -35,6 +36,7 @@ export class ListarMascotas {
   estadoSeleccionado = '';
   mensaje = '';
   error = '';
+  clienteId: number | null = null;
 
   mascotas: Mascota[] = [
     {
@@ -45,7 +47,7 @@ export class ListarMascotas {
       edad: 5,
       peso: 20.3,
       estado: 'activa',
-      cliente: { nombre: 'María', apellido: 'Gómez' },
+      cliente: { id: 1, nombre: 'María', apellido: 'Gómez' },
     },
     {
       id: 2,
@@ -55,7 +57,7 @@ export class ListarMascotas {
       edad: 3,
       peso: 4.2,
       estado: 'tratamiento',
-      cliente: { nombre: 'Carlos', apellido: 'Ramos' },
+      cliente: { id: 2, nombre: 'Carlos', apellido: 'Ramos' },
     },
     {
       id: 3,
@@ -65,13 +67,22 @@ export class ListarMascotas {
       edad: 8,
       peso: 17.8,
       estado: 'inactiva',
+      cliente: { id: 1, nombre: 'María', apellido: 'Gómez' },
     },
   ];
+
+   constructor(private readonly route: ActivatedRoute) {
+    this.route.paramMap.subscribe((params) => {
+      const routeClienteId = params.get('id');
+      this.clienteId = routeClienteId ? Number(routeClienteId) : null;
+    });
+  }
 
   get mascotasFiltradas(): Mascota[] {
     const filtro = this.busqueda.trim().toLowerCase();
 
     return this.mascotas.filter((mascota) => {
+      const coincideCliente = !this.clienteId || mascota.cliente?.id === this.clienteId;
       const coincideTexto =
         !filtro ||
         mascota.nombre.toLowerCase().includes(filtro) ||
@@ -83,7 +94,7 @@ export class ListarMascotas {
       const coincideEstado =
         !this.estadoSeleccionado || mascota.estado === this.estadoSeleccionado;
 
-      return coincideTexto && coincideEstado;
+      return coincideCliente && coincideTexto && coincideEstado;
     });
   }
 

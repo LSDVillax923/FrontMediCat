@@ -15,7 +15,7 @@
 
 <main class="dashboard">
   <section class="dashboard-header">
-    <h1 class="dashboard-title">Listado de Mascotas</h1>
+     <h1 class="dashboard-title">{{ clienteId ? 'Mis Mascotas' : 'Listado de Mascotas' }}</h1>
     <p class="dashboard-subtitle">Gestiona la información de las mascotas registradas</p>
   </section>
 
@@ -100,13 +100,15 @@
           <td>{{ mascota.cliente ? mascota.cliente.nombre + ' ' + mascota.cliente.apellido : '—' }}</td>
           <td>
             <div class="acciones">
-              <a [routerLink]="['/mascotas', mascota.id]" class="btn-accion">Ver</a>
-              <a [routerLink]="['/mascotas', mascota.id, 'editar']" class="btn-accion">Editar</a>
-              <button
-                type="button"
-                class="btn-eliminar"
-                (click)="desactivarMascota(mascota)"
+               <a
+                [routerLink]="['/mascotas', mascota.id]"
+                [queryParams]="clienteId ? { clienteId: clienteId } : null"
+                class="btn-accion"
+                >Ver</a
               >
+              <a [routerLink]="['/mascotas', mascota.id, 'editar']" class="btn-accion">Editar</a>
+              <button type="button" class="btn-eliminar" (click)="desactivarMascota(mascota)">
+              
                 Desactivar
               </button>
             </div>
