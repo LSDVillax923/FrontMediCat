@@ -1,1 +1,118 @@
 <p>listar-mascotas works!</p>
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/inicio" class="nav-link">Inicio</a>
+      <a routerLink="/clientes" class="nav-link">Clientes</a>
+      <a routerLink="/tratamientos" class="nav-link">Tratamientos</a>
+      <a routerLink="/mascotas/nueva" class="btn-nueva">+ Nueva Mascota</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <section class="dashboard-header">
+    <h1 class="dashboard-title">Listado de Mascotas</h1>
+    <p class="dashboard-subtitle">Gestiona la información de las mascotas registradas</p>
+  </section>
+
+  <form class="filtros" (ngSubmit)="$event.preventDefault()">
+    <div class="input-grupo">
+      <span class="icono" aria-hidden="true">🔍</span>
+      <input
+        type="text"
+        name="busqueda"
+        [(ngModel)]="busqueda"
+        placeholder="Buscar por nombre, dueño o raza..."
+      />
+    </div>
+
+    <div class="input-grupo">
+      <span class="icono" aria-hidden="true">⚲</span>
+      <select name="estado" [(ngModel)]="estadoSeleccionado">
+        <option value="">Todos los estados</option>
+        <option value="activa">Activa</option>
+        <option value="tratamiento">En Tratamiento</option>
+        <option value="inactiva">Inactiva</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-nueva">Buscar</button>
+    <button type="button" class="btn-nueva" (click)="limpiarFiltros()">✕ Limpiar</button>
+  </form>
+
+  <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
+  <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+
+  <p>Total de mascotas: <strong>{{ totalMascotas }}</strong></p>
+  <p>
+    Activas: <strong>{{ saludables }}</strong> |
+    En tratamiento: <strong>{{ tratamiento }}</strong> |
+    Inactivas: <strong>{{ inactivas }}</strong>
+  </p>
+
+  <section class="tabla-card">
+    <table class="tabla tabla-mascotas">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Especie</th>
+          <th>Raza</th>
+          <th>Edad</th>
+          <th>Peso</th>
+          <th>Estado</th>
+          <th>Propietario</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngIf="mascotasFiltradas.length === 0">
+          <td colspan="8" class="sin-resultados">
+            <span *ngIf="busqueda || estadoSeleccionado">
+              No se encontraron mascotas con esos filtros.
+            </span>
+            <span *ngIf="!busqueda && !estadoSeleccionado">No hay mascotas registradas.</span>
+          </td>
+        </tr>
+
+        <tr *ngFor="let mascota of mascotasFiltradas">
+          <td>{{ mascota.nombre }}</td>
+          <td>{{ mascota.especie }}</td>
+          <td>{{ mascota.raza }}</td>
+          <td>{{ mascota.edad }}</td>
+          <td>{{ mascota.peso }} kg</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-verde': mascota.estado === 'activa',
+                'badge-amarillo': mascota.estado === 'tratamiento',
+                'badge-rojo': mascota.estado === 'inactiva'
+              }"
+            >
+              {{ mascota.estado }}
+            </span>
+          </td>
+          <td>{{ mascota.cliente ? mascota.cliente.nombre + ' ' + mascota.cliente.apellido : '—' }}</td>
+          <td>
+            <div class="acciones">
+              <a [routerLink]="['/mascotas', mascota.id]" class="btn-accion">Ver</a>
+              <a [routerLink]="['/mascotas', mascota.id, 'editar']" class="btn-accion">Editar</a>
+              <button
+                type="button"
+                class="btn-eliminar"
+                (click)="desactivarMascota(mascota)"
+              >
+                Desactivar
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
