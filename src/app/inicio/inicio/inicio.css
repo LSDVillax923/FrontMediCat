@@ -19,16 +19,14 @@
     box-sizing: border-box;
 }
 
-body {
+:host {
     background-color: var(--color-fondo);
     font-family: 'Segoe UI', Roboto, Arial, sans-serif;
     line-height: 1.5;
     color: #333;
 }
 
-html {
-    scroll-behavior: smooth;
-}
+
 
 section h2 {
     margin: 0;
@@ -354,7 +352,9 @@ section {
     font-size: clamp(0.9rem, 1vw, 1.1rem);
     line-height: 1.4;
 }
-
+.fondo-celeste { background-color: #dff4f4; }
+.fondo-crema { background-color: #efe4d4; }
+.fondo-rosa { background-color: #f8dee1; }
 /* ===== Sección: Nosotros ===== */
 #nosotros {
     background-color: #007a80;
