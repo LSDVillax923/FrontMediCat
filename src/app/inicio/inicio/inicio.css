@@ -1,10 +1,10 @@
 /* Variables globales */
 :root {
-    --color-primario: #007a80;
-    --color-primario-oscuro: #005f64;
+    --color-primario: #0a7f86;
+    --color-primario-oscuro: #07686d;
     --color-primario-claro: #4f8f96;
-    --color-fondo: #f5ece2;
-    --color-fondo-nav: #f3ede7;
+    --color-fondo: #f2ede7;
+    --color-fondo-nav: #ece8e4;
     --color-borde: #e1d8cf;
     --blanco: #ffffff;
     --gris-claro: #f8f8f8;
@@ -19,14 +19,16 @@
     box-sizing: border-box;
 }
 
-:host {
+body {
     background-color: var(--color-fondo);
     font-family: 'Segoe UI', Roboto, Arial, sans-serif;
     line-height: 1.5;
     color: #333;
 }
 
-
+html {
+    scroll-behavior: smooth;
+}
 
 section h2 {
     margin: 0;
@@ -38,17 +40,18 @@ section h2 {
 
 /* Navegación */
 .navegacion {
-    background-color: var(--color-fondo-nav);
-    border-bottom: 1px solid var(--color-borde);
-    min-height: 70px;
-    padding: 8px clamp(20px, 5vw, 180px);
+     background-color: var(--color-fondo-nav);
+    border-bottom: none;
+    min-height: 92px;
+    padding: 16px clamp(28px, 5vw, 130px);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
+    gap: 36px;
     position: sticky;
     top: 0;
     z-index: 1000;
+
 }
 
 .logo img {
@@ -75,8 +78,8 @@ section h2 {
 .menu a {
     text-decoration: none;
     color: var(--color-primario);
-    font-size: 1rem;
-    font-weight: 700;
+    font-size: clamp(1.05rem, 1.35vw, 2rem);
+    font-weight: 800;
     transition: color 0.3s;
 }
 
@@ -352,9 +355,7 @@ section {
     font-size: clamp(0.9rem, 1vw, 1.1rem);
     line-height: 1.4;
 }
-.fondo-celeste { background-color: #dff4f4; }
-.fondo-crema { background-color: #efe4d4; }
-.fondo-rosa { background-color: #f8dee1; }
+
 /* ===== Sección: Nosotros ===== */
 #nosotros {
     background-color: #007a80;
