@@ -6,11 +6,13 @@ import { VerCliente } from './cliente/ver-cliente/ver-cliente';
 import { Inicio } from './inicio/inicio/inicio';
 import { ListarMascotas } from './mascota/listar-mascotas/listar-mascotas';
 import { EditarMascota } from './mascota/editar-mascota/editar-mascota';
+import { NuevaMascota } from './mascota/nueva-mascota/nueva-mascota';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
   { path: 'inicio', component: Inicio },
   { path: 'mascotas', component: ListarMascotas },
+  { path: 'mascotas/nueva', component: NuevaMascota },
   { path: 'mascotas/:id/editar', component: EditarMascota },
   { path: 'clientes', component: ListarCliente },
   { path: 'clientes/nuevo', component: NuevoCliente },
