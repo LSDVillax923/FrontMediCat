@@ -1,0 +1,120 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #ddd5ca;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  background-color: #f3ede7;
+  border-bottom: 1px solid #e3d2b8;
+  min-height: 70px;
+  padding: 8px clamp(20px, 5vw, 180px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  width: 90%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #0f6f6c;
+  font-weight: 500;
+}
+
+.dashboard {
+  width: 85%;
+  margin: 50px auto;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+}
+
+.btn-volver {
+  text-decoration: none;
+  color: #0f6f6c;
+  font-size: 14px;
+}
+
+.dashboard-title {
+  font-size: 42px;
+  color: #0f6f6c;
+  margin: 10px 0 5px;
+}
+
+.filtros-card {
+  background: #f1f1f1;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.filtros-card p {
+  margin: 8px 0;
+}
+
+.tabla-card {
+  margin-top: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.tabla th {
+  background: #0f6f6c;
+  color: white;
+  padding: 18px;
+  text-align: center;
+}
+
+.tabla td {
+  padding: 18px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  background: #dff5e7;
+  color: #1aa04a;
+}
+
+.alert-error {
+  color: #e53935;
+  background: #fdecea;
+  border-radius: 10px;
+  padding: 12px 20px;
+}

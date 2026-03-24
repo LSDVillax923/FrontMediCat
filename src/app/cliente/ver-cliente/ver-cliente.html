@@ -1,1 +1,59 @@
-<p>ver-cliente works!</p>
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/clientes" class="nav-link">Clientes</a>
+      <a routerLink="/mascotas" class="nav-link">Mascotas</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <section class="dashboard-header">
+    <a routerLink="/clientes" class="btn-volver">← Volver al listado</a>
+    <h1 class="dashboard-title">Detalle del Cliente</h1>
+  </section>
+
+  <ng-container *ngIf="cliente; else clienteNoEncontrado">
+    <section class="filtros-card">
+      <p><strong>ID:</strong> <span>{{ cliente.id }}</span></p>
+      <p><strong>Nombre:</strong> <span>{{ cliente.nombre }} {{ cliente.apellido }}</span></p>
+      <p><strong>Correo:</strong> <span>{{ cliente.correo }}</span></p>
+      <p><strong>Celular:</strong> <span>{{ cliente.celular }}</span></p>
+      <p><strong>Total de mascotas:</strong> <span>{{ totalMascotas }}</span></p>
+    </section>
+
+    <section class="tabla-card">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Mascota</th>
+            <th>Especie</th>
+            <th>Raza</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="cliente.mascotas.length === 0">
+            <td colspan="4">Este cliente no tiene mascotas registradas.</td>
+          </tr>
+          <tr *ngFor="let mascota of cliente.mascotas">
+            <td>{{ mascota.nombre }}</td>
+            <td>{{ mascota.especie }}</td>
+            <td>{{ mascota.raza }}</td>
+            <td><span class="badge">{{ mascota.estado }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </ng-container>
+
+  <ng-template #clienteNoEncontrado>
+    <section class="filtros-card">
+      <p class="alert-error">No se encontró el cliente solicitado.</p>
+      <a routerLink="/clientes" class="btn-volver">Ir al listado de clientes</a>
+    </section>
+  </ng-template>
+</main>
