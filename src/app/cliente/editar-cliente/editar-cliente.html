@@ -1,1 +1,63 @@
-<p>editar-cliente works!</p>
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/inicio" class="nav-link">Inicio</a>
+      <a routerLink="/clientes" class="nav-link">Clientes</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <section class="dashboard-header">
+    <h1 class="dashboard-title">Editar Cliente</h1>
+    <p class="dashboard-subtitle">Actualiza la información del propietario</p>
+  </section>
+
+  <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
+  <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+
+  <div class="form-card">
+    <form (ngSubmit)="guardarCambios()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" [(ngModel)]="formData.nombre" required />
+        </div>
+
+        <div class="form-group">
+          <label for="apellido">Apellido</label>
+          <input type="text" id="apellido" name="apellido" [(ngModel)]="formData.apellido" required />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" name="correo" [(ngModel)]="formData.correo" required />
+        </div>
+
+        <div class="form-group">
+          <label for="celular">Celular</label>
+          <input type="text" id="celular" name="celular" [(ngModel)]="formData.celular" required />
+        </div>
+
+        <div class="form-group">
+          <label for="contrasenia">Contraseña</label>
+          <input
+            type="password"
+            id="contrasenia"
+            name="contrasenia"
+            [(ngModel)]="formData.contrasenia"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-acciones">
+        <button type="submit" class="btn-guardar">💾 Guardar Cambios</button>
+        <button type="button" class="btn-cancelar" (click)="volverAClientes()">✕ Cancelar</button>
+      </div>
+    </form>
+  </div>
+</main>
