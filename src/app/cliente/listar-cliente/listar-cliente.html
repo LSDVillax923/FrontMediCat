@@ -1,1 +1,92 @@
-<p>listar-cliente works!</p>
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/inicio" class="nav-link">Inicio</a>
+      <a routerLink="/mascotas" class="nav-link">Mascotas</a>
+      <a routerLink="/clientes/nuevo" class="btn-nueva">+ Nuevo Cliente</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <section class="dashboard-header">
+    <h1 class="dashboard-title">Registro de Clientes</h1>
+    <p class="dashboard-subtitle">Gestiona la información de propietarios y sus mascotas</p>
+  </section>
+
+  <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
+  <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+
+  <section class="busqueda-card">
+    <form class="busqueda-form" (ngSubmit)="$event.preventDefault()">
+      <div class="input-grupo">
+        <span class="icono" aria-hidden="true">🔍</span>
+        <input
+          type="text"
+          name="busqueda"
+          [(ngModel)]="busqueda"
+          placeholder="Buscar por nombre, apellido, correo o celular..."
+        />
+      </div>
+
+      <div class="busqueda-acciones">
+        <button type="submit" class="btn-nueva">Buscar</button>
+        <button type="button" class="btn-nueva" (click)="limpiarBusqueda()">✕ Limpiar</button>
+      </div>
+    </form>
+
+    <p *ngIf="busqueda.trim()" class="busqueda-resultado">
+      Resultados para: <strong>{{ busqueda }}</strong>
+      — <span>{{ totalClientes }}</span> encontrado(s)
+    </p>
+  </section>
+
+  <p>Total de clientes: <strong>{{ totalClientes }}</strong></p>
+
+  <section class="tabla-card">
+    <table class="tabla tabla-clientes">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Correo</th>
+          <th>Celular</th>
+          <th>Mascotas</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="clientesFiltrados.length === 0">
+          <td colspan="6" class="sin-resultados">
+            <span *ngIf="busqueda.trim()">No se encontraron clientes con esa búsqueda.</span>
+            <span *ngIf="!busqueda.trim()">No hay clientes registrados.</span>
+          </td>
+        </tr>
+        <tr *ngFor="let cliente of clientesFiltrados">
+          <td>
+            <div class="cliente-info">
+              <div class="avatar">{{ cliente.nombre.charAt(0) }}</div>
+              <span>{{ cliente.nombre }} {{ cliente.apellido }}</span>
+            </div>
+          </td>
+          <td>{{ cliente.correo }}</td>
+          <td>{{ cliente.celular }}</td>
+          <td>{{ cliente.mascotas?.length ?? 0 }}</td>
+          <td><span class="badge">Activo</span></td>
+          <td>
+            <div class="acciones">
+              <a [routerLink]="['/clientes', cliente.id]" class="btn-accion">Ver</a>
+              <a [routerLink]="['/clientes', cliente.id, 'editar']" class="btn-accion">Editar</a>
+              <button type="button" class="btn-eliminar" (click)="eliminarCliente(cliente)">
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>
