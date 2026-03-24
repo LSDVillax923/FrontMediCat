@@ -1,0 +1,56 @@
+:host {
+  display: block;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.bg-body-custom {
+  background: #ddd1c5;
+}
+
+.login-wrapper {
+  width: 1000px;
+  max-width: 95%;
+  border-radius: 25px;
+}
+
+.img-overlay {
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%);
+}
+
+.overlay-text {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+}
+
+.text-teal {
+  color: #0f6f67;
+}
+
+.btn-teal {
+  background: #0f6f67;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+}
+
+.btn-teal:hover {
+  background: #0c5c56;
+}
+
+.input-custom {
+  background: #f4f4f4;
+  border-radius: 15px;
+  padding: 5px 10px;
+}
+
+.input-custom .form-control {
+  background: transparent;
+  box-shadow: none;
+}
+
+.input-custom:focus-within {
+  border: 1px solid #0f6f67;
+}

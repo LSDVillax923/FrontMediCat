@@ -1,1 +1,96 @@
-<p>login works!</p>
+<main class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-body-custom">
+  <div class="row login-wrapper shadow-lg overflow-hidden rounded-4">
+    <section class="col-lg-6 d-none d-lg-block p-0 position-relative">
+      <img src="/img/gato.jpg" alt="Gato" class="img-overlay w-100 h-100" />
+
+      <div class="overlay-text">
+        <h1 class="fw-bold text-white">Bienvenido de nuevo</h1>
+        <p class="text-white-50 mb-0">
+          Accede a tu cuenta para gestionar el cuidado de tus mascotas
+        </p>
+      </div>
+    </section>
+
+    <section class="col-lg-6 col-12 bg-white p-5">
+      <header class="mb-4">
+        <a routerLink="/inicio" class="text-decoration-none text-teal">
+          <i class="bi bi-arrow-left"></i>
+          Volver al inicio
+        </a>
+      </header>
+
+      <div class="text-center mb-4">
+        <img src="/img/Medicat.png" alt="Logo" width="60" class="mb-3" />
+
+        <h2 class="fw-bold text-teal">Iniciar Sesión</h2>
+
+        <p class="text-muted">Ingresa tus credenciales para continuar</p>
+      </div>
+
+      <form class="needs-validation" novalidate>
+        <div class="mb-4">
+          <label for="email" class="form-label fw-semibold">Correo Electrónico</label>
+
+          <div class="input-group input-custom">
+            <span class="input-group-text bg-transparent border-0">
+              <i class="bi bi-envelope"></i>
+            </span>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-control border-0"
+              placeholder="tu@email.com"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="password" class="form-label fw-semibold">Contraseña</label>
+
+          <div class="input-group input-custom">
+            <span class="input-group-text bg-transparent border-0">
+              <i class="bi bi-lock"></i>
+            </span>
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-control border-0"
+              required
+            />
+
+            <span class="input-group-text bg-transparent border-0">
+              <i class="bi bi-eye"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="remember" name="remember" />
+            <label class="form-check-label" for="remember">Recordarme</label>
+          </div>
+
+          <a routerLink="/inicio/forgot-password" class="text-teal small">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-teal rounded-pill py-3">Iniciar Sesión</button>
+        </div>
+      </form>
+
+      <footer class="text-center mt-4">
+        <p class="mb-0">
+          ¿No tienes cuenta?
+          <a routerLink="/inicio/registro" class="text-teal fw-semibold">Regístrate aquí</a>
+        </p>
+      </footer>
+    </section>
+  </div>
+</main>
