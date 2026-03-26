@@ -1,4 +1,4 @@
-import { Mascota } from '../mascota/mascota';
+import type { Mascota } from '../models/mascota.model';
 import { Veterinario } from '../veterinario/veterinario';
 import { TratamientoDroga } from '../tratamiento-droga/tratamiento-droga';
 
