@@ -18,6 +18,7 @@
   </section>
 
   <p *ngIf="mensaje" class="flash-message flash-message-success">{{ mensaje }}</p>
+  <p *ngIf="error" class="flash-message flash-message-error">{{ error }}</p>
 
   <div class="form-card">
     <form (ngSubmit)="guardarCambios()">
@@ -50,9 +51,9 @@
         <div class="form-group">
           <label for="estado">Estado</label>
           <select id="estado" name="estado" [(ngModel)]="mascota.estado">
-            <option value="Sano">Sano</option>
-            <option value="En Tratamiento">En Tratamiento</option>
-            <option value="Requiere Atención">Requiere Atención</option>
+             <option value="activa">Activa</option>
+            <option value="tratamiento">En tratamiento</option>
+            <option value="inactiva">Inactiva</option>
           </select>
         </div>
 

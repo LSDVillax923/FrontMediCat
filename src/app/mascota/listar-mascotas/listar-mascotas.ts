@@ -1,36 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-
-type EstadoMascota = 'activa' | 'tratamiento' | 'inactiva';
-
-interface Cliente {
-  id: number;
-  nombre: string;
-  apellido: string;
-}
-
-interface Mascota {
-  id: number;
-  nombre: string;
-  especie: string;
-  raza: string;
-  edad: number;
-  peso: number;
-  estado: EstadoMascota;
-  cliente?: Cliente;
-}
+import type { Mascota } from '../../models/mascota.model';
+import { MascotaService } from '../../services/mascota.service';
 
 @Component({
   selector: 'app-listar-mascotas',
 
-  standalone: true,
+   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './listar-mascotas.html',
   styleUrl: './listar-mascotas.css',
 })
-
 export class ListarMascotas {
   busqueda = '';
   estadoSeleccionado = '';
@@ -38,63 +20,36 @@ export class ListarMascotas {
   error = '';
   clienteId: number | null = null;
 
-  mascotas: Mascota[] = [
-    {
-      id: 1,
-      nombre: 'Luna',
-      especie: 'Canino',
-      raza: 'Labrador',
-      edad: 5,
-      peso: 20.3,
-      estado: 'activa',
-      cliente: { id: 1, nombre: 'María', apellido: 'Gómez' },
-    },
-    {
-      id: 2,
-      nombre: 'Milo',
-      especie: 'Felino',
-      raza: 'Siamés',
-      edad: 3,
-      peso: 4.2,
-      estado: 'tratamiento',
-      cliente: { id: 2, nombre: 'Carlos', apellido: 'Ramos' },
-    },
-    {
-      id: 3,
-      nombre: 'Rocky',
-      especie: 'Canino',
-      raza: 'Bulldog',
-      edad: 8,
-      peso: 17.8,
-      estado: 'inactiva',
-      cliente: { id: 1, nombre: 'María', apellido: 'Gómez' },
-    },
-  ];
+  mascotas: Mascota[] = [];
 
-   constructor(private readonly route: ActivatedRoute) {
-    this.route.paramMap.subscribe((params) => {
-      const routeClienteId = params.get('id');
-      this.clienteId = routeClienteId ? Number(routeClienteId) : null;
-    });
+  private readonly route = inject(ActivatedRoute);
+  private readonly mascotaService = inject(MascotaService);
+
+  constructor() {
+    this.clienteId = Number(this.route.snapshot.queryParamMap.get('clienteId')) || null;
+    this.mascotas = this.mascotaService.listar();
   }
-
-  get mascotasFiltradas(): Mascota[] {
-    const filtro = this.busqueda.trim().toLowerCase();
+    get mascotasFiltradas(): Mascota[] {
+    const texto = this.busqueda.trim().toLowerCase();
 
     return this.mascotas.filter((mascota) => {
-      const coincideCliente = !this.clienteId || mascota.cliente?.id === this.clienteId;
-      const coincideTexto =
-        !filtro ||
-        mascota.nombre.toLowerCase().includes(filtro) ||
-        mascota.raza.toLowerCase().includes(filtro) ||
-        `${mascota.cliente?.nombre ?? ''} ${mascota.cliente?.apellido ?? ''}`
-          .toLowerCase()
-          .includes(filtro);
+      const coincideCliente = this.clienteId ? mascota.cliente?.id === this.clienteId : true;
+      const coincideEstado = this.estadoSeleccionado
+        ? mascota.estado === this.estadoSeleccionado
+        : true;
+      const coincideBusqueda = texto
+        ? [
+            mascota.nombre,
+            mascota.especie,
+            mascota.raza,
+            mascota.cliente?.nombre,
+            mascota.cliente?.apellido,
+          ]
+            .filter(Boolean)
+            .some((valor) => valor!.toLowerCase().includes(texto))
+        : true;
 
-      const coincideEstado =
-        !this.estadoSeleccionado || mascota.estado === this.estadoSeleccionado;
-
-      return coincideCliente && coincideTexto && coincideEstado;
+      return coincideCliente && coincideEstado && coincideBusqueda;
     });
   }
 
@@ -103,24 +58,33 @@ export class ListarMascotas {
   }
 
   get saludables(): number {
-    return this.mascotasFiltradas.filter((m) => m.estado === 'activa').length;
+    return this.mascotasFiltradas.filter((mascota) => mascota.estado === 'activa').length;
   }
 
   get tratamiento(): number {
-    return this.mascotasFiltradas.filter((m) => m.estado === 'tratamiento').length;
+    return this.mascotasFiltradas.filter((mascota) => mascota.estado === 'tratamiento').length;
   }
 
   get inactivas(): number {
-    return this.mascotasFiltradas.filter((m) => m.estado === 'inactiva').length;
+    return this.mascotasFiltradas.filter((mascota) => mascota.estado === 'inactiva').length;
   }
 
   limpiarFiltros(): void {
     this.busqueda = '';
     this.estadoSeleccionado = '';
+    this.mensaje = '';
+    this.error = '';
   }
 
   desactivarMascota(mascota: Mascota): void {
-    mascota.estado = 'inactiva';
+    if (mascota.estado === 'inactiva') {
+      this.error = `${mascota.nombre} ya está inactiva.`;
+      this.mensaje = '';
+      return;
+    }
+
+    this.mascotaService.desactivar(mascota.id);
+    this.mascotas = this.mascotaService.listar();
     this.mensaje = `${mascota.nombre} fue desactivada correctamente.`;
     this.error = '';
   }

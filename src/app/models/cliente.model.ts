@@ -1,11 +1,11 @@
-import {Mascota} from '../mascota/mascota';
+import type { Mascota } from './mascota.model';
 
 export interface Cliente {
   id: number;
   nombre: string;
   apellido: string;
   correo: string;
-  contrasenia: string;
   celular: string;
-  mascotas: Mascota[];
+  contrasenia?: string;
+  mascotas?: Mascota[];
 }
