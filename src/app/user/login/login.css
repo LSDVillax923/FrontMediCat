@@ -4,7 +4,7 @@
 }
 
 .bg-body-custom {
-  background: #ddd1c5;
+  background: #e8ddd1;
 }
 
 .login-wrapper {
@@ -17,40 +17,112 @@
   height: 100%;
   object-fit: cover;
   filter: brightness(70%);
+  border-radius: 25px 0 0 25px;
 }
 
 .overlay-text {
-  position: absolute;
+  align-items: center;
   bottom: 40px;
   left: 40px;
+  right: 40px;
+}
+
+.overlay-text h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.overlay-text p {
+  font-size: 0.95rem;
 }
 
 .text-teal {
-  color: #0f6f67;
+  color: #008b8b;
 }
 
 .btn-teal {
-  background: #0f6f67;
+  background: #008b8b;
   color: #fff;
   font-weight: 600;
   border: none;
+  padding: 14px 20px;
 }
 
 .btn-teal:hover {
-  background: #0c5c56;
+  background: #007575;
+  color: #fff;
 }
 
 .input-custom {
-  background: #f4f4f4;
-  border-radius: 15px;
-  padding: 5px 10px;
+  background: transparent;
+  border: 1px solid #d0d0d0;
+  border-radius: 12px;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.input-custom .input-group-text {
+  background: transparent;
+  border: none;
+  color: #999;
+  padding-left: 15px;
 }
 
 .input-custom .form-control {
   background: transparent;
+  border: none;
   box-shadow: none;
+  padding: 12px 10px;
+  color: #333;
+}
+
+.input-custom .form-control::placeholder {
+  color: #999;
 }
 
 .input-custom:focus-within {
-  border: 1px solid #0f6f67;
+  border-color: #008b8b;
+  box-shadow: 0 0 0 3px rgba(0, 139, 139, 0.1);
+}
+
+.form-label {
+  color: #00474d;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.form-check-input:checked {
+  background-color: #008b8b;
+  border-color: #008b8b;
+}
+
+.text-muted {
+  color: #7a8d99 !important;
+}
+
+/* Ajustes para el logo */
+.text-center img {
+  margin-bottom: 15px;
+}
+
+/* Ajustes para el checkbox de términos */
+.form-check-label a {
+  color: #008b8b;
+  text-decoration: none;
+}
+
+.form-check-label a:hover {
+  text-decoration: underline;
+}
+
+/* Espaciado del formulario */
+.p-5 {
+  padding: 3rem !important;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .overlay-text h1 {
+    font-size: 1.8rem;
+  }
 }
