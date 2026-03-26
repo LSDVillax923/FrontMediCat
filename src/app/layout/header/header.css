@@ -1,0 +1,58 @@
+:host {
+  display: block;
+}
+
+.navegacion {
+  background-color: #ece8e4;
+  padding: 16px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #e5ded6;
+}
+
+.logo img {
+  width: 60px;
+}
+
+.menu {
+  display: flex;
+  list-style: none;
+  gap: 24px;
+  align-items: center;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #0a7f86;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.acciones-header {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-cita {
+  background-color: #0a7f86;
+  color: white !important;
+  padding: 10px 16px;
+  border-radius: 999px;
+}
+
+@media (max-width: 1100px) {
+  .navegacion {
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 20px;
+  }
+
+  .menu {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
