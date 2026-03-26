@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import type { Mascota } from '../../models/mascota.model';
@@ -22,10 +22,10 @@ export class ListarMascotas {
 
   mascotas: Mascota[] = [];
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly mascotaService: MascotaService,
-  ) {
+  private readonly route = inject(ActivatedRoute);
+  private readonly mascotaService = inject(MascotaService);
+
+  constructor() {
     this.clienteId = Number(this.route.snapshot.queryParamMap.get('clienteId')) || null;
     this.mascotas = this.mascotaService.listar();
   }
