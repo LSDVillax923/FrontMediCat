@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -6,5 +6,6 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class Login {}

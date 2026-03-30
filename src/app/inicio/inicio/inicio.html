@@ -1,6 +1,6 @@
 <nav class="navegacion" aria-label="Menú principal">
   <a class="logo">
-    <img src="/src/assets/img/Medicat.png" alt="Logo de Medicat" />
+    <img src="assets/img/Medicat.png" alt="Logo de Medicat" />
   </a>
 
   <ul class="menu">
@@ -13,9 +13,12 @@
       <a class="btn-cita" href="#contacto">
         <i class="fa-solid fa-mobile-screen"></i> Agendar Cita
       </a>
-
-       <a class="btn-cita" routerLink="/inicio/login">Iniciar Sesión</a>
-        <a class="btn-cita" routerLink="/inicio/registro">Crear Cuenta</a>
+    </li>
+    <li>
+      <a class="btn-cita" routerLink="/inicio/login">Iniciar Sesión</a>
+    </li>
+    <li>
+      <a class="btn-cita" routerLink="/inicio/registro">Crear Cuenta</a>
     </li>
   </ul>
 </nav>
@@ -23,7 +26,8 @@
 <main>
   <!-- SECCIÓN INICIO -->
   <section id="inicio" class="landing">
-    <article class="landing-contenido">
+    
+    <article>
       <p class="etiqueta-bienvenida">Bienvenido a Medicat</p>
       <h1>Cuidamos de tus mejores amigos como si fueran nuestra familia</h1>
       <p class="descripcion">
@@ -40,14 +44,15 @@
     </article>
 
     <figure class="landing-imagen">
-      <img src="/src/assets/img/perro-inicio.jpeg" alt="Perro frente a la entrada" />
+      <img src="assets/img/perro-inicio.jpeg" alt="Perro frente a la entrada" />
     </figure>
+  
   </section>
 
   <!-- SECCIÓN SERVICIOS -->
   <section id="servicios">
     <h2>Nuestros Servicios</h2>
-    <span class="servicios__linea" aria-hidden="true"></span>
+    <span class="titulo_linea" aria-hidden="true"></span>
     <p>
       Ofrecemos una amplia gama de cuidados médicos y estéticos diseñados para cubrir
       todas las necesidades de salud de tus mascotas.
@@ -203,7 +208,8 @@
 
   <!-- SECCIÓN EQUIPO -->
   <section id="equipo">
-    <h2>Nuestro Equipo Médico</h2>
+    <h2> Nuestro Equipo Médico</h2>   
+    <span class="titulo_linea" aria-hidden="true"></span> 
     <p>
       Profesionales altamente calificados y apasionados por brindar el mejor cuidado a
       tus compañeros peludos.
@@ -211,7 +217,7 @@
 
     <div class="equipo__grid" aria-label="Listado del equipo médico">
       <article class="tarjeta-medico">
-        <img src="/src/assets/img/vet1.jpeg" alt="Dra. Elena Martínez, cirujana veterinaria" />
+        <img src="assets/img/vet1.jpeg" alt="Dra. Elena Martínez, cirujana veterinaria" />
         <div class="tarjeta-medico__contenido">
           <h3>Dra. Elena Martínez</h3>
           <h4>Cirujana Veterinaria</h4>
@@ -223,7 +229,7 @@
       </article>
 
       <article class="tarjeta-medico">
-        <img src="/src/assets/img/vet2.jpeg" alt="Dr. Ricardo Sánchez, médico internista" />
+        <img src="assets/img/vet2.jpeg" alt="Dr. Ricardo Sánchez, médico internista" />
         <div class="tarjeta-medico__contenido">
           <h3>Dr. Ricardo Sánchez</h3>
           <h4>Médico Internista</h4>
@@ -236,7 +242,7 @@
 
       <article class="tarjeta-medico">
         <img
-          src="/src/assets/img/vet4.jpeg"
+          src="assets/img/vet4.jpeg"
           alt="Dra. Carla Gómez, especialista en dermatología"
         />
         <div class="tarjeta-medico__contenido">
@@ -438,11 +444,11 @@
             ></textarea>
           </div>
 
-          <button type="submit" class=".btn">Enviar Mensaje</button>
+<button type="submit" class="submit-btn">Enviar Mensaje</button>
         </form>
 
         <img
-          src="/src/assets/img/familaunida.jpeg"
+          src="assets/img/familaunida.jpeg"
           alt="Familia feliz con su mascota"
           class="contact-family-photo"
         />
@@ -457,7 +463,7 @@
 <footer class="footer">
   <div class="footer-contenido">
     <div class="footer-col footer-col-logo">
-      <img src="/src/assets/img/footer-img.jpeg" alt="Logo de Medicat" class="footer-logo" />
+      <img src="assets/img/footer-img.jpeg" alt="Logo de Medicat" class="footer-logo" />
       <p>
         Cuidando la salud y bienestar de tus mascotas con la mejor tecnología y el equipo
         más humano. Tu confianza, su salud.
