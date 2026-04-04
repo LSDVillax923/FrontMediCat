@@ -1,0 +1,95 @@
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/inicio" class="nav-link">Inicio</a>
+      <a routerLink="/veterinarios/nuevo" class="btn-nueva">+ Nuevo Veterinario</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <section class="dashboard-header">
+    <h1 class="dashboard-title">Equipo Veterinario</h1>
+    <p class="dashboard-subtitle">Gestiona el personal médico de la clínica</p>
+  </section>
+
+  <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
+  <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+
+  <section class="busqueda-card">
+    <form class="busqueda-form" (ngSubmit)="$event.preventDefault()">
+      <div class="input-grupo">
+        <span class="icono">🔍</span>
+        <input
+          type="text"
+          name="busqueda"
+          [(ngModel)]="busqueda"
+          placeholder="Buscar por nombre, especialidad o cédula..."
+        />
+      </div>
+      <div class="busqueda-acciones">
+        <button type="button" class="btn-nueva" (click)="limpiarBusqueda()">✕ Limpiar</button>
+      </div>
+    </form>
+  </section>
+
+  <p>Total de veterinarios: <strong>{{ totalVeterinarios }}</strong></p>
+
+  <section class="tabla-card">
+    <table class="tabla tabla-veterinarios">
+      <thead>
+        <tr>
+          <th>Veterinario</th>
+          <th>Especialidad</th>
+          <th>Cédula</th>
+          <th>Celular</th>
+          <th>Correo</th>
+          <th>Atenciones</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="veterinariosFiltrados.length === 0">
+          <td colspan="8" class="sin-resultados">
+            <span *ngIf="busqueda.trim()">No se encontraron veterinarios con esa búsqueda.</span>
+            <span *ngIf="!busqueda.trim()">No hay veterinarios registrados.</span>
+          </td>
+        </tr>
+        <tr *ngFor="let vet of veterinariosFiltrados">
+          <td>
+            <div class="cliente-info">
+              <div class="avatar">{{ vet.nombre.charAt(0) }}</div>
+              <span>{{ vet.nombre }}</span>
+            </div>
+          </td>
+          <td>{{ vet.especialidad }}</td>
+          <td>{{ vet.cedula }}</td>
+          <td>{{ vet.celular }}</td>
+          <td>{{ vet.correo }}</td>
+          <td>{{ vet.num_Atenciones }}</td>
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{ 'badge-verde': vet.estado === 'activo', 'badge-rojo': vet.estado !== 'activo' }"
+            >
+              {{ vet.estado }}
+            </span>
+          </td>
+          <td>
+            <div class="acciones">
+              <a [routerLink]="['/veterinarios', vet.id]" class="btn-accion">Ver</a>
+              <a [routerLink]="['/veterinarios', vet.id, 'editar']" class="btn-accion">Editar</a>
+              <button type="button" class="btn-eliminar" (click)="eliminarVeterinario(vet)">
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</main>

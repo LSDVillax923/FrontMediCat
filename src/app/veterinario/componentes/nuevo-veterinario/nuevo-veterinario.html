@@ -1,0 +1,75 @@
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/inicio" class="nav-link">Inicio</a>
+      <a routerLink="/veterinarios" class="nav-link">Veterinarios</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <section class="dashboard-header">
+    <h1 class="dashboard-title">Nuevo Veterinario</h1>
+    <p class="dashboard-subtitle">Registra un nuevo miembro del equipo médico</p>
+  </section>
+
+  <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
+  <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+
+  <div class="form-card">
+    <form (ngSubmit)="guardarVeterinario()" #formVet="ngForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" name="nombre" [(ngModel)]="formData.nombre" placeholder="Ej. Dr. Juan Pérez" required />
+        </div>
+
+        <div class="form-group">
+          <label for="cedula">Cédula profesional</label>
+          <input type="text" id="cedula" name="cedula" [(ngModel)]="formData.cedula" placeholder="Ej. 12345678" required />
+        </div>
+
+        <div class="form-group">
+          <label for="especialidad">Especialidad</label>
+          <select id="especialidad" name="especialidad" [(ngModel)]="formData.especialidad" required>
+            <option value="" disabled>Selecciona una especialidad</option>
+            <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="celular">Celular</label>
+          <input type="tel" id="celular" name="celular" [(ngModel)]="formData.celular" placeholder="Ej. 3100000000" required />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo" name="correo" [(ngModel)]="formData.correo" placeholder="vet@medicat.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="contrasenia">Contraseña</label>
+          <input type="password" id="contrasenia" name="contrasenia" [(ngModel)]="formData.contrasenia" required />
+        </div>
+
+        <div class="form-group">
+          <label for="estado">Estado</label>
+          <select id="estado" name="estado" [(ngModel)]="formData.estado" required>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-acciones">
+        <button type="submit" class="btn-guardar" [disabled]="formVet.invalid">
+          ✚ Registrar Veterinario
+        </button>
+        <a routerLink="/veterinarios" class="btn-cancelar">✕ Cancelar</a>
+      </div>
+    </form>
+  </div>
+</main>

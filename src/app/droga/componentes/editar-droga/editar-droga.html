@@ -1,0 +1,100 @@
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/inicio" class="nav-link">Inicio</a>
+      <a routerLink="/drogas" class="nav-link">Inventario</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <section class="dashboard-header">
+    <h1 class="dashboard-title">Editar Droga</h1>
+    <p class="dashboard-subtitle">Actualiza la información del medicamento</p>
+  </section>
+
+  <p *ngIf="noEncontrada" class="alert alert-error">
+    No se encontró la droga solicitada.
+    <a routerLink="/drogas">Volver al inventario</a>
+  </p>
+
+  <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
+  <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+
+  <div class="form-card" *ngIf="!noEncontrada">
+    <form (ngSubmit)="guardarCambios()" #formDroga="ngForm">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="nombre">Nombre del Medicamento</label>
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            [(ngModel)]="formData.nombre"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="precioCompra">Precio de Compra ($)</label>
+          <input
+            type="number"
+            id="precioCompra"
+            name="precioCompra"
+            [(ngModel)]="formData.precioCompra"
+            min="0"
+            step="100"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="precioVenta">Precio de Venta ($)</label>
+          <input
+            type="number"
+            id="precioVenta"
+            name="precioVenta"
+            [(ngModel)]="formData.precioVenta"
+            min="0"
+            step="100"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="unidadesDisponibles">Unidades Disponibles</label>
+          <input
+            type="number"
+            id="unidadesDisponibles"
+            name="unidadesDisponibles"
+            [(ngModel)]="formData.unidadesDisponibles"
+            min="0"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="unidadesVendidas">Unidades Vendidas</label>
+          <input
+            type="number"
+            id="unidadesVendidas"
+            name="unidadesVendidas"
+            [(ngModel)]="formData.unidadesVendidas"
+            min="0"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="form-acciones">
+        <button type="submit" class="btn-guardar" [disabled]="formDroga.invalid">
+          💾 Guardar Cambios
+        </button>
+        <button type="button" class="btn-cancelar" (click)="cancelar()">✕ Cancelar</button>
+      </div>
+    </form>
+  </div>
+</main>

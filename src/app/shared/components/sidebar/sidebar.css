@@ -1,0 +1,139 @@
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #1a2535;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+  transition: width 0.25s ease;
+  position: sticky;
+  top: 0;
+}
+
+.sidebar--collapsed {
+  width: 64px;
+}
+
+.sidebar__toggle {
+  background: none;
+  border: none;
+  color: #8b9db5;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  text-align: right;
+  transition: color 0.2s;
+}
+
+.sidebar__toggle:hover { color: #fff; }
+
+.sidebar__logo {
+  padding: 0.5rem 1.25rem 1.25rem;
+}
+
+.sidebar__logo img {
+  width: 100px;
+  object-fit: contain;
+}
+
+.sidebar__nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 0.5rem;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  color: #8b9db5;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar__link:hover,
+.sidebar__link.active {
+  background: #2a3a50;
+  color: #fff;
+}
+
+.sidebar__link.active {
+  background: #0d9488;
+  color: #fff;
+}
+
+.sidebar__icon { font-size: 1.1rem; flex-shrink: 0; }
+
+.sidebar__divider {
+  padding: 1rem 0.85rem 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4a5568;
+}
+
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #2a3a50;
+  margin-top: auto;
+}
+
+.sidebar__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #0d9488;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar__user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar__user-info strong {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar__user-info span {
+  font-size: 0.75rem;
+  color: #4a5568;
+  text-transform: capitalize;
+}
+
+.sidebar__logout {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1.35rem;
+  background: none;
+  border: none;
+  color: #8b9db5;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  width: 100%;
+}
+
+.sidebar__logout:hover { color: #fc8181; }

@@ -1,0 +1,61 @@
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/tratamientos" class="nav-link">← Volver</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <ng-container *ngIf="tratamiento; else noEncontrado">
+    <section class="dashboard-header">
+      <h1 class="dashboard-title">Tratamiento #{{ tratamiento.id }}</h1>
+      <p class="dashboard-subtitle">{{ tratamiento.fecha }}</p>
+    </section>
+
+    <section class="filtros-card">
+      <p><strong>Descripción:</strong> {{ tratamiento.descripcion }}</p>
+      <p><strong>Fecha:</strong> {{ tratamiento.fecha }}</p>
+      <p><strong>Mascota:</strong> {{ tratamiento.mascota.nombre }} ({{ tratamiento.mascota.especie }})</p>
+      <p><strong>Veterinario:</strong> {{ tratamiento.veterinario.nombre }} — {{ tratamiento.veterinario.especialidad }}</p>
+    </section>
+
+    <section class="tabla-card">
+      <h2 style="padding: 1rem 1.5rem; margin: 0;">Drogas Utilizadas</h2>
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Medicamento</th>
+            <th>Cantidad</th>
+            <th>Precio Venta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="!tratamiento.drogas || tratamiento.drogas.length === 0">
+            <td colspan="3" class="sin-resultados">No hay drogas registradas para este tratamiento.</td>
+          </tr>
+          <tr *ngFor="let td of tratamiento.drogas">
+            <td>{{ td.droga.nombre }}</td>
+            <td>{{ td.cantidad }}</td>
+            <td>$ {{ td.droga.precioVenta | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="form-acciones" style="padding: 1rem 0;">
+      <a [routerLink]="['/tratamientos', tratamiento.id, 'editar']" class="btn-guardar">Editar</a>
+      <a routerLink="/tratamientos" class="btn-cancelar">Volver al listado</a>
+    </div>
+  </ng-container>
+
+  <ng-template #noEncontrado>
+    <section class="filtros-card">
+      <p class="alert alert-error">No se encontró el tratamiento solicitado.</p>
+      <a routerLink="/tratamientos" class="btn-cancelar">Ir al listado</a>
+    </section>
+  </ng-template>
+</main>

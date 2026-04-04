@@ -1,0 +1,80 @@
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/inicio" class="logo">
+      <img src="/img/Medicat.png" alt="Medicat logo" />
+    </a>
+    <nav class="nav">
+      <a routerLink="/inicio" class="nav-link">Inicio</a>
+      <a routerLink="/tratamientos" class="nav-link">Tratamientos</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dashboard">
+  <section class="dashboard-header">
+    <h1 class="dashboard-title">Editar Tratamiento</h1>
+    <p class="dashboard-subtitle">Modifica la información del tratamiento #{{ formData.id }}</p>
+  </section>
+
+  <p *ngIf="noEncontrado" class="alert alert-error">
+    No se encontró el tratamiento. <a routerLink="/tratamientos">Volver</a>
+  </p>
+
+  <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
+  <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+
+  <div class="form-card" *ngIf="!noEncontrado">
+    <form (ngSubmit)="guardarCambios()" #formT="ngForm">
+      <div class="form-grid">
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción del Tratamiento</label>
+          <textarea
+            id="descripcion"
+            name="descripcion"
+            [(ngModel)]="formData.descripcion"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="fecha">Fecha</label>
+          <input
+            type="date"
+            id="fecha"
+            name="fecha"
+            [(ngModel)]="formData.fecha"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="mascotaId">Mascota</label>
+          <select id="mascotaId" name="mascotaId" [(ngModel)]="formData.mascotaId" required>
+            <option [ngValue]="null" disabled>Selecciona una mascota</option>
+            <option *ngFor="let m of mascotas" [ngValue]="m.id">
+              {{ m.nombre }} ({{ m.especie }} — {{ m.raza }})
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="veterinarioId">Veterinario</label>
+          <select id="veterinarioId" name="veterinarioId" [(ngModel)]="formData.veterinarioId" required>
+            <option [ngValue]="null" disabled>Selecciona un veterinario</option>
+            <option *ngFor="let v of veterinarios" [ngValue]="v.id">
+              {{ v.nombre }} — {{ v.especialidad }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-acciones">
+        <button type="submit" class="btn-guardar" [disabled]="formT.invalid">
+          💾 Guardar Cambios
+        </button>
+        <button type="button" class="btn-cancelar" (click)="cancelar()">✕ Cancelar</button>
+      </div>
+    </form>
+  </div>
+</main>
