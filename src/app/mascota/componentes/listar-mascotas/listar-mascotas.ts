@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MascotaService } from '../../services/mascota.service';
+import { TratamientoService } from '../../../tratamiento/services/tratamiento.service';
 import { AuthService } from '../../../user/services/auth.service';
 import { Mascota } from '../../mascota';
 import { Navbar } from '../../../shared/components/navbar/navbar';
@@ -25,6 +26,7 @@ export class ListarMascotas {
 
   constructor(
     private readonly mascotaService: MascotaService,
+    private readonly tratamientoService: TratamientoService,
     private readonly authService: AuthService,
     private readonly route: ActivatedRoute,
   ) {
@@ -107,6 +109,25 @@ export class ListarMascotas {
     
     // Actualizar la lista local
     this.todasMascotas = this.mascotaService.getAll();
+  }
+
+  // Método para eliminar permanentemente
+  eliminarMascotaPermanente(mascota: Mascota): void {
+    const tratamientosCount = this.tratamientoService.getByMascotaId(mascota.id).length;
+    const mensaje = tratamientosCount > 0
+      ? `¿Eliminar permanentemente a ${mascota.nombre}? También se eliminarán ${tratamientosCount} tratamiento(s) asociado(s).`
+      : `¿Eliminar permanentemente a ${mascota.nombre}?`;
+
+    if (!confirm(mensaje)) return;
+    
+    const ok = this.mascotaService.delete(mascota.id);
+    if (ok) {
+      this.mensaje = `${mascota.nombre} fue eliminada permanentemente.`;
+      this.error = '';
+      this.todasMascotas = this.mascotaService.getAll();
+    } else {
+      this.error = 'No se pudo eliminar la mascota.';
+    }
   }
 
   // Alias para compatibilidad

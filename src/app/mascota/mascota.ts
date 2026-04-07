@@ -8,19 +8,14 @@ export interface Mascota {
   raza: string;
   sexo: string;
   fechaNacimiento: string;
-
-  // Campos clínicos
   edad: number;
   peso: number;
   enfermedad?: string;
   observaciones?: string;
   foto?: string;
   veterinarioAsignado?: string;
-
-  // Estado funcional (¡CORREGIDO!)
   estado: 'Activa' | 'Tratamiento' | 'Inactiva';
-
-  // Relaciones
   clienteId: number;
+  cliente?: Cliente;
   propietario?: string;
 }

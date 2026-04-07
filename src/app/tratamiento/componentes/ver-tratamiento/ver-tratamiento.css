@@ -1,17 +1,118 @@
+/* Reutilizamos las variables del diseño anterior o puedes añadirlas aquí */
+:root {
+  --primary: #4f46e5;
+  --bg-card: #ffffff;
+  --border: #e5e7eb;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+}
+
+/* Encabezado con botón de volver */
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  transition: color 0.2s;
+}
+
+.btn-volver:hover {
+  color: var(--primary);
+}
+
+/* Tarjeta Principal de Detalle */
+.detalle-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.detalle-header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: var(--text-main);
+}
+
+/* Grid de Información */
+.detalle-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.detalle-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detalle-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.detalle-campo span:not(.detalle-label) {
+  font-size: 1rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+/* Caso especial para Observaciones (Ancho completo) */
 .detalle-campo.full-width {
   grid-column: 1 / -1;
+  background: #f9fafb; /* Fondo sutil para diferenciar notas */
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #cbd5e1;
 }
 
-.sin-drogas {
-  background: var(--color-background-primary);
-  border: 1px solid var(--color-border-tertiary);
-  border-radius: 10px;
-  padding: 2rem;
-  text-align: center;
-  color: var(--color-text-secondary);
-  font-size: 0.875rem;
+/* Botón de Editar con estilo Outline */
+.btn-accion--outline {
+  border: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background: white;
+  color: var(--text-main);
+  transition: all 0.2s;
 }
 
-.sin-drogas p {
-  margin: 0;
+.btn-accion--outline:hover {
+  background: #f9fafb;
+  border-color: var(--primary);
+  color: var(--primary);
+  text-decoration: none;
+}
+
+/* Ajustes para la tabla de medicamentos dentro del detalle */
+.tabla-card h2.dashboard-subtitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Badge (Asegúrate de tener estos del CSS anterior) */
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
 }

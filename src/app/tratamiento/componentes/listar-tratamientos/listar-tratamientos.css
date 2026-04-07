@@ -1,18 +1,222 @@
-.filtro-estado {
-  padding: 0.5rem 0.75rem;
-  border-radius: 7px;
-  border: 1px solid var(--color-border-tertiary);
-  background: var(--color-background-secondary);
-  color: var(--color-text-primary);
-  font-size: 0.875rem;
+/* Variables de color para mantener consistencia */
+:root {
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --bg-main: #f9fafb;
+  --bg-card: #ffffff;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  /* Colores de estados */
+  --status-activo: #dcfce7;
+  --status-activo-text: #166534;
+  --status-pendiente: #fef9c3;
+  --status-pendiente-text: #854d0e;
+  --status-completado: #dbeafe;
+  --status-completado-text: #1e40af;
+  --status-cancelado: #fee2e2;
+  --status-cancelado-text: #991b1b;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text-main);
+}
+
+/* Encabezado */
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dashboard-subtitle {
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* Barra de Búsqueda y Filtros */
+.busqueda-card {
+  background: var(--bg-card);
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 1.5rem;
+}
+
+.busqueda-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.input-grupo {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.input-grupo .icono {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--text-muted);
+}
+
+.input-grupo input {
+  width: 100%;
+  padding: 0.625rem 2.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.input-grupo input:focus {
   outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.filtro-estado {
+  padding: 0.625rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background-color: white;
+  min-width: 180px;
   cursor: pointer;
-  min-width: 160px;
+}
+
+/* Toolbar de la Tabla */
+.tabla-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary);
+  color: white;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+/* Estilos de la Tabla */
+.tabla-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden; /* Para que los bordes redondeados funcionen */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tabla th {
+  background: #f8fafc;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.tabla td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.tabla tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Info de Mascota con Avatar */
+.cliente-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  background: #e0e7ff;
+  color: #4338ca;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+/* Badges de Estado */
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-activo { background: var(--status-activo); color: var(--status-activo-text); }
+.badge-pendiente { background: var(--status-pendiente); color: var(--status-pendiente-text); }
+.badge-completado { background: var(--status-completado); color: var(--status-completado-text); }
+.badge-cancelado { background: var(--status-cancelado); color: var(--status-cancelado-text); }
+
+/* Acciones */
+.acciones {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.btn-accion:hover {
+  text-decoration: underline;
 }
 
 .diagnostico-cell {
-  max-width: 240px;
+  max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text-muted);
 }

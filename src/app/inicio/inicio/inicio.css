@@ -131,6 +131,7 @@ body {
     gap: 16px;
 }
 
+
 .btn {
     padding: 14px 28px;
     border-radius: 999px;
@@ -145,11 +146,13 @@ body {
 
 .btn-primario {
     background: var(--color-primario);
-    color: white;
+    color: rgb(1, 1, 1);
 }
 
 .btn-primario:hover {
     background: var(--color-primario-oscuro);
+    color: white;
+    background-color: #075e63;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(10, 127, 134, 0.3);
 }
@@ -163,6 +166,10 @@ body {
 .btn-secundario:hover {
     background: var(--color-primario);
     color: white;
+    background-color: #075e63;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(10, 127, 134, 0.3);
+
 }
 
 .landing-imagen {

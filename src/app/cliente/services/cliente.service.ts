@@ -1,34 +1,49 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from '../cliente';
 import { CLIENTES_MOCK } from '../../shared/data/mock-data';
+import { MascotaService } from '../../mascota/services/mascota.service';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
-  private clientes: Cliente[] = [...CLIENTES_MOCK];
-  private nextId = this.clientes.length + 1;
+  private clientes: Cliente[] = [];
+
+  constructor(private readonly mascotaService: MascotaService) {
+    this.clientes = [...CLIENTES_MOCK];
+    this.actualizarMascotasDeClientes();
+  }
+
+  private actualizarMascotasDeClientes(): void {
+    this.clientes.forEach(cliente => {
+      cliente.mascotas = this.mascotaService.getByClienteId(cliente.id);
+    });
+  }
 
   getAll(): Cliente[] {
+    this.actualizarMascotasDeClientes();
     return this.clientes;
   }
 
   getById(id: number): Cliente | null {
-    return this.clientes.find((c) => c.id === id) ?? null;
+    const cliente = this.clientes.find((c) => c.id === id) ?? null;
+    if (cliente) {
+      cliente.mascotas = this.mascotaService.getByClienteId(id);
+    }
+    return cliente;
   }
 
   add(cliente: Omit<Cliente, 'id' | 'mascotas'>): Cliente {
-    const nuevo: Cliente = { ...cliente, id: this.nextId++, mascotas: [] };
+    const nuevoId = Math.max(...this.clientes.map(c => c.id), 0) + 1;
+    const nuevo: Cliente = { ...cliente, id: nuevoId, mascotas: [] };
     this.clientes.push(nuevo);
     return nuevo;
   }
 
   update(id: number, cambios: Partial<Omit<Cliente, 'mascotas'>>): Cliente | null {
-  const idx = this.clientes.findIndex((c) => c.id === id);
-  if (idx === -1) return null;
-  // No permitir modificar mascotas desde aquí
-  const { mascotas, ...cambiosSinMascotas } = cambios as any;
-  this.clientes[idx] = { ...this.clientes[idx], ...cambiosSinMascotas };
-  return this.clientes[idx];
-}
+    const idx = this.clientes.findIndex((c) => c.id === id);
+    if (idx === -1) return null;
+    this.clientes[idx] = { ...this.clientes[idx], ...cambios };
+    return this.clientes[idx];
+  }
 
   delete(id: number): boolean {
     const antes = this.clientes.length;
@@ -36,11 +51,10 @@ export class ClienteService {
     return this.clientes.length < antes;
   }
 
-  /** Busca clientes por nombre, apellido, correo o celular */
   search(query: string): Cliente[] {
     const filtro = query.trim().toLowerCase();
-    if (!filtro) return this.clientes;
-    return this.clientes.filter(
+    if (!filtro) return this.getAll();
+    return this.getAll().filter(
       (c) =>
         c.nombre.toLowerCase().includes(filtro) ||
         c.apellido.toLowerCase().includes(filtro) ||

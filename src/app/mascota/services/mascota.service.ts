@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Mascota } from '../mascota';
 import { MASCOTAS_MOCK } from '../../shared/data/mock-data';
+import { TratamientoService } from '../../tratamiento/services/tratamiento.service';
 
 @Injectable({ providedIn: 'root' })
 export class MascotaService {
-  private mascotas: Mascota[] = [...MASCOTAS_MOCK];
-  private nextId = this.mascotas.length + 1;
+  private mascotas: Mascota[] = [];
+  private nextId = 1;
+
+  constructor(private readonly tratamientoService: TratamientoService) {
+    this.mascotas = [...MASCOTAS_MOCK];
+    this.nextId = Math.max(...this.mascotas.map(m => m.id), 0) + 1;
+  }
 
   getAll(): Mascota[] {
     return this.mascotas;
@@ -38,15 +44,14 @@ export class MascotaService {
     return this.mascotas.length < antes;
   }
 
- // Marca la mascota como inactiva sin eliminarla
   desactivar(id: number): void {
-    this.update(id, { estado: 'Inactiva' }); // ¡CORREGIDO! (Antes era 'Crítico')
+    this.update(id, { estado: 'Inactiva' });
   }
 
   search(query: string): Mascota[] {
     const filtro = query.trim().toLowerCase();
-    if (!filtro) return this.mascotas;
-    return this.mascotas.filter(
+    if (!filtro) return this.getAll();
+    return this.getAll().filter(
       (m) =>
         m.nombre.toLowerCase().includes(filtro) ||
         m.especie.toLowerCase().includes(filtro) ||

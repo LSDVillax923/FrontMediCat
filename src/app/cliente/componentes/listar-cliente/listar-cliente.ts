@@ -33,13 +33,18 @@ export class ListarCliente {
   }
 
   eliminarCliente(cliente: Cliente): void {
-    if (!confirm(`¿Eliminar a ${cliente.nombre} ${cliente.apellido}?`)) return;
-    const ok = this.clienteService.delete(cliente.id);
-    if (ok) {
-      this.mensaje = `${cliente.nombre} ${cliente.apellido} fue eliminado correctamente.`;
-      this.error = '';
-    } else {
-      this.error = 'No se pudo eliminar el cliente.';
-    }
+  const mensajeConfirmacion = cliente.mascotas.length > 0
+    ? `¿Eliminar a ${cliente.nombre} ${cliente.apellido}? Esta acción también eliminará sus ${cliente.mascotas.length} mascota(s) y todos sus tratamientos asociados.`
+    : `¿Eliminar a ${cliente.nombre} ${cliente.apellido}?`;
+
+  if (!confirm(mensajeConfirmacion)) return;
+  
+  const ok = this.clienteService.delete(cliente.id);
+  if (ok) {
+    this.mensaje = `${cliente.nombre} ${cliente.apellido} fue eliminado correctamente junto con sus mascotas y tratamientos.`;
+    this.error = '';
+  } else {
+    this.error = 'No se pudo eliminar el cliente.';
   }
+}
 }

@@ -56,4 +56,20 @@ export class TratamientoService {
         t.diagnostico.toLowerCase().includes(filtro),
     );
   }
+
+  /**
+ * Elimina todos los tratamientos de una mascota específica
+ * (Usado en borrado en cascada)
+ */
+deleteByMascotaId(mascotaId: number): void {
+  this.tratamientos = this.tratamientos.filter(t => t.mascotaId !== mascotaId);
+}
+
+/**
+ * Elimina todos los tratamientos de un cliente específico
+ * (Usado en borrado en cascada)
+ */
+deleteByClienteId(clienteId: number): void {
+  this.tratamientos = this.tratamientos.filter(t => t.clienteId !== clienteId);
+}
 }
