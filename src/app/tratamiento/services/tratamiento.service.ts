@@ -15,12 +15,16 @@ export class TratamientoService {
     return this.tratamientos.find((t) => t.id === id) ?? null;
   }
 
-  getByMascotaId(mascotaId: number): Tratamiento[] {
-    return this.tratamientos.filter((t) => t.mascota.id === mascotaId);
+  getByClienteId(clienteId: number): Tratamiento[] {
+    return this.tratamientos.filter((t) => t.clienteId === clienteId);
   }
 
-  getByVeterinarioId(vetId: number): Tratamiento[] {
-    return this.tratamientos.filter((t) => t.veterinario.id === vetId);
+  getByMascotaId(mascotaId: number): Tratamiento[] {
+    return this.tratamientos.filter((t) => t.mascotaId === mascotaId);
+  }
+
+  getByVeterinarioId(veterinarioId: number): Tratamiento[] {
+    return this.tratamientos.filter((t) => t.veterinarioId === veterinarioId);
   }
 
   add(tratamiento: Omit<Tratamiento, 'id'>): Tratamiento {
@@ -40,5 +44,16 @@ export class TratamientoService {
     const antes = this.tratamientos.length;
     this.tratamientos = this.tratamientos.filter((t) => t.id !== id);
     return this.tratamientos.length < antes;
+  }
+
+  search(query: string): Tratamiento[] {
+    const filtro = query.trim().toLowerCase();
+    if (!filtro) return this.tratamientos;
+    return this.tratamientos.filter(
+      (t) =>
+        t.mascota.toLowerCase().includes(filtro) ||
+        t.veterinario.toLowerCase().includes(filtro) ||
+        t.diagnostico.toLowerCase().includes(filtro),
+    );
   }
 }

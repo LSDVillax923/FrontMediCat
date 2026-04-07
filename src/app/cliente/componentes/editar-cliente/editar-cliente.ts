@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ClienteService } from '../../services/cliente.service';
+import { AuthService } from '../../../user/services/auth.service';
+import { Navbar } from '../../../shared/components/navbar/navbar';
 
 interface ClienteEditable {
   id: number;
@@ -14,87 +17,76 @@ interface ClienteEditable {
 
 @Component({
   selector: 'app-editar-cliente',
-
-  imports: [CommonModule, FormsModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './editar-cliente.html',
   styleUrl: './editar-cliente.css',
 })
-
 export class EditarCliente {
-  clienteId = 0;
+  formData: ClienteEditable = { id: 0, nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
   mensaje = '';
   error = '';
-
-  formData: ClienteEditable = {
-    id: 0,
-    nombre: '',
-    apellido: '',
-    correo: '',
-    celular: '',
-    contrasenia: '',
-  };
-
-  private readonly clientesMock: ClienteEditable[] = [
-    {
-      id: 1,
-      nombre: 'Ana',
-      apellido: 'Martínez',
-      correo: 'ana.martinez@email.com',
-      celular: '3101234567',
-      contrasenia: '12345',
-    },
-    {
-      id: 2,
-      nombre: 'Carlos',
-      apellido: 'Ruiz',
-      correo: 'carlos.ruiz@email.com',
-      celular: '3209876543',
-      contrasenia: '12345',
-    },
-    {
-      id: 3,
-      nombre: 'Diana',
-      apellido: 'Gómez',
-      correo: 'diana.gomez@email.com',
-      celular: '3001122334',
-      contrasenia: '12345',
-    },
-  ];
+  noEncontrado = false;
+  esPerfil = false;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
+    private readonly clienteService: ClienteService,
+    private readonly authService: AuthService,
   ) {
-    this.cargarCliente();
-  }
+    const paramId = this.route.snapshot.paramMap.get('id');
+    const sesion = this.authService.getSesion();
+    const id = paramId ? Number(paramId) : sesion?.id ?? 0;
+    this.esPerfil = !paramId;
 
-  private cargarCliente(): void {
-    this.clienteId = Number(this.route.snapshot.paramMap.get('id'));
-
-    const cliente = this.clientesMock.find((item) => item.id === this.clienteId);
-
-    if (!cliente) {
-      this.error = 'No se encontró el cliente para editar.';
-      return;
+    const cliente = this.clienteService.getById(id);
+    if (cliente) {
+      this.formData = {
+        id: cliente.id,
+        nombre: cliente.nombre,
+        apellido: cliente.apellido,
+        correo: cliente.correo,
+        celular: cliente.celular,
+        contrasenia: '',
+      };
+    } else {
+      this.noEncontrado = true;
+      this.error = 'No se encontró el cliente solicitado.';
     }
-
-    this.formData = { ...cliente };
   }
 
   guardarCambios(): void {
-    const { nombre, apellido, correo, celular, contrasenia } = this.formData;
-
-    if (!nombre || !apellido || !correo || !celular || !contrasenia) {
-      this.error = 'Todos los campos son obligatorios.';
-      this.mensaje = '';
+    const { id, nombre, apellido, correo, celular, contrasenia } = this.formData;
+    if (!nombre || !apellido || !correo || !celular) {
+      this.error = 'Los campos nombre, apellido, correo y celular son obligatorios.';
       return;
     }
 
+    const cambios: Partial<{ nombre: string; apellido: string; correo: string; celular: string; contrasenia: string }> = {
+      nombre,
+      apellido,
+      correo,
+      celular,
+    };
+
+    if (contrasenia) {
+      cambios['contrasenia'] = contrasenia;
+    }
+
+    this.clienteService.update(id, cambios);
+    this.mensaje = `Los datos de ${nombre} ${apellido} fueron actualizados.`;
     this.error = '';
-    this.mensaje = `Se actualizó el cliente ${nombre} ${apellido}.`;
   }
 
-  volverAClientes(): void {
-    this.router.navigate(['/clientes']);
+  volver(): void {
+    const sesion = this.authService.getSesion();
+    if (sesion?.rol === 'admin') {
+      this.router.navigate(this.esPerfil ? ['/dashboard'] : ['/clientes']);
+    } else if (sesion?.rol === 'cliente') {
+      this.router.navigate(['/mis-mascotas']);
+    } else {
+      this.router.navigate(['/inicio']);
+    }
   }
 }

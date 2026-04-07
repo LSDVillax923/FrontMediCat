@@ -34,13 +34,13 @@ export class DrogaService {
     return this.drogas.length < antes;
   }
 
-  /** Registra una venta: descuenta stock y suma vendidas */
-  vender(id: number, cantidad: number): boolean {
-    const droga = this.getById(id);
-    if (!droga || droga.unidadesDisponibles < cantidad) return false;
-    return !!this.update(id, {
-      unidadesDisponibles: droga.unidadesDisponibles - cantidad,
-      unidadesVendidas: droga.unidadesVendidas + cantidad,
-    });
+  search(query: string): Droga[] {
+    const filtro = query.trim().toLowerCase();
+    if (!filtro) return this.drogas;
+    return this.drogas.filter(
+      (d) =>
+        d.nombre.toLowerCase().includes(filtro) ||
+        d.descripcion.toLowerCase().includes(filtro),
+    );
   }
 }

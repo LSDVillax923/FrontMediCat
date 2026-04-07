@@ -1,0 +1,18 @@
+.filtro-estado {
+  padding: 0.5rem 0.75rem;
+  border-radius: 7px;
+  border: 1px solid var(--color-border-tertiary);
+  background: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  outline: none;
+  cursor: pointer;
+  min-width: 160px;
+}
+
+.diagnostico-cell {
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

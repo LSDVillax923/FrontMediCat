@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { ClienteService } from '../../services/cliente.service';
+import { Navbar } from '../../../shared/components/navbar/navbar';
 
 interface NuevoClienteForm {
   nombre: string;
@@ -13,12 +15,11 @@ interface NuevoClienteForm {
 
 @Component({
   selector: 'app-nuevo-cliente',
-
-  imports: [CommonModule, FormsModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './nuevo-cliente.html',
   styleUrl: './nuevo-cliente.css',
 })
-
 export class NuevoCliente {
   mensaje = '';
   error = '';
@@ -31,6 +32,8 @@ export class NuevoCliente {
     contrasenia: '',
   };
 
+  constructor(private readonly clienteService: ClienteService) {}
+
   guardarCliente(): void {
     const { nombre, apellido, correo, celular, contrasenia } = this.formData;
 
@@ -40,15 +43,10 @@ export class NuevoCliente {
       return;
     }
 
+    this.clienteService.add({ nombre, apellido, correo, celular, contrasenia });
     this.mensaje = `${nombre} ${apellido} se registró correctamente.`;
     this.error = '';
 
-    this.formData = {
-      nombre: '',
-      apellido: '',
-      correo: '',
-      celular: '',
-      contrasenia: '',
-    };
+    this.formData = { nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
   }
 }

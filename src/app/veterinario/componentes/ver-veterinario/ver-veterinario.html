@@ -1,74 +1,53 @@
-<header class="header">
-  <div class="header-container">
-    <a routerLink="/inicio" class="logo">
-      <img src="/img/Medicat.png" alt="Medicat logo" />
-    </a>
-    <nav class="nav">
-      <a routerLink="/veterinarios" class="nav-link">← Volver</a>
-    </nav>
-  </div>
-</header>
+<app-navbar></app-navbar>
 
 <main class="dashboard">
+  <section class="dashboard-header">
+    <a routerLink="/veterinarios" class="btn-volver">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver a Veterinarios
+    </a>
+    <h1 class="dashboard-title">Detalle del Veterinario</h1>
+  </section>
+
   <ng-container *ngIf="veterinario; else noEncontrado">
-    <section class="dashboard-header">
-      <h1 class="dashboard-title">{{ veterinario.nombre }}</h1>
-      <p class="dashboard-subtitle">{{ veterinario.especialidad }}</p>
-    </section>
+    <section class="detalle-card">
+      <div class="detalle-header">
+        <div class="avatar-lg">{{ veterinario.nombre.charAt(0) }}</div>
+        <div>
+          <h2>{{ veterinario.nombre }} {{ veterinario.apellido }}</h2>
+          <span class="badge badge-especialidad">{{ veterinario.especialidad }}</span>
+        </div>
+        <a [routerLink]="['/veterinarios', veterinario.id, 'editar']" class="btn-accion btn-accion--outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editar
+        </a>
+      </div>
 
-    <section class="filtros-card">
-      <p><strong>ID:</strong> {{ veterinario.id }}</p>
-      <p><strong>Cédula:</strong> {{ veterinario.cedula }}</p>
-      <p><strong>Correo:</strong> {{ veterinario.correo }}</p>
-      <p><strong>Celular:</strong> {{ veterinario.celular }}</p>
-      <p><strong>Especialidad:</strong> {{ veterinario.especialidad }}</p>
-      <p><strong>Atenciones realizadas:</strong> {{ veterinario.num_Atenciones }}</p>
-      <p>
-        <strong>Estado:</strong>
-        <span
-          class="badge"
-          [ngClass]="{ 'badge-verde': veterinario.estado === 'activo', 'badge-rojo': veterinario.estado !== 'activo' }"
-        >
-          {{ veterinario.estado }}
-        </span>
-      </p>
+      <div class="detalle-info">
+        <div class="detalle-campo">
+          <span class="detalle-label">ID</span>
+          <span>{{ veterinario.id }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-label">Correo</span>
+          <span>{{ veterinario.correo }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-label">Celular</span>
+          <span>{{ veterinario.celular }}</span>
+        </div>
+        <div class="detalle-campo">
+          <span class="detalle-label">N° Licencia</span>
+          <span>{{ veterinario.numeroLicencia }}</span>
+        </div>
+      </div>
     </section>
-
-    <section class="tabla-card">
-      <h2 style="padding: 1rem 1.5rem; margin: 0;">Tratamientos Asignados</h2>
-      <table class="tabla">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Descripción</th>
-            <th>Fecha</th>
-            <th>Mascota</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngIf="!veterinario.tratamientos || veterinario.tratamientos.length === 0">
-            <td colspan="4" class="sin-resultados">Este veterinario no tiene tratamientos asignados.</td>
-          </tr>
-          <tr *ngFor="let t of veterinario.tratamientos">
-            <td>{{ t.id }}</td>
-            <td>{{ t.descripcion }}</td>
-            <td>{{ t.fecha }}</td>
-            <td>{{ t.mascota.nombre }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-
-    <div class="form-acciones" style="padding: 1rem 0;">
-      <a [routerLink]="['/veterinarios', veterinario.id, 'editar']" class="btn-guardar">Editar</a>
-      <a routerLink="/veterinarios" class="btn-cancelar">Volver al listado</a>
-    </div>
   </ng-container>
 
   <ng-template #noEncontrado>
-    <section class="filtros-card">
+    <div class="form-card">
       <p class="alert alert-error">No se encontró el veterinario solicitado.</p>
-      <a routerLink="/veterinarios" class="btn-cancelar">Ir al listado</a>
-    </section>
+      <a routerLink="/veterinarios" class="btn-volver">Volver al listado</a>
+    </div>
   </ng-template>
 </main>

@@ -1,0 +1,88 @@
+.seccion-drogas {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-tertiary);
+}
+
+.seccion-drogas__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.seccion-titulo {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.droga-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
+  gap: 0.875rem;
+  align-items: end;
+  padding: 1rem;
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-tertiary);
+  border-radius: 8px;
+  margin-bottom: 0.625rem;
+}
+
+.btn-eliminar-droga {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border-tertiary);
+  background: transparent;
+  color: var(--color-text-danger);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.btn-eliminar-droga:hover {
+  background: var(--color-background-danger);
+  border-color: var(--color-border-danger);
+}
+
+.drogas-vacio {
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 1.25rem;
+  border: 1px dashed var(--color-border-tertiary);
+  border-radius: 8px;
+  margin: 0;
+}
+
+.campo-bloqueado input {
+  background: var(--color-background-secondary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.campo-bloqueado__aviso {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin-left: 0.375rem;
+}
+
+@media (max-width: 768px) {
+  .droga-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .droga-row {
+    grid-template-columns: 1fr;
+  }
+}

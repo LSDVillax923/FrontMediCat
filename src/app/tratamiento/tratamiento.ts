@@ -1,14 +1,15 @@
-import { Mascota } from '../mascota/mascota';
-import { Veterinario } from '../veterinario/veterinario';
 import { TratamientoDroga } from '../tratamiento-droga/tratamiento-droga';
 
 export interface Tratamiento {
   id: number;
-  descripcion: string;
+  mascotaId: number;
+  mascota: string;
+  clienteId: number;
+  veterinarioId: number;
+  veterinario: string;
+  diagnostico: string;
+  observaciones: string;
   fecha: string;
-
-  // Relaciones
-  mascota: Mascota;
-  veterinario: Veterinario;
+  estado: 'Activo' | 'Completado' | 'Pendiente' | 'Cancelado';
   drogas: TratamientoDroga[];
 }

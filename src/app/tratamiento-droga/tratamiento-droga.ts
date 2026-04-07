@@ -3,10 +3,9 @@ import { Droga } from '../droga/droga';
 
 export interface TratamientoDroga {
   id: number;
-
-  // Relaciones
-  tratamiento?: Tratamiento;
-  droga: Droga;
-
-  cantidad: number;
+  drogaId: number;
+  nombreDroga: string;
+  dosis: string;
+  frecuencia: string;
+  duracion: string;
 }

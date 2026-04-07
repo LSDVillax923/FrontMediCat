@@ -3,56 +3,74 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DrogaService } from '../../services/droga.service';
-import { Droga } from '../../droga';
+import { AuthService } from '../../../user/services/auth.service';
+import { Navbar } from '../../../shared/components/navbar/navbar';
+
+interface DrogaEditable {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  unidad: string;
+  stock: number;
+  dosis: string;
+}
 
 @Component({
   selector: 'app-editar-droga',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './editar-droga.html',
   styleUrl: './editar-droga.css',
 })
 export class EditarDroga {
-  formData: Droga = {
-    id: 0,
-    nombre: '',
-    precioCompra: 0,
-    precioVenta: 0,
-    unidadesDisponibles: 0,
-    unidadesVendidas: 0,
-  };
-
+  formData: DrogaEditable = { id: 0, nombre: '', descripcion: '', unidad: '', stock: 0, dosis: '' };
   mensaje = '';
   error = '';
-  noEncontrada = false;
+  noEncontrado = false;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly drogaService: DrogaService,
+    private readonly authService: AuthService,
   ) {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     const droga = this.drogaService.getById(id);
-
     if (droga) {
-      this.formData = { ...droga };
+      this.formData = {
+        id: droga.id,
+        nombre: droga.nombre,
+        descripcion: droga.descripcion ?? '',
+        unidad: droga.unidad ?? '',
+        stock: droga.stock ?? 0,
+        dosis: droga.dosis ?? '',
+      };
     } else {
-      this.noEncontrada = true;
+      this.noEncontrado = true;
+      this.error = 'No se encontró el medicamento solicitado.';
     }
+  }
+
+  get esAdmin(): boolean {
+    return this.authService.getSesion()?.rol === 'admin';
   }
 
   guardarCambios(): void {
-    if (this.formData.precioVenta < this.formData.precioCompra) {
-      this.error = 'El precio de venta no puede ser menor al de compra.';
+    const { id, nombre, descripcion, unidad, stock, dosis } = this.formData;
+    if (!nombre) {
+      this.error = 'El nombre del medicamento es obligatorio.';
       return;
     }
 
-    this.drogaService.update(this.formData.id, this.formData);
-    this.mensaje = `"${this.formData.nombre}" fue actualizado correctamente.`;
-    this.error = '';
-  }
+    const cambios: Partial<DrogaEditable> = { nombre, descripcion, unidad, stock };
 
-  cancelar(): void {
-    this.router.navigate(['/drogas']);
+    // Admin no puede modificar la dosis
+    if (!this.esAdmin) {
+      cambios['dosis'] = dosis;
+    }
+
+    this.drogaService.update(id, cambios);
+    this.mensaje = `${nombre} fue actualizado correctamente.`;
+    this.error = '';
   }
 }

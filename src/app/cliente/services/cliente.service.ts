@@ -21,12 +21,14 @@ export class ClienteService {
     return nuevo;
   }
 
-  update(id: number, cambios: Partial<Cliente>): Cliente | null {
-    const idx = this.clientes.findIndex((c) => c.id === id);
-    if (idx === -1) return null;
-    this.clientes[idx] = { ...this.clientes[idx], ...cambios };
-    return this.clientes[idx];
-  }
+  update(id: number, cambios: Partial<Omit<Cliente, 'mascotas'>>): Cliente | null {
+  const idx = this.clientes.findIndex((c) => c.id === id);
+  if (idx === -1) return null;
+  // No permitir modificar mascotas desde aquí
+  const { mascotas, ...cambiosSinMascotas } = cambios as any;
+  this.clientes[idx] = { ...this.clientes[idx], ...cambiosSinMascotas };
+  return this.clientes[idx];
+}
 
   delete(id: number): boolean {
     const antes = this.clientes.length;

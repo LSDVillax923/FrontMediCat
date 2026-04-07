@@ -3,11 +3,12 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { VeterinarioService } from '../../services/veterinario.service';
 import { Veterinario } from '../../veterinario';
+import { Navbar } from '../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-ver-veterinario',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, Navbar],
   templateUrl: './ver-veterinario.html',
   styleUrl: './ver-veterinario.css',
 })

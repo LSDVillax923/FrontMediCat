@@ -1,95 +1,61 @@
-<header class="header">
-  <div class="header-container">
-    <a routerLink="/inicio" class="logo">
-      <img src="/img/Medicat.png" alt="Medicat logo" />
-    </a>
-    <nav class="nav">
-      <a routerLink="/inicio" class="nav-link">Inicio</a>
-      <a routerLink="/drogas" class="nav-link">Inventario</a>
-    </nav>
-  </div>
-</header>
+<app-navbar></app-navbar>
 
 <main class="dashboard">
   <section class="dashboard-header">
-    <h1 class="dashboard-title">Nueva Droga</h1>
-    <p class="dashboard-subtitle">Agrega un nuevo medicamento o producto al inventario</p>
+    <a routerLink="/drogas" class="btn-volver">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Volver a Medicamentos
+    </a>
+    <h1 class="dashboard-title">Nuevo Medicamento</h1>
+    <p class="dashboard-subtitle">Agrega un medicamento al inventario de la clínica</p>
   </section>
 
   <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
   <p *ngIf="error" class="alert alert-error">{{ error }}</p>
 
   <div class="form-card">
-    <form (ngSubmit)="guardarDroga()" #formDroga="ngForm">
+    <form (ngSubmit)="guardarDroga()">
       <div class="form-grid">
+
         <div class="form-group full-width">
-          <label for="nombre">Nombre del Medicamento</label>
-          <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            [(ngModel)]="formData.nombre"
-            placeholder="Ej. Amoxicilina 500mg"
-            required
-          />
+          <label for="nombre">Nombre del medicamento</label>
+          <input type="text" id="nombre" name="nombre" [(ngModel)]="formData.nombre" placeholder="Ej: Amoxicilina" required />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" [(ngModel)]="formData.descripcion" rows="3" placeholder="Indicaciones, contraindicaciones, etc."></textarea>
         </div>
 
         <div class="form-group">
-          <label for="precioCompra">Precio de Compra ($)</label>
-          <input
-            type="number"
-            id="precioCompra"
-            name="precioCompra"
-            [(ngModel)]="formData.precioCompra"
-            min="0"
-            step="100"
-            required
-          />
+          <label for="unidad">Unidad de medida</label>
+          <input type="text" id="unidad" name="unidad" [(ngModel)]="formData.unidad" placeholder="mg, ml, comprimidos..." />
         </div>
 
         <div class="form-group">
-          <label for="precioVenta">Precio de Venta ($)</label>
-          <input
-            type="number"
-            id="precioVenta"
-            name="precioVenta"
-            [(ngModel)]="formData.precioVenta"
-            min="0"
-            step="100"
-            required
-          />
+          <label for="stock">Stock disponible</label>
+          <input type="number" id="stock" name="stock" [(ngModel)]="formData.stock" min="0" />
         </div>
 
-        <div class="form-group">
-          <label for="unidadesDisponibles">Unidades Disponibles</label>
-          <input
-            type="number"
-            id="unidadesDisponibles"
-            name="unidadesDisponibles"
-            [(ngModel)]="formData.unidadesDisponibles"
-            min="0"
-            required
-          />
+        <div class="form-group full-width">
+          <label for="dosis">
+            Dosis recomendada
+            <span class="form-hint-inline">Solo veterinarios pueden modificar este campo después de creado</span>
+          </label>
+          <input type="text" id="dosis" name="dosis" [(ngModel)]="formData.dosis" placeholder="Ej: 5mg por kg de peso" />
         </div>
 
-        <div class="form-group">
-          <label for="unidadesVendidas">Unidades Vendidas</label>
-          <input
-            type="number"
-            id="unidadesVendidas"
-            name="unidadesVendidas"
-            [(ngModel)]="formData.unidadesVendidas"
-            min="0"
-            required
-          />
-        </div>
       </div>
 
       <div class="form-acciones">
-        <button type="submit" class="btn-guardar" [disabled]="formDroga.invalid">
-          ✚ Guardar Droga
+        <button type="submit" class="btn-guardar">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Guardar Medicamento
         </button>
-        <a routerLink="/drogas" class="btn-cancelar">✕ Cancelar</a>
+        <a routerLink="/drogas" class="btn-cancelar">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          Cancelar
+        </a>
       </div>
     </form>
   </div>

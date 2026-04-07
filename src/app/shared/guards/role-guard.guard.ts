@@ -13,3 +13,27 @@ export const adminGuard: CanActivateFn = () => {
   router.navigate(['/inicio']);
   return false;
 };
+
+export const veterinarioGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  if (auth.esVeterinario() || auth.esAdmin()) {
+    return true;
+  }
+
+  router.navigate(['/inicio']);
+  return false;
+};
+
+export const clienteGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  if (auth.esCliente()) {
+    return true;
+  }
+
+  router.navigate(['/inicio']);
+  return false;
+};

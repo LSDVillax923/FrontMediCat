@@ -3,41 +3,53 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { VeterinarioService } from '../../services/veterinario.service';
+import { Navbar } from '../../../shared/components/navbar/navbar';
 
-interface VeterinarioForm {
+interface VeterinarioEditable {
   id: number;
   nombre: string;
-  cedula: string;
-  celular: string;
+  apellido: string;
   correo: string;
-  especialidad: string;
+  celular: string;
   contrasenia: string;
-  estado: string;
-  imageURL: string;
-  num_Atenciones: number;
+  especialidad: string;
+  numeroLicencia: string;
 }
 
 @Component({
   selector: 'app-editar-veterinario',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './editar-veterinario.html',
   styleUrl: './editar-veterinario.css',
 })
 export class EditarVeterinario {
-  formData: VeterinarioForm = {
-    id: 0, nombre: '', cedula: '', celular: '', correo: '',
-    especialidad: '', contrasenia: '', estado: 'activo', imageURL: '', num_Atenciones: 0,
+  formData: VeterinarioEditable = {
+    id: 0,
+    nombre: '',
+    apellido: '',
+    correo: '',
+    celular: '',
+    contrasenia: '',
+    especialidad: '',
+    numeroLicencia: '',
   };
-
-  readonly especialidades = [
-    'Medicina Interna', 'Cirugía', 'Dermatología', 'Odontología',
-    'Oftalmología', 'Traumatología', 'Oncología', 'Urgencias',
-  ];
-
   mensaje = '';
   error = '';
   noEncontrado = false;
+
+  especialidades = [
+    'Medicina General',
+    'Cirugía',
+    'Dermatología',
+    'Cardiología',
+    'Oncología',
+    'Oftalmología',
+    'Neurología',
+    'Ortopedia',
+    'Odontología',
+    'Nutrición',
+  ];
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -46,26 +58,36 @@ export class EditarVeterinario {
   ) {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     const vet = this.veterinarioService.getById(id);
-
     if (vet) {
       this.formData = {
-        id: vet.id, nombre: vet.nombre, cedula: vet.cedula,
-        celular: vet.celular, correo: vet.correo, especialidad: vet.especialidad,
-        contrasenia: vet.contrasenia, estado: vet.estado,
-        imageURL: vet.imageURL, num_Atenciones: vet.num_Atenciones,
+        id: vet.id,
+        nombre: vet.nombre,
+        apellido: vet.apellido,
+        correo: vet.correo,
+        celular: vet.celular,
+        contrasenia: '',
+        especialidad: vet.especialidad,
+        numeroLicencia: vet.numeroLicencia,
       };
     } else {
       this.noEncontrado = true;
+      this.error = 'No se encontró el veterinario solicitado.';
     }
   }
 
   guardarCambios(): void {
-    this.veterinarioService.update(this.formData.id, this.formData);
-    this.mensaje = `Los datos de ${this.formData.nombre} fueron actualizados.`;
-    this.error = '';
-  }
+    const { id, nombre, apellido, correo, celular, contrasenia, especialidad, numeroLicencia } = this.formData;
 
-  cancelar(): void {
-    this.router.navigate(['/veterinarios']);
+    if (!nombre || !apellido || !correo || !celular || !especialidad || !numeroLicencia) {
+      this.error = 'Todos los campos son obligatorios excepto la contraseña.';
+      return;
+    }
+
+    const cambios: Partial<VeterinarioEditable> = { nombre, apellido, correo, celular, especialidad, numeroLicencia };
+    if (contrasenia) cambios['contrasenia'] = contrasenia;
+
+    this.veterinarioService.update(id, cambios);
+    this.mensaje = `${nombre} ${apellido} fue actualizado correctamente.`;
+    this.error = '';
   }
 }

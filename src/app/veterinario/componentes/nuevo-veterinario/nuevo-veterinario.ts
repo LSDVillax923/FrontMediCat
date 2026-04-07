@@ -3,21 +3,22 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { VeterinarioService } from '../../services/veterinario.service';
+import { Navbar } from '../../../shared/components/navbar/navbar';
 
-interface VeterinarioForm {
+interface NuevoVeterinarioForm {
   nombre: string;
-  cedula: string;
-  celular: string;
+  apellido: string;
   correo: string;
-  especialidad: string;
+  celular: string;
   contrasenia: string;
-  estado: string;
+  especialidad: string;
+  numeroLicencia: string;
 }
 
 @Component({
   selector: 'app-nuevo-veterinario',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './nuevo-veterinario.html',
   styleUrl: './nuevo-veterinario.css',
 })
@@ -25,55 +26,43 @@ export class NuevoVeterinario {
   mensaje = '';
   error = '';
 
-  readonly especialidades = [
-    'Medicina Interna',
+  especialidades = [
+    'Medicina General',
     'Cirugía',
     'Dermatología',
-    'Odontología',
-    'Oftalmología',
-    'Traumatología',
+    'Cardiología',
     'Oncología',
-    'Urgencias',
+    'Oftalmología',
+    'Neurología',
+    'Ortopedia',
+    'Odontología',
+    'Nutrición',
   ];
 
-  formData: VeterinarioForm = this.crearFormulario();
+  formData: NuevoVeterinarioForm = {
+    nombre: '',
+    apellido: '',
+    correo: '',
+    celular: '',
+    contrasenia: '',
+    especialidad: '',
+    numeroLicencia: '',
+  };
 
   constructor(private readonly veterinarioService: VeterinarioService) {}
 
   guardarVeterinario(): void {
-    const { nombre, cedula, celular, correo, especialidad, contrasenia, estado } = this.formData;
+    const { nombre, apellido, correo, celular, contrasenia, especialidad, numeroLicencia } = this.formData;
 
-    if (!nombre || !cedula || !celular || !correo || !especialidad || !contrasenia) {
+    if (!nombre || !apellido || !correo || !celular || !contrasenia || !especialidad || !numeroLicencia) {
       this.error = 'Todos los campos son obligatorios.';
+      this.mensaje = '';
       return;
     }
 
-    this.veterinarioService.add({
-      nombre,
-      cedula,
-      celular,
-      correo,
-      especialidad,
-      contrasenia,
-      estado,
-      imageURL: '',
-      num_Atenciones: 0,
-    });
-
-    this.mensaje = `${nombre} fue registrado correctamente.`;
+    this.veterinarioService.add({ nombre, apellido, correo, celular, contrasenia, especialidad, numeroLicencia });
+    this.mensaje = `${nombre} ${apellido} fue registrado correctamente.`;
     this.error = '';
-    this.formData = this.crearFormulario();
-  }
-
-  private crearFormulario(): VeterinarioForm {
-    return {
-      nombre: '',
-      cedula: '',
-      celular: '',
-      correo: '',
-      especialidad: '',
-      contrasenia: '',
-      estado: 'activo',
-    };
+    this.formData = { nombre: '', apellido: '', correo: '', celular: '', contrasenia: '', especialidad: '', numeroLicencia: '' };
   }
 }

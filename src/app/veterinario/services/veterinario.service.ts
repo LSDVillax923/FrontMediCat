@@ -11,16 +11,17 @@ export class VeterinarioService {
     return this.veterinarios;
   }
 
+  /** Alias utilizado en formularios de mascota — devuelve todos los veterinarios */
   getActivos(): Veterinario[] {
-    return this.veterinarios.filter((v) => v.estado === 'activo');
+    return this.veterinarios;
   }
 
   getById(id: number): Veterinario | null {
     return this.veterinarios.find((v) => v.id === id) ?? null;
   }
 
-  add(vet: Omit<Veterinario, 'id' | 'tratamientos'>): Veterinario {
-    const nuevo: Veterinario = { ...vet, id: this.nextId++, tratamientos: [] };
+  add(veterinario: Omit<Veterinario, 'id'>): Veterinario {
+    const nuevo: Veterinario = { ...veterinario, id: this.nextId++ };
     this.veterinarios.push(nuevo);
     return nuevo;
   }
@@ -36,5 +37,27 @@ export class VeterinarioService {
     const antes = this.veterinarios.length;
     this.veterinarios = this.veterinarios.filter((v) => v.id !== id);
     return this.veterinarios.length < antes;
+  }
+
+  validarCredenciales(correo: string, contrasenia: string): Veterinario | null {
+    return (
+      this.veterinarios.find(
+        (v) =>
+          v.correo.toLowerCase() === correo.trim().toLowerCase() &&
+          v.contrasenia === contrasenia,
+      ) ?? null
+    );
+  }
+
+  search(query: string): Veterinario[] {
+    const filtro = query.trim().toLowerCase();
+    if (!filtro) return this.veterinarios;
+    return this.veterinarios.filter(
+      (v) =>
+        v.nombre.toLowerCase().includes(filtro) ||
+        v.apellido.toLowerCase().includes(filtro) ||
+        v.correo.toLowerCase().includes(filtro) ||
+        v.especialidad.toLowerCase().includes(filtro),
+    );
   }
 }

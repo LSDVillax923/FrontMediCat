@@ -4,51 +4,37 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MascotaService } from '../../services/mascota.service';
 import { VeterinarioService } from '../../../veterinario/services/veterinario.service';
-
-interface MascotaForm {
-  id: number;
-  nombre: string;
-  especie: string;
-  raza: string;
-  edad: number;
-  peso: number;
-  estado: 'activa' | 'tratamiento' | 'inactiva';
-  enfermedad: string;
-  observaciones: string;
-  tratamiento: string;
-  veterinarioAsignado: string;
-}
+import { Veterinario } from '../../../veterinario/veterinario';
+import { Mascota } from '../../mascota';
+import { Navbar } from '../../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-editar-mascota',
-  imports: [CommonModule, FormsModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './editar-mascota.html',
   styleUrl: './editar-mascota.css',
 })
 export class EditarMascota {
-  mascota: MascotaForm = {
+  mascota: Mascota = {
     id: 0,
     nombre: '',
     especie: '',
     raza: '',
+    sexo: '',
+    fechaNacimiento: '',
     edad: 0,
     peso: 0,
-    estado: 'activa',
+    estado: 'Activa',
     enfermedad: '',
     observaciones: '',
-    tratamiento: '',
     veterinarioAsignado: '',
+    clienteId: 0,
   };
 
-  readonly tratamientosDisponibles = [
-    'Control antiparasitario',
-    'Antibiótico oral',
-    'Suplementación vitamínica',
-    'Fisioterapia',
-  ];
-
-  veterinariosDisponibles: { nombre: string; especialidad: string }[] = [];
+  veterinariosDisponibles: Veterinario[] = [];
   mensaje = '';
+  error = '';
   noEncontrada = false;
 
   constructor(
@@ -61,31 +47,24 @@ export class EditarMascota {
     const encontrada = this.mascotaService.getById(id);
 
     if (encontrada) {
-      this.mascota = {
-        id: encontrada.id,
-        nombre: encontrada.nombre,
-        especie: encontrada.especie,
-        raza: encontrada.raza,
-        edad: encontrada.edad,
-        peso: encontrada.peso,
-        estado: encontrada.estado as 'activa' | 'tratamiento' | 'inactiva',
-        enfermedad: encontrada.enfermedad,
-        observaciones: encontrada.observaciones,
-        tratamiento: encontrada.tratamiento,
-        veterinarioAsignado: encontrada.veterinarioAsignado,
-      };
+      this.mascota = { ...encontrada };
     } else {
       this.noEncontrada = true;
+      this.error = 'No se encontró la mascota solicitada.';
     }
 
-    this.veterinariosDisponibles = this.veterinarioService
-      .getActivos()
-      .map((v) => ({ nombre: v.nombre, especialidad: v.especialidad }));
+    this.veterinariosDisponibles = this.veterinarioService.getActivos();
   }
 
   guardarCambios(): void {
+    if (!this.mascota.nombre || !this.mascota.especie || !this.mascota.raza) {
+      this.error = 'Los campos nombre, especie y raza son obligatorios.';
+      return;
+    }
+    
     this.mascotaService.update(this.mascota.id, this.mascota);
     this.mensaje = `Se actualizaron los datos de ${this.mascota.nombre}.`;
+    this.error = '';
   }
 
   cancelar(): void {

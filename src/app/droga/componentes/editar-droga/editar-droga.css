@@ -1,0 +1,16 @@
+.campo-bloqueado input {
+  background: var(--color-background-secondary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+  border-color: var(--color-border-tertiary);
+}
+
+.campo-bloqueado__aviso {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  margin-left: 0.5rem;
+}

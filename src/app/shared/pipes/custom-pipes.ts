@@ -46,9 +46,21 @@ export class TruncarPipe implements PipeTransform {
 }
 
 /**
- * Badge de estado de mascota
- * Uso: {{ 'activa' | estadoBadge }}  →  "✅ Activa"
+ * Convierte número de mes "03" → "Mar"
+ * Uso: {{ t.fecha | slice:5:7 | mesNombre }}
  */
+const MESES: Record<string, string> = {
+  '01': 'Ene', '02': 'Feb', '03': 'Mar', '04': 'Abr',
+  '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Ago',
+  '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dic',
+};
+ 
+@Pipe({ name: 'mesNombre', standalone: true })
+export class MesNombrePipe implements PipeTransform {
+  transform(value: string): string {
+    return MESES[value] ?? value;
+  }
+}
 @Pipe({ name: 'estadoBadge', standalone: true })
 export class EstadoBadgePipe implements PipeTransform {
   private readonly map: Record<string, string> = {
@@ -62,4 +74,6 @@ export class EstadoBadgePipe implements PipeTransform {
   transform(value: string): string {
     return this.map[value?.toLowerCase()] ?? value;
   }
+
+  
 }

@@ -1,85 +1,92 @@
 import { Routes } from '@angular/router';
 
-// Guards
-import { authGuard } from './shared/guards/auth-guard.guard';
-//import { roleGuard } from './shared/guards/role-guard.guard';
-import { adminGuard } from './shared/guards/role-guard.guard';
-// Inicio
-import { Inicio } from './inicio/inicio/inicio';
-// User
-import { Login } from './user/componentes/login/login';
-import { ForgotPassword } from './user/componentes/forgot-password/forgot-password';
-import { SignUp } from './user/componentes/sign-up/sign-up';
+import { authGuard }                              from './shared/guards/auth-guard.guard';
+import { adminGuard, veterinarioGuard, clienteGuard } from './shared/guards/role-guard.guard';
 
-// Cliente
-import { ListarCliente } from './cliente/componentes/listar-cliente/listar-cliente';
-import { NuevoCliente } from './cliente/componentes/nuevo-cliente/nuevo-cliente';
-import { EditarCliente } from './cliente/componentes/editar-cliente/editar-cliente';
-import { VerCliente } from './cliente/componentes/ver-cliente/ver-cliente';
+import { Inicio }             from './inicio/inicio/inicio';
+import { Login }              from './user/componentes/login/login';
+import { ForgotPassword }     from './user/componentes/forgot-password/forgot-password';
+import { SignUp }             from './user/componentes/sign-up/sign-up';
 
-// Mascota
-import { ListarMascotas } from './mascota/componentes/listar-mascotas/listar-mascotas';
-import { NuevaMascota } from './mascota/componentes/nueva-mascota/nueva-mascota';
-import { EditarMascota } from './mascota/componentes/editar-mascota/editar-mascota';
-import { VerMascota } from './mascota/componentes/ver-mascota/ver-mascota';
+import { Dashboard }          from './admin/componentes/dashboard/dashboard';
 
-// Veterinario
+import { ListarCliente }      from './cliente/componentes/listar-cliente/listar-cliente';
+import { NuevoCliente }       from './cliente/componentes/nuevo-cliente/nuevo-cliente';
+import { EditarCliente }      from './cliente/componentes/editar-cliente/editar-cliente';
+import { VerCliente }         from './cliente/componentes/ver-cliente/ver-cliente';
+
+import { MisMascotas }        from './mascota/componentes/mis-mascotas/mis-mascotas';
+import { ListarMascotas }     from './mascota/componentes/listar-mascotas/listar-mascotas';
+import { NuevaMascota }       from './mascota/componentes/nueva-mascota/nueva-mascota';
+import { EditarMascota }      from './mascota/componentes/editar-mascota/editar-mascota';
+import { VerMascota }         from './mascota/componentes/ver-mascota/ver-mascota';
+
 import { ListarVeterinarios } from './veterinario/componentes/listar-veterinarios/listar-veterinarios';
-import { NuevoVeterinario } from './veterinario/componentes/nuevo-veterinario/nuevo-veterinario';
-import { EditarVeterinario } from './veterinario/componentes/editar-veterinario/editar-veterinario';
+import { NuevoVeterinario }   from './veterinario/componentes/nuevo-veterinario/nuevo-veterinario';
+import { EditarVeterinario }  from './veterinario/componentes/editar-veterinario/editar-veterinario';
 import { VerVeterinario } from './veterinario/componentes/ver-veterinario/ver-veterinario';
+import { PerfilVeterinario }  from './veterinario/componentes/perfil-veterinario/perfil-veterinario';
 
-// Droga
-import { ListarDrogas } from './droga/componentes/listar-drogas/listar-drogas';
-import { NuevaDroga } from './droga/componentes/nueva-droga/nueva-droga';
-import { EditarDroga } from './droga/componentes/editar-droga/editar-droga';
+import { ListarDrogas }       from './droga/componentes/listar-drogas/listar-drogas';
+import { NuevaDroga }         from './droga/componentes/nueva-droga/nueva-droga';
+import { EditarDroga }        from './droga/componentes/editar-droga/editar-droga';
 
-// Tratamiento
 import { ListarTratamientos } from './tratamiento/componentes/listar-tratamientos/listar-tratamientos';
-import { NuevoTratamiento } from './tratamiento/componentes/nuevo-tratamiento/nuevo-tratamiento';
-import { EditarTratamiento } from './tratamiento/componentes/editar-tratamiento/editar-tratamiento';
-import { VerTratamiento } from './tratamiento/componentes/ver-tratamiento/ver-tratamiento';
+import { NuevoTratamiento }   from './tratamiento/componentes/nuevo-tratamiento/nuevo-tratamiento';
+import { EditarTratamiento }  from './tratamiento/componentes/editar-tratamiento/editar-tratamiento';
+import { VerTratamiento }     from './tratamiento/componentes/ver-tratamiento/ver-tratamiento';
 
 export const routes: Routes = [
-  // ── Redireccion raíz ──────────────────────────────────────────────────────
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
 
-  // ── Pública: landing + auth ───────────────────────────────────────────────
-  { path: 'inicio', component: Inicio },
-  { path: 'inicio/login', component: Login },
-  { path: 'inicio/registro', component: SignUp },
-  { path: 'inicio/forgot-password', component: ForgotPassword },
+  // ── Rutas públicas ───────────────────────────────────
+  { path: 'inicio',                  component: Inicio },
+  { path: 'inicio/login',            component: Login },
+  { path: 'inicio/registro',         component: SignUp },
+  { path: 'inicio/forgot-password',  component: ForgotPassword },
 
-  // ── Clientes (requiere autenticación) ─────────────────────────────────────
-  { path: 'clientes', component: ListarCliente, canActivate: [authGuard] },
-  { path: 'clientes/nuevo', component: NuevoCliente, canActivate: [authGuard] },
-  { path: 'clientes/:id', component: VerCliente, canActivate: [authGuard] },
-  { path: 'clientes/:id/editar', component: EditarCliente, canActivate: [authGuard] },
-  { path: 'clientes/:id/mismascotas', component: ListarMascotas, canActivate: [authGuard] },
+  // ── Perfiles propios (cada rol edita el suyo) ────────
+  { path: 'perfil',                  component: EditarCliente,      canActivate: [authGuard, clienteGuard] },
+  { path: 'perfil-admin',            component: EditarCliente,      canActivate: [authGuard, adminGuard] },
+  { path: 'perfil-veterinario',      component: PerfilVeterinario,  canActivate: [authGuard, veterinarioGuard] },
 
-  // ── Mascotas (requiere autenticación) ─────────────────────────────────────
-  { path: 'mascotas', component: ListarMascotas, canActivate: [authGuard] },
-  { path: 'mascotas/nueva', component: NuevaMascota, canActivate: [authGuard] },
-  { path: 'mascotas/:id', component: VerMascota, canActivate: [authGuard] },
-  { path: 'mascotas/:id/editar', component: EditarMascota, canActivate: [authGuard] },
+  // ── Admin ────────────────────────────────────────────
+  { path: 'dashboard',               component: Dashboard,          canActivate: [authGuard, adminGuard] },
 
-  // ── Veterinarios (solo admin) ──────────────────────────────────────────────
-  { path: 'veterinarios', component: ListarVeterinarios, canActivate: [authGuard, adminGuard] },
-  { path: 'veterinarios/nuevo', component: NuevoVeterinario, canActivate: [authGuard, adminGuard] },
-  { path: 'veterinarios/:id', component: VerVeterinario, canActivate: [authGuard, adminGuard] },
-  { path: 'veterinarios/:id/editar', component: EditarVeterinario, canActivate: [authGuard, adminGuard] },
+  // Clientes — solo admin
+  { path: 'clientes',                component: ListarCliente,      canActivate: [authGuard, adminGuard] },
+  { path: 'clientes/nuevo',          component: NuevoCliente,       canActivate: [authGuard, adminGuard] },
+  { path: 'clientes/:id',            component: VerCliente,         canActivate: [authGuard, adminGuard] },
+  { path: 'clientes/:id/editar',     component: EditarCliente,      canActivate: [authGuard, adminGuard] },
+  { path: 'clientes/:id/mismascotas',component: ListarMascotas,     canActivate: [authGuard, adminGuard] },
 
-  // ── Drogas / Inventario (solo admin) ──────────────────────────────────────
-  { path: 'drogas', component: ListarDrogas, canActivate: [authGuard, adminGuard] },
-  { path: 'drogas/nueva', component: NuevaDroga, canActivate: [authGuard, adminGuard] },
-  { path: 'drogas/:id/editar', component: EditarDroga, canActivate: [authGuard, adminGuard] },
+  // Veterinarios — solo admin
+  { path: 'veterinarios',            component: ListarVeterinarios, canActivate: [authGuard, adminGuard] },
+  { path: 'veterinarios/nuevo',      component: NuevoVeterinario,   canActivate: [authGuard, adminGuard] },
+  { path: 'veterinarios/:id',        component: VerVeterinario,     canActivate: [authGuard, adminGuard] },
+  { path: 'veterinarios/:id/editar', component: EditarVeterinario,  canActivate: [authGuard, adminGuard] },
 
-  // ── Tratamientos (requiere autenticación) ─────────────────────────────────
-  { path: 'tratamientos', component: ListarTratamientos, canActivate: [authGuard] },
-  { path: 'tratamientos/nuevo', component: NuevoTratamiento, canActivate: [authGuard] },
-  { path: 'tratamientos/:id', component: VerTratamiento, canActivate: [authGuard] },
-  { path: 'tratamientos/:id/editar', component: EditarTratamiento, canActivate: [authGuard] },
+  // ── Mascotas del cliente ─────────────────────────────
+  { path: 'mis-mascotas',            component: MisMascotas,        canActivate: [authGuard, clienteGuard] },
+  { path: 'mis-mascotas/nueva',      component: NuevaMascota,       canActivate: [authGuard, clienteGuard] },
+  { path: 'mis-mascotas/:id',        component: VerMascota,         canActivate: [authGuard] },
 
-  // ── Wildcard ───────────────────────────────────────────────────────────────
+  // ── Mascotas — admin y veterinario ───────────────────
+  { path: 'mascotas',                component: ListarMascotas,     canActivate: [authGuard, veterinarioGuard] },
+  { path: 'mascotas/nueva',          component: NuevaMascota,       canActivate: [authGuard, veterinarioGuard] },
+  { path: 'mascotas/:id',            component: VerMascota,         canActivate: [authGuard] },
+  { path: 'mascotas/:id/editar',     component: EditarMascota,      canActivate: [authGuard, veterinarioGuard] },
+
+  // ── Drogas ───────────────────────────────────────────
+  { path: 'drogas',                  component: ListarDrogas,       canActivate: [authGuard] },
+  { path: 'drogas/nueva',            component: NuevaDroga,         canActivate: [authGuard, adminGuard] },
+  { path: 'drogas/:id/editar',       component: EditarDroga,        canActivate: [authGuard, veterinarioGuard] },
+
+  // ── Tratamientos ─────────────────────────────────────
+  { path: 'tratamientos',            component: ListarTratamientos, canActivate: [authGuard] },
+  { path: 'tratamientos/nuevo',      component: NuevoTratamiento,   canActivate: [authGuard, veterinarioGuard] },
+  { path: 'tratamientos/:id',        component: VerTratamiento,     canActivate: [authGuard] },
+  { path: 'tratamientos/:id/editar', component: EditarTratamiento,  canActivate: [authGuard, veterinarioGuard] },
+
   { path: '**', redirectTo: 'inicio' },
 ];
