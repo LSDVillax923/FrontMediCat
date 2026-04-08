@@ -4,8 +4,13 @@ import { TRATAMIENTOS_MOCK } from '../../shared/data/mock-data';
 
 @Injectable({ providedIn: 'root' })
 export class TratamientoService {
-  private tratamientos: Tratamiento[] = [...TRATAMIENTOS_MOCK];
-  private nextId = this.tratamientos.length + 1;
+  private tratamientos: Tratamiento[] = [];
+  private nextId = 1;
+
+  constructor() {
+    this.tratamientos = [...TRATAMIENTOS_MOCK];
+    this.nextId = Math.max(...this.tratamientos.map(t => t.id), 0) + 1;
+  }
 
   getAll(): Tratamiento[] {
     return this.tratamientos;
@@ -15,16 +20,12 @@ export class TratamientoService {
     return this.tratamientos.find((t) => t.id === id) ?? null;
   }
 
-  getByClienteId(clienteId: number): Tratamiento[] {
-    return this.tratamientos.filter((t) => t.clienteId === clienteId);
-  }
-
   getByMascotaId(mascotaId: number): Tratamiento[] {
     return this.tratamientos.filter((t) => t.mascotaId === mascotaId);
   }
 
-  getByVeterinarioId(veterinarioId: number): Tratamiento[] {
-    return this.tratamientos.filter((t) => t.veterinarioId === veterinarioId);
+  getByClienteId(clienteId: number): Tratamiento[] {
+    return this.tratamientos.filter((t) => t.clienteId === clienteId);
   }
 
   add(tratamiento: Omit<Tratamiento, 'id'>): Tratamiento {
@@ -40,10 +41,38 @@ export class TratamientoService {
     return this.tratamientos[idx];
   }
 
+  /**
+   * Elimina un tratamiento específico por ID
+   */
   delete(id: number): boolean {
     const antes = this.tratamientos.length;
     this.tratamientos = this.tratamientos.filter((t) => t.id !== id);
     return this.tratamientos.length < antes;
+  }
+
+  /**
+   * ELIMINACIÓN EN CASCADA
+   * Elimina todos los tratamientos de una mascota específica
+   * Retorna el número de tratamientos eliminados
+   */
+  deleteByMascotaId(mascotaId: number): number {
+    const antes = this.tratamientos.length;
+    this.tratamientos = this.tratamientos.filter((t) => t.mascotaId !== mascotaId);
+    const eliminados = antes - this.tratamientos.length;
+    console.log(`  Eliminados ${eliminados} tratamiento(s) de la mascota ID ${mascotaId}`);
+    return eliminados;
+  }
+
+  /**
+   * Elimina todos los tratamientos de un cliente específico
+   * Retorna el número de tratamientos eliminados
+   */
+  deleteByClienteId(clienteId: number): number {
+    const antes = this.tratamientos.length;
+    this.tratamientos = this.tratamientos.filter((t) => t.clienteId !== clienteId);
+    const eliminados = antes - this.tratamientos.length;
+    console.log(`  Eliminados ${eliminados} tratamiento(s) del cliente ID ${clienteId}`);
+    return eliminados;
   }
 
   search(query: string): Tratamiento[] {
@@ -56,20 +85,4 @@ export class TratamientoService {
         t.diagnostico.toLowerCase().includes(filtro),
     );
   }
-
-  /**
- * Elimina todos los tratamientos de una mascota específica
- * (Usado en borrado en cascada)
- */
-deleteByMascotaId(mascotaId: number): void {
-  this.tratamientos = this.tratamientos.filter(t => t.mascotaId !== mascotaId);
-}
-
-/**
- * Elimina todos los tratamientos de un cliente específico
- * (Usado en borrado en cascada)
- */
-deleteByClienteId(clienteId: number): void {
-  this.tratamientos = this.tratamientos.filter(t => t.clienteId !== clienteId);
-}
 }

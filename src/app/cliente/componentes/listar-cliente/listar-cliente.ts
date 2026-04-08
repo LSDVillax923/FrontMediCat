@@ -17,11 +17,28 @@ export class ListarCliente {
   busqueda = '';
   mensaje = '';
   error = '';
+  clientes: Cliente[] = [];  // ← Propiedad declarada
 
-  constructor(private readonly clienteService: ClienteService) {}
+  constructor(private readonly clienteService: ClienteService) {
+    this.cargarClientes();
+  }
+
+  private cargarClientes(): void {
+    this.clientes = this.clienteService.getAll();
+  }
 
   get clientesFiltrados(): Cliente[] {
-    return this.clienteService.search(this.busqueda);
+    if (!this.busqueda.trim()) {
+      return this.clientes;
+    }
+    const filtro = this.busqueda.trim().toLowerCase();
+    return this.clientes.filter(
+      (c) =>
+        c.nombre.toLowerCase().includes(filtro) ||
+        c.apellido.toLowerCase().includes(filtro) ||
+        c.correo.toLowerCase().includes(filtro) ||
+        c.celular.toLowerCase().includes(filtro)
+    );
   }
 
   get totalClientes(): number {
@@ -33,18 +50,35 @@ export class ListarCliente {
   }
 
   eliminarCliente(cliente: Cliente): void {
-  const mensajeConfirmacion = cliente.mascotas.length > 0
-    ? `¿Eliminar a ${cliente.nombre} ${cliente.apellido}? Esta acción también eliminará sus ${cliente.mascotas.length} mascota(s) y todos sus tratamientos asociados.`
-    : `¿Eliminar a ${cliente.nombre} ${cliente.apellido}?`;
+    const totalMascotas = cliente.mascotas?.length || 0;
+    
+    let mensajeConfirmacion = '';
+    if (totalMascotas > 0) {
+      mensajeConfirmacion = `⚠️ ¡ADVERTENCIA!\n\n` +
+        `¿Estás seguro de eliminar a ${cliente.nombre} ${cliente.apellido}?\n\n` +
+        `Esta acción ELIMINARÁ PERMANENTEMENTE:\n` +
+        `• ${totalMascotas} mascota(s) asociada(s)\n` +
+        `• Todos los tratamientos de esas mascotas\n\n` +
+        `Esta acción no se puede deshacer.`;
+    } else {
+      mensajeConfirmacion = `¿Eliminar a ${cliente.nombre} ${cliente.apellido}?\n\n` +
+        `Esta acción no se puede deshacer.`;
+    }
 
-  if (!confirm(mensajeConfirmacion)) return;
-  
-  const ok = this.clienteService.delete(cliente.id);
-  if (ok) {
-    this.mensaje = `${cliente.nombre} ${cliente.apellido} fue eliminado correctamente junto con sus mascotas y tratamientos.`;
-    this.error = '';
-  } else {
-    this.error = 'No se pudo eliminar el cliente.';
+    if (!confirm(mensajeConfirmacion)) return;
+    
+    const ok = this.clienteService.delete(cliente.id);
+    if (ok) {
+      let mensaje = `${cliente.nombre} ${cliente.apellido} fue eliminado correctamente.`;
+      if (totalMascotas > 0) {
+        mensaje += ` Se eliminaron ${totalMascotas} mascota(s) y sus tratamientos.`;
+      }
+      this.mensaje = mensaje;
+      this.error = '';
+      // Recargar la lista después de eliminar
+      this.cargarClientes();
+    } else {
+      this.error = 'No se pudo eliminar el cliente.';
+    }
   }
-}
 }
