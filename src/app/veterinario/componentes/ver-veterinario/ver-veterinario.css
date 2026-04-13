@@ -1,0 +1,181 @@
+/* Variables */
+:root {
+  --color-primario: #0a7f86;
+  --color-primario-oscuro: #07686d;
+  --color-primario-claro: #6a8f93;
+  --color-fondo: #f2ede7;
+  --color-fondo-nav: #ece8e4;
+  --blanco: #ffffff;
+}
+
+/* Base */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--color-fondo);
+}
+
+/* Contenedor */
+.dashboard {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Header */
+.dashboard-header {
+  margin-bottom: 20px;
+}
+
+.dashboard-title {
+  font-size: 26px;
+  margin-top: 10px;
+  color: #333;
+}
+
+/* Botón volver */
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: var(--color-primario);
+  font-size: 14px;
+}
+
+.btn-volver:hover {
+  color: var(--color-primario-oscuro);
+}
+
+/* Card principal */
+.detalle-card {
+  background: var(--blanco);
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Header del perfil */
+.detalle-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Avatar */
+.avatar-lg {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--color-primario);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Nombre */
+.detalle-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* Badge especialidad */
+.badge {
+  display: inline-block;
+  margin-top: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.badge-especialidad {
+  background: rgba(10, 127, 134, 0.1);
+  color: var(--color-primario);
+}
+
+/* Botón editar */
+.btn-accion {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.btn-accion--outline {
+  border: 1px solid var(--color-primario);
+  color: var(--color-primario);
+}
+
+.btn-accion--outline:hover {
+  background: var(--color-primario);
+  color: white;
+}
+
+/* Info */
+.detalle-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Campo */
+.detalle-campo {
+  background: #fafafa;
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label */
+.detalle-label {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 3px;
+}
+
+/* Texto */
+.detalle-campo span:last-child {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Card fallback */
+.form-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* Alertas */
+.alert {
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.alert-error {
+  background-color: #fdecea;
+  color: #c62828;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .detalle-info {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-accion {
+    margin-left: 0;
+  }
+}

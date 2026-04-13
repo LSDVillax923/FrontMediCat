@@ -1,6 +1,192 @@
+/* Variables */
+:root {
+  --color-primario: #0a7f86;
+  --color-primario-oscuro: #07686d;
+  --color-primario-claro: #6a8f93;
+  --color-fondo: #f2ede7;
+  --color-fondo-nav: #ece8e4;
+  --blanco: #ffffff;
+
+  --color-texto: #2c3e50;
+  --color-text-secondary: #777;
+}
+
+/* Base */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--color-fondo);
+}
+
+/* Layout */
+.dashboard {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Header */
+.dashboard-header {
+  margin-bottom: 20px;
+}
+
+.dashboard-title {
+  font-size: 26px;
+  margin: 10px 0 5px;
+  color: var(--color-texto);
+}
+
+.dashboard-subtitle {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+/* Volver */
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: var(--color-primario);
+  font-size: 14px;
+}
+
+.btn-volver:hover {
+  color: var(--color-primario-oscuro);
+}
+
+/* Card */
+.form-card {
+  background: var(--blanco);
+  border-radius: 14px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+/* Labels */
+label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: var(--color-texto);
+  font-weight: 500;
+}
+
+/* Hint inline (el que ya tenías) */
 .form-hint-inline {
-  font-size: 0.75rem;
+  font-size: 11px;
   font-weight: 400;
   color: var(--color-text-secondary);
-  margin-left: 0.5rem;
+  margin-left: 6px;
+}
+
+/* Inputs */
+input, textarea, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Focus */
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 2px rgba(10, 127, 134, 0.2);
+  background-color: var(--blanco);
+}
+
+/* Acciones */
+.form-acciones {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Botón guardar */
+.btn-guardar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: var(--color-primario);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.btn-guardar:hover {
+  background-color: var(--color-primario-oscuro);
+}
+
+/* Cancelar */
+.btn-cancelar {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  background-color: var(--color-fondo-nav);
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.btn-cancelar:hover {
+  background-color: #ddd;
+}
+
+/* Alertas */
+.alert {
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.alert-success {
+  background-color: #e0f2f3;
+  color: var(--color-primario-oscuro);
+}
+
+.alert-error {
+  background-color: #fdecea;
+  color: #c62828;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
 }
