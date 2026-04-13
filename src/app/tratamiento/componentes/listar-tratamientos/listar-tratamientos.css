@@ -1,222 +1,261 @@
-/* Variables de color para mantener consistencia */
-:root {
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --bg-main: #f9fafb;
-  --bg-card: #ffffff;
-  --text-main: #111827;
-  --text-muted: #6b7280;
-  --border: #e5e7eb;
-  /* Colores de estados */
-  --status-activo: #dcfce7;
-  --status-activo-text: #166534;
-  --status-pendiente: #fef9c3;
-  --status-pendiente-text: #854d0e;
-  --status-completado: #dbeafe;
-  --status-completado-text: #1e40af;
-  --status-cancelado: #fee2e2;
-  --status-cancelado-text: #991b1b;
+/* ====== RESET ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* ====== BODY ====== */
+body {
+  background: #f5f7fb;
+  color: #333;
+}
+
+/* ====== CONTENEDOR ====== */
 .dashboard {
+  padding: 30px;
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1.5rem;
-  font-family: 'Inter', system-ui, sans-serif;
-  color: var(--text-main);
+  margin: auto;
 }
 
-/* Encabezado */
+/* ====== HEADER ====== */
 .dashboard-header {
-  margin-bottom: 2rem;
+  margin-bottom: 25px;
 }
 
 .dashboard-title {
-  font-size: 1.875rem;
+  font-size: 28px;
   font-weight: 700;
-  margin: 0;
+  color: #07686d;
 }
 
 .dashboard-subtitle {
-  color: var(--text-muted);
-  margin-top: 0.5rem;
+  color: #6b7280;
+  margin-top: 5px;
 }
 
-/* Barra de Búsqueda y Filtros */
+/* ====== ALERTAS ====== */
+.alert {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.alert-success {
+  background: #e6f9f0;
+  color: #0f9d58;
+}
+
+.alert-error {
+  background: #ffecec;
+  color: #d93025;
+}
+
+/* ====== BUSQUEDA ====== */
 .busqueda-card {
-  background: var(--bg-card);
-  padding: 1.25rem;
+  background: #ffffff;
+  padding: 20px;
   border-radius: 12px;
-  border: 1px solid var(--border);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
 }
 
 .busqueda-form {
   display: flex;
-  gap: 1rem;
-  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .input-grupo {
-  position: relative;
-  flex-grow: 1;
   display: flex;
   align-items: center;
-}
-
-.input-grupo .icono {
-  position: absolute;
-  left: 0.75rem;
-  color: var(--text-muted);
+  background: #ece8e4;
+  border-radius: 8px;
+  padding: 8px 10px;
+  flex: 1;
 }
 
 .input-grupo input {
+  border: none;
+  background: transparent;
+  outline: none;
+  margin-left: 8px;
   width: 100%;
-  padding: 0.625rem 2.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  font-size: 0.95rem;
-  transition: border-color 0.2s;
 }
 
-.input-grupo input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+.icono {
+  color: #6b7280;
+}
+
+.btn-limpiar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
 }
 
 .filtro-estado {
-  padding: 0.625rem;
+  padding: 10px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background-color: white;
-  min-width: 180px;
-  cursor: pointer;
+  border: 1px solid #000000;
 }
 
-/* Toolbar de la Tabla */
+/* ====== TOOLBAR ====== */
 .tabla-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
 }
 
 .btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--primary);
+  background:  #07686d;
   color: white;
-  padding: 0.625rem 1.25rem;
+  padding: 10px 15px;
   border-radius: 8px;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-weight: 500;
-  font-size: 0.875rem;
-  transition: background 0.2s;
+  transition: 0.3s;
 }
 
 .btn-primary:hover {
-  background: var(--primary-hover);
+  transform: scale(1.05);
+  background: #0a7f86;
 }
 
-/* Estilos de la Tabla */
+/* ====== TABLA ====== */
 .tabla-card {
-  background: var(--bg-card);
+  background: #ffffff;
   border-radius: 12px;
-  border: 1px solid var(--border);
-  overflow: hidden; /* Para que los bordes redondeados funcionen */
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
 .tabla {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
+}
+
+.tabla thead {
+  background: #0a7f86;
 }
 
 .tabla th {
-  background: #f8fafc;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border);
+  text-align: left;
+  padding: 12px;
+  font-size: 13px;
+  color: #ffffff;
 }
 
 .tabla td {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
+  padding: 12px;
+  border-top: 1px solid #f2ede7;
 }
 
-.tabla tr:last-child td {
-  border-bottom: none;
+.tabla tbody tr:hover {
+  background: #f1f5f9;
+  transition: 0.2s;
 }
 
-.tabla tr:hover {
-  background-color: #f9fafb;
-}
-
-/* Info de Mascota con Avatar */
+/* ====== CLIENTE / MASCOTA ====== */
 .cliente-info {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 10px;
 }
 
 .avatar {
-  width: 32px;
-  height: 32px;
-  background: #e0e7ff;
-  color: #4338ca;
-  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  background: #ece8e4;
+  color: #07686d;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
   font-weight: bold;
-  font-size: 0.875rem;
 }
 
-/* Badges de Estado */
+/* ====== DIAGNOSTICO ====== */
+.diagnostico-cell {
+  color: #374151;
+}
+
+/* ====== BADGES ====== */
 .badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
   font-weight: 600;
 }
 
-.badge-activo { background: var(--status-activo); color: var(--status-activo-text); }
-.badge-pendiente { background: var(--status-pendiente); color: var(--status-pendiente-text); }
-.badge-completado { background: var(--status-completado); color: var(--status-completado-text); }
-.badge-cancelado { background: var(--status-cancelado); color: var(--status-cancelado-text); }
+/* Estados */
+.badge.activo {
+  background: #e0f2fe;
+  color: #0284c7;
+}
 
-/* Acciones */
+.badge.pendiente {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.badge.completado {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.badge.cancelado {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ====== ACCIONES ====== */
 .acciones {
   display: flex;
-  gap: 1rem;
+  gap: 10px;
 }
 
 .btn-accion {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.25rem;
-  color: var(--primary);
+  gap: 5px;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 13px;
+  color: #0a7f86;
   font-weight: 500;
+  transition: 0.2s;
 }
 
 .btn-accion:hover {
-  text-decoration: underline;
+  color: #1d4ed8;
 }
 
-.diagnostico-cell {
-  max-width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--text-muted);
+/* ====== SIN RESULTADOS ====== */
+.sin-resultados {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  .busqueda-form {
+    flex-direction: column;
+  }
+
+  .tabla-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .tabla {
+    font-size: 13px;
+  }
 }
