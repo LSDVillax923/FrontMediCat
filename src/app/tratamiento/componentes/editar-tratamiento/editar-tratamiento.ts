@@ -51,6 +51,7 @@ export class EditarTratamiento implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly tratamientoRestService: TratamientoRestService,
     private readonly veterinarioRestService: VeterinarioRestService,
     private readonly drogaRestService: DrogaRestService,
     private readonly authService: AuthService,

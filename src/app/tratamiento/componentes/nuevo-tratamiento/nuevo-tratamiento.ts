@@ -54,7 +54,7 @@ export class NuevoTratamiento implements OnInit {
 
 
   constructor(
-        private readonly tratamientoRestService: TratamientoRestService,
+    private readonly tratamientoRestService: TratamientoRestService,
     private readonly mascotaRestService: MascotaRestService,
     private readonly veterinarioRestService: VeterinarioRestService,
     private readonly drogaRestService: DrogaRestService,
