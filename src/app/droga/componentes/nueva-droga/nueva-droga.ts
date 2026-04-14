@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { DrogaService } from '../../services/droga.service';
+import { DrogaCreateDto } from '../../../shared/api/backend-contracts';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { DrogaRestService } from '../../services/droga-rest.service';
 
 interface NuevaDrogaForm {
   nombre: string;
@@ -32,7 +33,7 @@ export class NuevaDroga {
     dosis: '',
   };
 
-  constructor(private readonly drogaService: DrogaService) {}
+constructor(private readonly drogaRestService: DrogaRestService) {}
 
   guardarDroga(): void {
     const { nombre, descripcion, unidad, stock, dosis } = this.formData;
@@ -42,9 +43,16 @@ export class NuevaDroga {
       return;
     }
 
-    this.drogaService.add({ nombre, descripcion, unidad, stock, dosis });
-    this.mensaje = `${nombre} fue agregado al inventario.`;
-    this.error = '';
-    this.formData = { nombre: '', descripcion: '', unidad: '', stock: 0, dosis: '' };
-  }
+    const payload: DrogaCreateDto = { nombre, descripcion, unidad, stock, dosis };
+    this.drogaRestService.create(payload).subscribe({
+      next: () => {
+        this.mensaje = `${nombre} fue agregado al inventario.`;
+        this.error = '';
+        this.formData = { nombre: '', descripcion: '', unidad: '', stock: 0, dosis: '' };
+      },
+      error: () => {
+        this.error = 'No se pudo agregar el medicamento.';
+      },
+    });
+}
 }

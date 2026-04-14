@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { VeterinarioService } from '../../services/veterinario.service';
-import { Veterinario } from '../../veterinario';
+import { VeterinarioMapper } from '../../../shared/api/model-mappers';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { Veterinario } from '../../veterinario';
+import { VeterinarioRestService } from '../../services/veterinario-rest.service';
 
 @Component({
   selector: 'app-ver-veterinario',
@@ -12,14 +13,24 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
   templateUrl: './ver-veterinario.html',
   styleUrl: './ver-veterinario.css',
 })
-export class VerVeterinario {
+export class VerVeterinario implements OnInit {
   veterinario: Veterinario | null = null;
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly veterinarioService: VeterinarioService,
-  ) {
+    private readonly veterinarioRestService: VeterinarioRestService,
+  ) {}
+
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.veterinario = this.veterinarioService.getById(id);
+
+    this.veterinarioRestService.getById(id).subscribe({
+      next: (vetDto) => {
+        this.veterinario = VeterinarioMapper.fromDto(vetDto);
+      },
+      error: () => {
+        this.veterinario = null;
+      },
+    });
   }
 }

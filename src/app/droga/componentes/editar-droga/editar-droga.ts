@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DrogaService } from '../../services/droga.service';
-import { AuthService } from '../../../user/services/auth.service';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { DrogaUpdateDto } from '../../../shared/api/backend-contracts';
+import { DrogaMapper } from '../../../shared/api/model-mappers';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { AuthService } from '../../../user/services/auth.service';
+import { DrogaRestService } from '../../services/droga-rest.service';
 
 interface DrogaEditable {
   id: number;
@@ -22,7 +24,8 @@ interface DrogaEditable {
   templateUrl: './editar-droga.html',
   styleUrl: './editar-droga.css',
 })
-export class EditarDroga {
+
+export class EditarDroga implements OnInit {
   formData: DrogaEditable = { id: 0, nombre: '', descripcion: '', unidad: '', stock: 0, dosis: '' };
   mensaje = '';
   error = '';
@@ -30,25 +33,29 @@ export class EditarDroga {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly drogaService: DrogaService,
+    private readonly drogaRestService: DrogaRestService,
     private readonly authService: AuthService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    const droga = this.drogaService.getById(id);
-    if (droga) {
-      this.formData = {
-        id: droga.id,
-        nombre: droga.nombre,
-        descripcion: droga.descripcion ?? '',
-        unidad: droga.unidad ?? '',
-        stock: droga.stock ?? 0,
-        dosis: droga.dosis ?? '',
-      };
-    } else {
-      this.noEncontrado = true;
-      this.error = 'No se encontró el medicamento solicitado.';
-    }
+    this.drogaRestService.getById(id).subscribe({
+      next: (drogaDto) => {
+        const droga = DrogaMapper.fromDto(drogaDto);
+        this.formData = {
+          id: droga.id,
+          nombre: droga.nombre,
+          descripcion: droga.descripcion ?? '',
+          unidad: droga.unidad ?? '',
+          stock: droga.stock ?? 0,
+          dosis: droga.dosis ?? '',
+        };
+      },
+      error: () => {
+        this.noEncontrado = true;
+        this.error = 'No se encontró el medicamento solicitado.';
+      },
+    });
   }
 
   get esAdmin(): boolean {
@@ -62,15 +69,22 @@ export class EditarDroga {
       return;
     }
 
-    const cambios: Partial<DrogaEditable> = { nombre, descripcion, unidad, stock };
+    const cambios: DrogaUpdateDto = { nombre, descripcion, unidad, stock };
 
-    // Admin no puede modificar la dosis
+   
     if (!this.esAdmin) {
-      cambios['dosis'] = dosis;
+      cambios.dosis = dosis;
     }
 
-    this.drogaService.update(id, cambios);
-    this.mensaje = `${nombre} fue actualizado correctamente.`;
-    this.error = '';
+   
+    this.drogaRestService.update(id, cambios).subscribe({
+      next: () => {
+        this.mensaje = `${nombre} fue actualizado correctamente.`;
+        this.error = '';
+      },
+      error: () => {
+        this.error = 'No se pudo actualizar el medicamento.';
+      },
+    });
   }
 }

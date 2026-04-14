@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { DrogaService } from '../../services/droga.service';
+
+import { DrogaMapper } from '../../../shared/api/model-mappers';
+import { Navbar } from '../../../shared/components/navbar/navbar';
 import { AuthService } from '../../../user/services/auth.service';
 import { Droga } from '../../droga';
-import { Navbar } from '../../../shared/components/navbar/navbar';
+
+import { DrogaRestService } from '../../services/droga-rest.service';
 
 @Component({
   selector: 'app-listar-drogas',
@@ -14,15 +18,33 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
   templateUrl: './listar-drogas.html',
   styleUrl: './listar-drogas.css',
 })
-export class ListarDrogas {
+
+export class ListarDrogas implements OnInit {
   busqueda = '';
   mensaje = '';
   error = '';
+  private drogas: Droga[] = [];
 
   constructor(
-    private readonly drogaService: DrogaService,
+    private readonly drogaRestService: DrogaRestService,
     private readonly authService: AuthService,
   ) {}
+
+  ngOnInit(): void {
+    this.cargarDrogas();
+  }
+
+  private cargarDrogas(): void {
+    this.drogaRestService.getAll().subscribe({
+      next: (drogasDto) => {
+        this.drogas = drogasDto.map(DrogaMapper.fromDto);
+      },
+      error: () => {
+        this.error = 'No se pudieron cargar los medicamentos desde el servidor.';
+        this.drogas = [];
+      },
+    });
+  }
 
   get esAdmin(): boolean {
     return this.authService.getSesion()?.rol === 'admin';
@@ -34,7 +56,16 @@ export class ListarDrogas {
   }
 
   get drogasFiltradas(): Droga[] {
-    return this.drogaService.search(this.busqueda);
+    
+    const filtro = this.busqueda.trim().toLowerCase();
+    if (!filtro) return this.drogas;
+
+    return this.drogas.filter(
+      (d) =>
+        d.nombre.toLowerCase().includes(filtro) ||
+        d.descripcion.toLowerCase().includes(filtro) ||
+        d.unidad.toLowerCase().includes(filtro),
+    );
   }
 
   stockClase(stock: number): string {
@@ -45,12 +76,16 @@ export class ListarDrogas {
 
   eliminarDroga(droga: Droga): void {
     if (!confirm(`¿Eliminar ${droga.nombre} del inventario?`)) return;
-    const ok = this.drogaService.delete(droga.id);
-    if (ok) {
-      this.mensaje = `${droga.nombre} fue eliminado del inventario.`;
-      this.error = '';
-    } else {
-      this.error = 'No se pudo eliminar el medicamento.';
-    }
+
+    this.drogaRestService.delete(droga.id).subscribe({
+      next: () => {
+        this.mensaje = `${droga.nombre} fue eliminado del inventario.`;
+        this.error = '';
+        this.cargarDrogas();
+      },
+      error: () => {
+        this.error = 'No se pudo eliminar el medicamento.';
+      },
+    });
   }
 }

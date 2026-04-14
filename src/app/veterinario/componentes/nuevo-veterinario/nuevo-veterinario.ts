@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { VeterinarioService } from '../../services/veterinario.service';
+import { VeterinarioCreateDto } from '../../../shared/api/backend-contracts';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { VeterinarioRestService } from '../../services/veterinario-rest.service';
 
 interface NuevoVeterinarioForm {
   nombre: string;
@@ -49,7 +50,7 @@ export class NuevoVeterinario {
     numeroLicencia: '',
   };
 
-  constructor(private readonly veterinarioService: VeterinarioService) {}
+  constructor(private readonly veterinarioRestService: VeterinarioRestService) {}
 
   guardarVeterinario(): void {
     const { nombre, apellido, correo, celular, contrasenia, especialidad, numeroLicencia } = this.formData;
@@ -60,9 +61,34 @@ export class NuevoVeterinario {
       return;
     }
 
-    this.veterinarioService.add({ nombre, apellido, correo, celular, contrasenia, especialidad, numeroLicencia });
-    this.mensaje = `${nombre} ${apellido} fue registrado correctamente.`;
-    this.error = '';
-    this.formData = { nombre: '', apellido: '', correo: '', celular: '', contrasenia: '', especialidad: '', numeroLicencia: '' };
+    const payload: VeterinarioCreateDto = {
+      nombre,
+      apellido,
+      correo,
+      celular,
+      contrasenia,
+      especialidad,
+      numeroLicencia,
+    };
+
+    this.veterinarioRestService.create(payload).subscribe({
+      next: () => {
+        this.mensaje = `${nombre} ${apellido} fue registrado correctamente.`;
+        this.error = '';
+        this.formData = {
+          nombre: '',
+          apellido: '',
+          correo: '',
+          celular: '',
+          contrasenia: '',
+          especialidad: '',
+          numeroLicencia: '',
+        };
+      },
+      error: () => {
+        this.error = 'No se pudo registrar el veterinario.';
+        this.mensaje = '';
+      },
+    });
   }
 }

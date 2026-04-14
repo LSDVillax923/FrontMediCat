@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ClienteService } from '../../services/cliente.service';
-import { AuthService } from '../../../user/services/auth.service';
+import { ClienteUpdateDto } from '../../../shared/api/backend-contracts';
+import { ClienteMapper } from '../../../shared/api/model-mappers';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { AuthService } from '../../../user/services/auth.service';
+import { ClienteRestService } from '../../services/cliente-rest.service';
 
 interface ClienteEditable {
   id: number;
@@ -22,7 +24,7 @@ interface ClienteEditable {
   templateUrl: './editar-cliente.html',
   styleUrl: './editar-cliente.css',
 })
-export class EditarCliente {
+export class EditarCliente implements OnInit {
   formData: ClienteEditable = { id: 0, nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
   mensaje = '';
   error = '';
@@ -32,28 +34,33 @@ export class EditarCliente {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly clienteService: ClienteService,
+    private readonly clienteRestService: ClienteRestService,
     private readonly authService: AuthService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     const paramId = this.route.snapshot.paramMap.get('id');
     const sesion = this.authService.getSesion();
     const id = paramId ? Number(paramId) : sesion?.id ?? 0;
     this.esPerfil = !paramId;
 
-    const cliente = this.clienteService.getById(id);
-    if (cliente) {
-      this.formData = {
-        id: cliente.id,
-        nombre: cliente.nombre,
-        apellido: cliente.apellido,
-        correo: cliente.correo,
-        celular: cliente.celular,
-        contrasenia: '',
-      };
-    } else {
-      this.noEncontrado = true;
-      this.error = 'No se encontró el cliente solicitado.';
-    }
+    this.clienteRestService.getById(id).subscribe({
+      next: (clienteDto) => {
+        const cliente = ClienteMapper.fromDto(clienteDto);
+        this.formData = {
+          id: cliente.id,
+          nombre: cliente.nombre,
+          apellido: cliente.apellido,
+          correo: cliente.correo,
+          celular: cliente.celular,
+          contrasenia: '',
+        };
+      },
+      error: () => {
+        this.noEncontrado = true;
+        this.error = 'No se encontró el cliente solicitado.';
+      },
+    });
   }
 
   guardarCambios(): void {
@@ -63,7 +70,7 @@ export class EditarCliente {
       return;
     }
 
-    const cambios: Partial<{ nombre: string; apellido: string; correo: string; celular: string; contrasenia: string }> = {
+    const cambios: ClienteUpdateDto = {
       nombre,
       apellido,
       correo,
@@ -71,12 +78,18 @@ export class EditarCliente {
     };
 
     if (contrasenia) {
-      cambios['contrasenia'] = contrasenia;
+      cambios.contrasenia = contrasenia;
     }
 
-    this.clienteService.update(id, cambios);
-    this.mensaje = `Los datos de ${nombre} ${apellido} fueron actualizados.`;
-    this.error = '';
+    this.clienteRestService.update(id, cambios).subscribe({
+      next: () => {
+        this.mensaje = `Los datos de ${nombre} ${apellido} fueron actualizados.`;
+        this.error = '';
+      },
+      error: () => {
+        this.error = 'No se pudo actualizar el cliente.';
+      },
+    });
   }
 
   volver(): void {

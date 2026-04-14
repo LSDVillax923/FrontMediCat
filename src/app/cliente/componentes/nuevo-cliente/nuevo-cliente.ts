@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ClienteService } from '../../services/cliente.service';
+import { ClienteCreateDto } from '../../../shared/api/backend-contracts';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { ClienteRestService } from '../../services/cliente-rest.service';
 
 interface NuevoClienteForm {
   nombre: string;
@@ -32,7 +33,7 @@ export class NuevoCliente {
     contrasenia: '',
   };
 
-  constructor(private readonly clienteService: ClienteService) {}
+  constructor(private readonly clienteRestService: ClienteRestService) {}
 
   guardarCliente(): void {
     const { nombre, apellido, correo, celular, contrasenia } = this.formData;
@@ -43,10 +44,17 @@ export class NuevoCliente {
       return;
     }
 
-    this.clienteService.add({ nombre, apellido, correo, celular, contrasenia });
-    this.mensaje = `${nombre} ${apellido} se registró correctamente.`;
-    this.error = '';
-
-    this.formData = { nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
+    const payload: ClienteCreateDto = { nombre, apellido, correo, celular, contrasenia };
+    this.clienteRestService.create(payload).subscribe({
+      next: () => {
+        this.mensaje = `${nombre} ${apellido} se registró correctamente.`;
+        this.error = '';
+        this.formData = { nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
+      },
+      error: () => {
+        this.error = 'No se pudo registrar el cliente.';
+        this.mensaje = '';
+      },
+    });
   }
 }

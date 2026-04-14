@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { VeterinarioService } from '../../services/veterinario.service';
-import { Veterinario } from '../../veterinario';
+import { VeterinarioMapper } from '../../../shared/api/model-mappers';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { Veterinario } from '../../veterinario';
+import { VeterinarioRestService } from '../../services/veterinario-rest.service';
 
 @Component({
   selector: 'app-listar-veterinarios',
@@ -13,25 +14,56 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
   templateUrl: './listar-veterinarios.html',
   styleUrl: './listar-veterinarios.css',
 })
-export class ListarVeterinarios {
+export class ListarVeterinarios implements OnInit {
   busqueda = '';
   mensaje = '';
   error = '';
+  private veterinarios: Veterinario[] = [];
 
-  constructor(private readonly veterinarioService: VeterinarioService) {}
+  constructor(private readonly veterinarioRestService: VeterinarioRestService) {}
+
+  ngOnInit(): void {
+    this.cargarVeterinarios();
+  }
+
+  private cargarVeterinarios(): void {
+    this.veterinarioRestService.getAll().subscribe({
+      next: (veterinariosDto) => {
+        this.veterinarios = veterinariosDto.map(VeterinarioMapper.fromDto);
+      },
+      error: () => {
+        this.error = 'No se pudieron cargar los veterinarios desde el servidor.';
+        this.veterinarios = [];
+      },
+    });
+  }
 
   get veterinariosFiltrados(): Veterinario[] {
-    return this.veterinarioService.search(this.busqueda);
+    const filtro = this.busqueda.trim().toLowerCase();
+    if (!filtro) return this.veterinarios;
+
+    return this.veterinarios.filter(
+      (v) =>
+        v.nombre.toLowerCase().includes(filtro) ||
+        v.apellido.toLowerCase().includes(filtro) ||
+        v.correo.toLowerCase().includes(filtro) ||
+        v.especialidad.toLowerCase().includes(filtro) ||
+        v.numeroLicencia.toLowerCase().includes(filtro),
+    );
   }
 
   eliminarVeterinario(vet: Veterinario): void {
     if (!confirm(`¿Eliminar a ${vet.nombre} ${vet.apellido}?`)) return;
-    const ok = this.veterinarioService.delete(vet.id);
-    if (ok) {
-      this.mensaje = `${vet.nombre} ${vet.apellido} fue eliminado correctamente.`;
-      this.error = '';
-    } else {
-      this.error = 'No se pudo eliminar el veterinario.';
-    }
+
+    this.veterinarioRestService.delete(vet.id).subscribe({
+      next: () => {
+        this.mensaje = `${vet.nombre} ${vet.apellido} fue eliminado correctamente.`;
+        this.error = '';
+        this.cargarVeterinarios();
+      },
+      error: () => {
+        this.error = 'No se pudo eliminar el veterinario.';
+      },
+    });
   }
 }

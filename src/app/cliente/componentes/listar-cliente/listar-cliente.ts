@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ClienteService } from '../../services/cliente.service';
 import { Cliente } from '../../cliente';
+import { ClienteRestService } from '../../services/cliente-rest.service';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { ClienteMapper } from '../../../shared/api/model-mappers';
 
 @Component({
   selector: 'app-listar-cliente',
@@ -13,18 +15,29 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
   templateUrl: './listar-cliente.html',
   styleUrl: './listar-cliente.css',
 })
-export class ListarCliente {
+
+export class ListarCliente implements OnInit {
   busqueda = '';
   mensaje = '';
   error = '';
-  clientes: Cliente[] = [];  // ← Propiedad declarada
+  clientes: Cliente[] = [];
 
-  constructor(private readonly clienteService: ClienteService) {
+  constructor(private readonly clienteRestService: ClienteRestService) {}
+
+  ngOnInit(): void {
     this.cargarClientes();
   }
 
   private cargarClientes(): void {
-    this.clientes = this.clienteService.getAll();
+    this.clienteRestService.getAll().subscribe({
+      next: (clientesDto) => {
+        this.clientes = clientesDto.map(ClienteMapper.fromDto);
+      },
+      error: () => {
+        this.error = 'No se pudieron cargar los clientes desde el servidor.';
+        this.clientes = [];
+      },
+    });
   }
 
   get clientesFiltrados(): Cliente[] {
@@ -37,7 +50,7 @@ export class ListarCliente {
         c.nombre.toLowerCase().includes(filtro) ||
         c.apellido.toLowerCase().includes(filtro) ||
         c.correo.toLowerCase().includes(filtro) ||
-        c.celular.toLowerCase().includes(filtro)
+        c.celular.toLowerCase().includes(filtro),
     );
   }
 
@@ -52,33 +65,36 @@ export class ListarCliente {
   eliminarCliente(cliente: Cliente): void {
     const totalMascotas = cliente.mascotas?.length || 0;
     
+
     let mensajeConfirmacion = '';
     if (totalMascotas > 0) {
-      mensajeConfirmacion = `⚠️ ¡ADVERTENCIA!\n\n` +
+      mensajeConfirmacion =
+        `⚠️ ¡ADVERTENCIA!\n\n` +
         `¿Estás seguro de eliminar a ${cliente.nombre} ${cliente.apellido}?\n\n` +
         `Esta acción ELIMINARÁ PERMANENTEMENTE:\n` +
         `• ${totalMascotas} mascota(s) asociada(s)\n` +
         `• Todos los tratamientos de esas mascotas\n\n` +
         `Esta acción no se puede deshacer.`;
     } else {
-      mensajeConfirmacion = `¿Eliminar a ${cliente.nombre} ${cliente.apellido}?\n\n` +
+      mensajeConfirmacion =
+        `¿Eliminar a ${cliente.nombre} ${cliente.apellido}?\n\n` +
         `Esta acción no se puede deshacer.`;
     }
 
     if (!confirm(mensajeConfirmacion)) return;
-    
-    const ok = this.clienteService.delete(cliente.id);
-    if (ok) {
-      let mensaje = `${cliente.nombre} ${cliente.apellido} fue eliminado correctamente.`;
-      if (totalMascotas > 0) {
-        mensaje += ` Se eliminaron ${totalMascotas} mascota(s) y sus tratamientos.`;
-      }
-      this.mensaje = mensaje;
-      this.error = '';
-      // Recargar la lista después de eliminar
-      this.cargarClientes();
-    } else {
-      this.error = 'No se pudo eliminar el cliente.';
-    }
+    this.clienteRestService.delete(cliente.id).subscribe({
+      next: () => {
+        let mensaje = `${cliente.nombre} ${cliente.apellido} fue eliminado correctamente.`;
+        if (totalMascotas > 0) {
+          mensaje += ` Se eliminaron ${totalMascotas} mascota(s) y sus tratamientos.`;
+        }
+        this.mensaje = mensaje;
+        this.error = '';
+        this.cargarClientes();
+      },
+      error: () => {
+        this.error = 'No se pudo eliminar el cliente.';
+      },
+    });
   }
 }

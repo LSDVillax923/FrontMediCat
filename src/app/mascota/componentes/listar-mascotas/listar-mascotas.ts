@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MascotaService } from '../../services/mascota.service';
+import { MascotaMapper } from '../../../shared/api/model-mappers';
+import { Navbar } from '../../../shared/components/navbar/navbar';
 import { TratamientoService } from '../../../tratamiento/services/tratamiento-service';
 import { AuthService } from '../../../user/services/auth.service';
 import { Mascota } from '../../mascota';
-import { Navbar } from '../../../shared/components/navbar/navbar';
+import { MascotaRestService } from '../../services/mascota-rest.service';
 
 @Component({
   selector: 'app-listar-mascotas',
@@ -15,7 +16,7 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
   templateUrl: './listar-mascotas.html',
   styleUrl: './listar-mascotas.css',
 })
-export class ListarMascotas {
+export class ListarMascotas implements OnInit {
   busqueda = '';
   estadoSeleccionado = '';
   mensaje = '';
@@ -25,60 +26,78 @@ export class ListarMascotas {
   private todasMascotas: Mascota[] = [];
 
   constructor(
-    private readonly mascotaService: MascotaService,
+    private readonly mascotaRestService: MascotaRestService,
     private readonly tratamientoService: TratamientoService,
     private readonly authService: AuthService,
     private readonly route: ActivatedRoute,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     const sesion = this.authService.getSesion();
-    this.todasMascotas = this.mascotaService.getAll();
 
     if (sesion?.rol === 'cliente') {
       this.clienteId = sesion.id;
       this.esCliente = true;
+      this.cargarMascotas();
     } else {
       this.route.paramMap.subscribe((params) => {
         const id = params.get('id');
         this.clienteId = id ? Number(id) : null;
+        this.cargarMascotas();
       });
     }
+  }
+
+  private cargarMascotas(): void {
+    this.mascotaRestService.getAll().subscribe({
+      next: (mascotasDto) => {
+        this.todasMascotas = mascotasDto.map(MascotaMapper.fromDto);
+      },
+      error: () => {
+        this.error = 'No se pudieron cargar las mascotas desde el servidor.';
+        this.todasMascotas = [];
+      },
+    });
   }
 
   get mascotasFiltradas(): Mascota[] {
     const filtroTexto = this.busqueda.trim().toLowerCase();
     
+
     return this.todasMascotas.filter((mascota) => {
       const coincideCliente = !this.clienteId || mascota.clienteId === this.clienteId;
       
-      const coincideTexto = !filtroTexto ||
+
+      const coincideTexto =
+        !filtroTexto ||
         mascota.nombre.toLowerCase().includes(filtroTexto) ||
         mascota.raza.toLowerCase().includes(filtroTexto) ||
         mascota.especie.toLowerCase().includes(filtroTexto) ||
         (mascota.propietario?.toLowerCase().includes(filtroTexto) ?? false);
       
+
       const coincideEstado = !this.estadoSeleccionado || mascota.estado === this.estadoSeleccionado;
       
+
       return coincideCliente && coincideTexto && coincideEstado;
     });
   }
-
-  get totalMascotas(): number { 
-    return this.mascotasFiltradas.length; 
+  get totalMascotas(): number {
+    return this.mascotasFiltradas.length;
   }
 
-  get saludables(): number { 
-    return this.mascotasFiltradas.filter((m) => m.estado === 'Activa').length; 
+  get saludables(): number {
+    return this.mascotasFiltradas.filter((m) => m.estado === 'Activa').length;
   }
 
-  get tratamiento(): number { 
-    return this.mascotasFiltradas.filter((m) => m.estado === 'Tratamiento').length; 
+
+  get tratamiento(): number {
+    return this.mascotasFiltradas.filter((m) => m.estado === 'Tratamiento').length;
+  }
+  get inactivas(): number {
+    return this.mascotasFiltradas.filter((m) => m.estado === 'Inactiva').length;
   }
 
-  get inactivas(): number { 
-    return this.mascotasFiltradas.filter((m) => m.estado === 'Inactiva').length; 
-  }
-
-  // Alias para mantener compatibilidad con el HTML
   get enTratamiento(): number {
     return this.tratamiento;
   }
@@ -91,9 +110,7 @@ export class ListarMascotas {
     this.busqueda = value;
   }
 
-  aplicarFiltros(): void {
-    // Los filtros ya se aplican en el getter
-  }
+  aplicarFiltros(): void {}
 
   limpiarFiltros(): void {
     this.busqueda = '';
@@ -102,16 +119,19 @@ export class ListarMascotas {
 
   desactivarMascota(mascota: Mascota): void {
     if (!confirm(`¿Desactivar a ${mascota.nombre}? Esto la marcará como Inactiva.`)) return;
-    
-    this.mascotaService.desactivar(mascota.id);
-    this.mensaje = `${mascota.nombre} fue desactivada correctamente.`;
-    this.error = '';
-    
-    // Actualizar la lista local
-    this.todasMascotas = this.mascotaService.getAll();
+
+    this.mascotaRestService.patch(mascota.id, { estado: 'Inactiva' }).subscribe({
+      next: () => {
+        this.mensaje = `${mascota.nombre} fue desactivada correctamente.`;
+        this.error = '';
+        this.cargarMascotas();
+      },
+      error: () => {
+        this.error = 'No se pudo desactivar la mascota.';
+      },
+    });
   }
 
-  // Método para eliminar permanentemente
   eliminarMascotaPermanente(mascota: Mascota): void {
     const tratamientosCount = this.tratamientoService.getByMascotaId(mascota.id).length;
     const mensaje = tratamientosCount > 0
@@ -120,18 +140,20 @@ export class ListarMascotas {
 
     if (!confirm(mensaje)) return;
     
-    const ok = this.mascotaService.delete(mascota.id);
-    if (ok) {
-      this.mensaje = `${mascota.nombre} fue eliminada permanentemente.`;
-      this.error = '';
-      this.todasMascotas = this.mascotaService.getAll();
-    } else {
-      this.error = 'No se pudo eliminar la mascota.';
-    }
+    this.mascotaRestService.delete(mascota.id).subscribe({
+      next: () => {
+        this.mensaje = `${mascota.nombre} fue eliminada permanentemente.`;
+        this.error = '';
+        this.cargarMascotas();
+      },
+      error: () => {
+        this.error = 'No se pudo eliminar la mascota.';
+      },
+    });
   }
 
-  // Alias para compatibilidad
   borrarMascota(mascota: Mascota): void {
     this.desactivarMascota(mascota);
   }
-}
+
+} 
