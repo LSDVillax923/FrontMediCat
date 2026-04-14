@@ -1,118 +1,211 @@
-/* Reutilizamos las variables del diseño anterior o puedes añadirlas aquí */
 :root {
-  --primary: #4f46e5;
-  --bg-card: #ffffff;
-  --border: #e5e7eb;
-  --text-main: #111827;
-  --text-muted: #6b7280;
+  --color-primario: #0a7f86;
+  --color-primario-oscuro: #07686d;
+  --color-primario-claro: #6a8f93;
+  --color-fondo: #f2ede7;
+  --color-fondo-nav: #ece8e4;
+  --blanco: #ffffff;
+}
+/* Layout general */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
-/* Encabezado con botón de volver */
-.btn-volver {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
-  transition: color 0.2s;
-}
-
-.btn-volver:hover {
-  color: var(--primary);
-}
-
-/* Tarjeta Principal de Detalle */
-.detalle-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+.dashboard {
   padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  margin-bottom: 2rem;
+  max-width: 1100px;
+  margin: auto;
 }
 
-.detalle-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 1.5rem;
+/* Header */
+.dashboard-header {
   margin-bottom: 1.5rem;
 }
 
-.detalle-header h2 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
-  color: var(--text-main);
+.dashboard-title {
+  font-size: 1.8rem;
+  margin-top: 0.5rem;
+  color: #07686d;
 }
 
-/* Grid de Información */
+/* Botón volver */
+.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  color:#f2ede7;
+  background-color: #07686d;
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-volver:hover {
+  background-color: #0a7f86;
+  color: #ffffff;
+}
+
+/* Cards */
+.detalle-card,
+.tabla-card,
+.form-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+/* Header de card */
+.detalle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.detalle-header h2 {
+  margin: 0;
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+/* Estados */
+.badge.completado {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.pendiente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge.cancelado {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Info */
 .detalle-info {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding: 1.25rem;
 }
 
 .detalle-campo {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
 }
 
 .detalle-label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  font-weight: 600;
+  font-size: 0.8rem;
+  color: #000000;
+  margin-bottom: 0.2rem;
 }
 
-.detalle-campo span:not(.detalle-label) {
-  font-size: 1rem;
-  color: var(--text-main);
-  font-weight: 500;
+.full-width {
+  grid-column: span 2;
 }
 
-/* Caso especial para Observaciones (Ancho completo) */
-.detalle-campo.full-width {
-  grid-column: 1 / -1;
-  background: #f9fafb; /* Fondo sutil para diferenciar notas */
-  padding: 1rem;
+/* Botones */
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.7rem;
   border-radius: 8px;
-  border-left: 4px solid #cbd5e1;
+  font-size: 0.85rem;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-/* Botón de Editar con estilo Outline */
 .btn-accion--outline {
-  border: 1px solid var(--border);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  background: white;
-  color: var(--text-main);
-  transition: all 0.2s;
+  border: 1px solid var(--color-primary);
+  color: #0a7f86;
+  background-color: #ffffff;
 }
 
 .btn-accion--outline:hover {
-  background: #f9fafb;
-  border-color: var(--primary);
-  color: var(--primary);
-  text-decoration: none;
+  background: #0a7f86;
+  color: #ffffff;
 }
 
-/* Ajustes para la tabla de medicamentos dentro del detalle */
-.tabla-card h2.dashboard-subtitle {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-main);
+/* Tabla */
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-/* Badge (Asegúrate de tener estos del CSS anterior) */
-.badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  display: inline-block;
+.tabla th,
+.tabla td {
+  text-align: left;
+  padding: 0.9rem 1.2rem;
+}
+
+.tabla thead {
+  background: #0a7f86;
+  color: #ffffff;
+}
+
+.tabla th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.tabla tbody tr {
+  border-top: 1px solid var(--color-border);
+}
+
+.tabla tbody tr:hover {
+  background:#ece8e4;
+}
+
+/* Sin medicamentos */
+.sin-drogas {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--color-text-secondary);
+}
+
+/* Alert */
+.alert {
+  padding: 0.8rem;
+  border-radius: 8px;
+}
+
+.alert-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .detalle-info {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
+
+  .dashboard {
+    padding: 1rem;
+  }
 }

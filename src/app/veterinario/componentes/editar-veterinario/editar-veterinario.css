@@ -152,6 +152,23 @@ input:focus, select:focus {
 .btn-guardar:hover { background-color: #07686d; }
 .btn-cancelar:hover { background-color:#07686d; color: #ffffff; }
 
+.alert {
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.alert-success {
+  background-color: #07686d;
+    color: #ffffff;
+}
+
+.alert-error {
+  background-color: #fdecea;
+  color: #c62828;
+}
+
 /* Responsive: en celulares se pone en una sola columna */
 @media (max-width: 640px) {
     .form-grid { grid-template-columns: 1fr; }
