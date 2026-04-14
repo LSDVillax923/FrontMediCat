@@ -29,8 +29,7 @@ export class ListarTratamientos implements OnInit {
     private readonly authService: AuthService,
     private readonly route: ActivatedRoute,
   ) {}
-
-    
+  
   ngOnInit(): void {
     this.cargarTratamientos();
   }

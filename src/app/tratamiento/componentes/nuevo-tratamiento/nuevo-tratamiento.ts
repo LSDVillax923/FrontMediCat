@@ -19,8 +19,6 @@ import {
   VeterinarioMapper,
 } from '../../../shared/api/model-mappers';
 
-
-
 interface NuevoTratamientoForm {
   mascotaId: number;
   mascota: string;
@@ -129,9 +127,8 @@ export class NuevoTratamiento implements OnInit {
     if (vet) {
       this.formData.veterinario = `${vet.nombre} ${vet.apellido}`;
       return;
-    
     }
-     this.formData.veterinario = '';
+    this.formData.veterinario = '';
   }
 
   agregarDroga(): void {

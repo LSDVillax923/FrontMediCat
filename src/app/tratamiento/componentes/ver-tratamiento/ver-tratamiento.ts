@@ -16,7 +16,7 @@ import { TratamientoMapper } from '../../../shared/api/model-mappers';
 })
 export class VerTratamiento implements OnInit {
   tratamiento: Tratamiento | null = null;
-   cargando = false;
+  cargando = false;
 
   constructor(
     private readonly route: ActivatedRoute,
