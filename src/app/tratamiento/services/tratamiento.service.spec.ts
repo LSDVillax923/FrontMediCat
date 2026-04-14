@@ -1,16 +1,19 @@
-import { TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import {
+  TratamientoCreateDto,
+  TratamientoDto,
+  TratamientoUpdateDto,
+} from '../../shared/api/backend-contracts';
+import { BaseCrudRestService } from '../../shared/api/base-crud-rest.service';
+import { REST_ENDPOINTS } from '../../shared/api/rest-endpoints';
 
-import { TratamientoService } from './tratamiento.service';
-
-describe('TratamientoService', () => {
-  let service: TratamientoService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(TratamientoService);
-  });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+@Injectable({ providedIn: 'root' })
+export class TratamientoRestService extends BaseCrudRestService<
+  TratamientoDto,
+  TratamientoCreateDto,
+  TratamientoUpdateDto
+> {
+  constructor() {
+    super(REST_ENDPOINTS.tratamientos);
+  }
+}

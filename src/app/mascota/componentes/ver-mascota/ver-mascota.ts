@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MascotaService } from '../../services/mascota.service';
-import { TratamientoService } from '../../../tratamiento/services/tratamiento.service';
+import { TratamientoService } from '../../../tratamiento/services/tratamiento-service';
 import { AuthService } from '../../../user/services/auth.service';
 import { Mascota } from '../../mascota';
 import { Tratamiento } from '../../../tratamiento/tratamiento';

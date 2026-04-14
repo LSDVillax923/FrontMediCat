@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Cliente } from '../cliente';
 import { CLIENTES_MOCK } from '../../shared/data/mock-data';
 import { MascotaService } from '../../mascota/services/mascota.service';
-import { TratamientoService } from '../../tratamiento/services/tratamiento.service';
+import { TratamientoService } from '../../tratamiento/services/tratamiento-service';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {

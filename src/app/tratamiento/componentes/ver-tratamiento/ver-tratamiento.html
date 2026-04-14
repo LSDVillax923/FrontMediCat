@@ -9,8 +9,10 @@
     <h1 class="dashboard-title">Detalle del Tratamiento</h1>
   </section>
 
-  <ng-container *ngIf="tratamiento; else noEncontrado">
+  <p *ngIf="cargando" class="alert">Cargando tratamiento...</p>
 
+  <ng-container *ngIf="!cargando && tratamiento; else noEncontrado">
+    
     <section class="detalle-card">
       <div class="detalle-header">
         <div>

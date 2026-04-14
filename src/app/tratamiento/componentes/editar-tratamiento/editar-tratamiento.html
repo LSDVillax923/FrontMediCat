@@ -12,6 +12,7 @@
 
   <p *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</p>
   <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+  <p *ngIf="cargando" class="alert">Procesando solicitud...</p>
 
   <div class="form-card" *ngIf="!noEncontrado">
     <form (ngSubmit)="guardarCambios()">

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { TratamientoService } from '../../services/tratamiento.service';
 import { AuthService } from '../../../user/services/auth.service';
 import { Tratamiento } from '../../tratamiento';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { TratamientoRestService } from '../../services/tratamiento-rest.service';
+import { TratamientoMapper } from '../../../shared/api/model-mappers';
 
 @Component({
   selector: 'app-ver-tratamiento',
@@ -13,16 +14,33 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
   templateUrl: './ver-tratamiento.html',
   styleUrl: './ver-tratamiento.css',
 })
-export class VerTratamiento {
+export class VerTratamiento implements OnInit {
   tratamiento: Tratamiento | null = null;
+   cargando = false;
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly tratamientoService: TratamientoService,
+    private readonly tratamientoRestService: TratamientoRestService,
     private readonly authService: AuthService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+    
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.tratamiento = this.tratamientoService.getById(id);
+    if (!id) return;
+
+    this.cargando = true;
+    this.tratamientoRestService.getById(id).subscribe({
+      next: (tratamientoDto) => {
+        this.tratamiento = TratamientoMapper.fromDto(tratamientoDto);
+        this.cargando = false;
+      },
+      error: () => {
+        this.tratamiento = null;
+        this.cargando = false;
+      },
+    });
+
   }
 
   get puedeEditar(): boolean {
@@ -32,10 +50,10 @@ export class VerTratamiento {
 
   estadoClase(estado: string): string {
     const map: Record<string, string> = {
-      Activo:     'badge-activo',
+      Activo: 'badge-activo',
       Completado: 'badge-activo',
-      Pendiente:  'badge-warning',
-      Cancelado:  'badge-danger',
+      Pendiente: 'badge-warning',
+      Cancelado: 'badge-danger',
     };
     return map[estado] ?? '';
   }

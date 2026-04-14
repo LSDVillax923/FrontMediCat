@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MascotaService } from '../../services/mascota.service';
-import { TratamientoService } from '../../../tratamiento/services/tratamiento.service';
+import { TratamientoService } from '../../../tratamiento/services/tratamiento-service';
 import { AuthService } from '../../../user/services/auth.service';
 import { Mascota } from '../../mascota';
 import { Navbar } from '../../../shared/components/navbar/navbar';
