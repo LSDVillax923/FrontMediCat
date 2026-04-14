@@ -12,7 +12,7 @@
 
 /* El contenedor principal de tu HTML ahora controla el fondo de la página */
 .dashboard {
-    background-color: var(--color-fondo);
+    background-color: #f2ede7;
     min-height: 100vh; /* Para que el color ocupe todo el alto de la pantalla */
     margin: 0;
     padding: 40px 20px;
@@ -32,27 +32,41 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: var(--color-primario);
+    color: #07686d;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 600;
     margin-bottom: 1rem;
+    background-color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+}
+
+.btn-volver:hover {
+    background-color: #07686d;
+    color: #ffffff;
 }
 
 .dashboard-title {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--color-primario-oscuro);
+    color:#07686d;
+    background-color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     margin: 0;
 }
 
 .dashboard-subtitle {
-    color: var(--text-muted);
+    color: #000000;
 }
 
 /* La tarjeta blanca donde vive el formulario */
 .form-card {
-    background-color: var(--blanco);
+    background-color: #ffffff;
     padding: 40px;
     border-radius: 20px;
     width: 100%;
@@ -83,7 +97,7 @@
 label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #475569;
+    color: #000000;
 }
 
 input, select {
@@ -91,14 +105,14 @@ input, select {
     border: 1.5px solid var(--color-fondo-nav);
     border-radius: 12px;
     font-size: 1rem;
-    background-color: #fcfcfc;
+    background-color: #f2ede7;
     transition: all 0.3s;
 }
 
 input:focus, select:focus {
     outline: none;
-    border-color: var(--color-primario);
-    background-color: var(--blanco);
+    border-color:  #000000;
+    background-color:  #f2ede7;
     box-shadow: 0 0 0 4px rgba(10, 127, 134, 0.1);
 }
 
@@ -126,17 +140,17 @@ input:focus, select:focus {
 }
 
 .btn-guardar {
-    background-color: var(--color-primario);
-    color: var(--blanco);
+    background-color: #07686d;
+    color: #ffffff;
 }
 
 .btn-cancelar {
-    background-color: var(--color-fondo-nav);
-    color: var(--color-primario-oscuro);
+    background-color:#07686d;
+    color: #ffffff;
 }
 
-.btn-guardar:hover { background-color: var(--color-primario-oscuro); }
-.btn-cancelar:hover { background-color: var(--color-primario-claro); color: white; }
+.btn-guardar:hover { background-color: #07686d; }
+.btn-cancelar:hover { background-color:#07686d; color: #ffffff; }
 
 /* Responsive: en celulares se pone en una sola columna */
 @media (max-width: 640px) {

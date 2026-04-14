@@ -28,10 +28,14 @@ body {
   font-size: 28px;
   font-weight: 600;
   color: #07686d;
+  background-color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-subtitle {
-  color: #07686d;
+  color:  #0a7f86;
   font-size: 14px;
 }
 
@@ -43,10 +47,15 @@ body {
   text-decoration: none;
   color: #07686d;
   font-size: 14px;
+  background-color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
 }
 
 .btn-volver:hover {
-  color: var(--color-primario-oscuro);
+  background-color: #07686d;
+  color: #ffffff;
 }
 
 /* Card */

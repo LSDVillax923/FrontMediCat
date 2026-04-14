@@ -188,7 +188,7 @@ tbody tr:hover {
 /* ACCIONES */
 .acciones {
   display: flex;
-  gap: 6px;
+  gap: 10px;
 }
 
 .btn-icono {
@@ -212,7 +212,7 @@ tbody tr:hover {
   width: 30px;
   height: 30px;
   border-radius: 6px;
-  border: 1px solid #e53935;
+  border: 10px solid #e53935;
   background: #fdecea;
   cursor: pointer;
   transition: all 0.2s ease;

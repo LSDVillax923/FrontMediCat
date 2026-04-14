@@ -16,12 +16,12 @@
 /* Header de la página */
 .dashboard-title {
   font-size: 2.5rem;
-  color: var(--color-primario);
+  color: #000000;
   margin-bottom: 5px;
 }
 
 .dashboard-subtitle {
-  color: var(--color-texto-secundario);
+  color: #000000;
   margin-bottom: 30px;
 }
 

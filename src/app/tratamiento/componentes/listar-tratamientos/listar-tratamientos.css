@@ -27,11 +27,11 @@ body {
 .dashboard-title {
   font-size: 28px;
   font-weight: 700;
-  color: #07686d;
+  color: #000000;
 }
 
 .dashboard-subtitle {
-  color: #6b7280;
+  color: #000000;
   margin-top: 5px;
 }
 
