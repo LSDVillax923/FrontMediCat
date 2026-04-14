@@ -11,7 +11,14 @@ import { TratamientoRestService } from '../../services/tratamiento-rest.service'
 import { MascotaRestService } from '../../../mascota/services/mascota-rest.service';
 import { VeterinarioRestService } from '../../../veterinario/services/veterinario-rest.service';
 import { DrogaRestService } from '../../../droga/services/droga-rest.service';
-import { DrogaMapper, MascotaMapper, VeterinarioMapper } from '../../../shared/api/model-mappers';
+
+import {
+  DrogaMapper,
+  MascotaMapper,
+  TratamientoMapper,
+  VeterinarioMapper,
+} from '../../../shared/api/model-mappers';
+
 
 
 interface NuevoTratamientoForm {
@@ -111,14 +118,20 @@ export class NuevoTratamiento implements OnInit {
     if (mascota) {
       this.formData.mascota = mascota.nombre;
       this.formData.clienteId = mascota.clienteId;
+      return;
     }
+    this.formData.mascota = '';
+    this.formData.clienteId = 0;
   }
 
   onVetChange(id: number): void {
     const vet = this.veterinarios.find((v) => v.id === id);
     if (vet) {
       this.formData.veterinario = `${vet.nombre} ${vet.apellido}`;
+      return;
+    
     }
+     this.formData.veterinario = '';
   }
 
   agregarDroga(): void {
@@ -154,7 +167,8 @@ export class NuevoTratamiento implements OnInit {
     }
 
     this.cargando = true;
-    this.tratamientoRestService.create({ ...this.formData }).subscribe({
+    const payload = TratamientoMapper.toDto({ ...this.formData, id: 0 });
+    this.tratamientoRestService.create(payload).subscribe({
       next: () => {
         this.mensaje = 'El tratamiento fue registrado correctamente.';
         this.error = '';

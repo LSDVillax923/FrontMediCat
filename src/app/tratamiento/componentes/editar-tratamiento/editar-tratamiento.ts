@@ -51,8 +51,6 @@ export class EditarTratamiento implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-
-      private readonly tratamientoRestService: TratamientoRestService,
     private readonly veterinarioRestService: VeterinarioRestService,
     private readonly drogaRestService: DrogaRestService,
     private readonly authService: AuthService,
@@ -62,7 +60,7 @@ export class EditarTratamiento implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-        if (!id) {
+      if (!id) {
       this.noEncontrado = true;
       this.error = 'No se encontró el tratamiento solicitado.';
       return;
@@ -113,17 +111,19 @@ export class EditarTratamiento implements OnInit {
     return this.authService.getSesion()?.rol === 'admin';
   }
 
-  onVetChange(id: number): void {
-
-       const vet = this.veterinarios.find((v) => v.id === id);
+  onVetChange(id: number): void { 
+    
+    const vet = this.veterinarios.find((v) => v.id === id);
     if (vet) {
       this.formData.veterinario = `${vet.nombre} ${vet.apellido}`;
+      return;
     }
+    this.formData.veterinario = '';
   }
 
   agregarDroga(): void {
 
-       const nuevoId = Math.max(0, ...this.formData.drogas.map((d) => d.id || 0)) + 1;
+    const nuevoId = Math.max(0, ...this.formData.drogas.map((d) => d.id || 0)) + 1;
     this.formData.drogas.push({
       id: nuevoId,
       drogaId: 0,
@@ -135,11 +135,11 @@ export class EditarTratamiento implements OnInit {
   }
 
   onDrogaChange(index: number, id: number): void {
-      const droga = this.drogas.find((d) => d.id === id);
+    const droga = this.drogas.find((d) => d.id === id);
     if (droga) {
       this.formData.drogas[index].nombreDroga = droga.nombre;
 
-            if (!this.esAdmin) {
+        if (!this.esAdmin) {
         this.formData.drogas[index].dosis = droga.dosis ?? '';
       }
     }
@@ -165,7 +165,7 @@ export class EditarTratamiento implements OnInit {
                dosis: this.tratamientoOriginal?.drogas[i]?.dosis ?? d.dosis,
       }));
        }
-         this.cargando = true;
+    this.cargando = true;
     this.tratamientoRestService.update(id, TratamientoMapper.toDto(this.formData)).subscribe({
       next: () => {
         this.mensaje = 'El tratamiento fue actualizado correctamente.';
