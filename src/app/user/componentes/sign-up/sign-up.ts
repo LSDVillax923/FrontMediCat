@@ -36,7 +36,7 @@ export class SignUp {
   error = '';
   cargando = false;
 
-  cconstructor(
+  constructor(
     private readonly router: Router,
     private readonly authRestService: AuthRestService,
   ) {}
