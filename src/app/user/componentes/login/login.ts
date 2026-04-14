@@ -3,9 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { AdminService } from '../../../admin/services/admin.service';
-import { ClienteService } from '../../../cliente/services/cliente.service';
-import { VeterinarioService } from '../../../veterinario/services/veterinario.service';
+import { AuthRestService } from '../../../shared/auth/auth-rest.service';
 
 @Component({
   selector: 'app-login',
@@ -24,9 +22,7 @@ export class Login {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService,
-    private readonly adminService: AdminService,
-    private readonly clienteService: ClienteService,
-    private readonly veterinarioService: VeterinarioService,
+      private readonly authRestService: AuthRestService,
   ) {}
 
   iniciarSesion(): void {
@@ -41,49 +37,29 @@ export class Login {
 
     this.cargando = true;
 
-    // 1. Verificar admin
-    const admin = this.adminService.validarCredenciales(correo, contrasenia);
-    if (admin) {
-      this.authService.setSesion({
-        id: admin.id,
-        nombre: admin.nombre,
-        correo: admin.correo,
-        rol: 'admin',
-      });
-      this.router.navigate(['/dashboard']);
-      return;
-    }
-
-    // 2. Verificar veterinario
-    const vet = this.veterinarioService.validarCredenciales(correo, contrasenia);
-    if (vet) {
-      this.authService.setSesion({
-        id: vet.id,
-        nombre: `${vet.nombre} ${vet.apellido}`,
-        correo: vet.correo,
-        rol: 'veterinario',
-      });
-      this.router.navigate(['/mascotas']);
-      return;
-    }
-
-    // 3. Verificar cliente
-    const clientes = this.clienteService.getAll();
-    const cliente = clientes.find(
-      (c) => c.correo.toLowerCase() === correo && c.contrasenia === contrasenia,
-    );
-    if (cliente) {
-      this.authService.setSesion({
-        id: cliente.id,
-        nombre: `${cliente.nombre} ${cliente.apellido}`,
-        correo: cliente.correo,
-        rol: 'cliente',
-      });
-      this.router.navigate(['/mis-mascotas']);
-      return;
-    }
-
-    this.error = 'Correo o contraseña incorrectos.';
-    this.cargando = false;
+      this.authRestService.login({ correo, contrasenia }).subscribe({
+      next: (sesion) => {
+        this.authService.setSesion({
+          id: sesion.id,
+          nombre: sesion.nombre,
+          correo: sesion.correo,
+          rol: sesion.rol,
+          token: sesion.token,
+        });
+               if (sesion.rol === 'admin') {
+          this.router.navigate(['/dashboard']);
+          return;
+        }
+        if (sesion.rol === 'veterinario') {
+          this.router.navigate(['/mascotas']);
+          return;
+        }
+        this.router.navigate(['/mis-mascotas']);
+      },
+      error: () => {
+        this.error = 'Correo o contraseña incorrectos.';
+        this.cargando = false;
+      },
+    });
   }
 }

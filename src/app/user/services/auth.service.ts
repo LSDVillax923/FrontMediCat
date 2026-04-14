@@ -5,6 +5,7 @@ export interface SesionActiva {
   nombre: string;
   correo: string;
   rol: 'admin' | 'cliente' | 'veterinario';
+  token?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -27,6 +28,10 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.SESSION_KEY);
+  }
+
+   getToken(): string | null {
+    return this.getSesion()?.token ?? null;
   }
 
   esAdmin(): boolean {

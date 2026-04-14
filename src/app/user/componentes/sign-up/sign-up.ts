@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthRestService } from '../../../shared/auth/auth-rest.service';
 
 interface RegistroForm {
   nombre: string;
@@ -33,8 +34,12 @@ export class SignUp {
 
   mensaje = '';
   error = '';
+  cargando = false;
 
-  constructor(private readonly router: Router) {}
+  cconstructor(
+    private readonly router: Router,
+    private readonly authRestService: AuthRestService,
+  ) {}
 
   registrar(): void {
     this.mensaje = '';
@@ -45,10 +50,28 @@ export class SignUp {
       return;
     }
 
-    this.mensaje = 'Cuenta creada correctamente. Redirigiendo al listado de clientes...';
+    this.cargando = true;
 
-    setTimeout(() => {
-      this.router.navigate(['/clientes']);
-    }, 1000);
+    this.authRestService
+      .register({
+        nombre: this.form.nombre.trim(),
+        apellido: this.form.apellido.trim(),
+        correo: this.form.correo.trim().toLowerCase(),
+        celular: this.form.celular.trim(),
+        contrasenia: this.form.contrasenia,
+      })
+      .subscribe({
+        next: () => {
+          this.mensaje = 'Cuenta creada correctamente. Ahora puedes iniciar sesión.';
+          this.cargando = false;
+          setTimeout(() => {
+            this.router.navigate(['/inicio/login']);
+          }, 1000);
+        },
+        error: () => {
+          this.error = 'No fue posible crear la cuenta. Verifica tus datos e intenta de nuevo.';
+          this.cargando = false;
+        },
+      });
   }
 }

@@ -1,19 +1,23 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import {
-  TratamientoCreateDto,
-  TratamientoDto,
-  TratamientoUpdateDto,
-} from '../../shared/api/backend-contracts';
-import { BaseCrudRestService } from '../../shared/api/base-crud-rest.service';
+    
+    AuthLoginRequestDto,
+  AuthLoginResponseDto,
+  AuthRegisterRequestDto,
+} from '../api/backend-contracts';
 import { REST_ENDPOINTS } from '../../shared/api/rest-endpoints';
 
 @Injectable({ providedIn: 'root' })
-export class TratamientoRestService extends BaseCrudRestService<
-  TratamientoDto,
-  TratamientoCreateDto,
-  TratamientoUpdateDto
-> {
-  constructor() {
-    super(REST_ENDPOINTS.tratamientos);
+export class AuthRestService {
+  constructor(private readonly http: HttpClient) {}
+
+  login(payload: AuthLoginRequestDto): Observable<AuthLoginResponseDto> {
+    return this.http.post<AuthLoginResponseDto>(`${REST_ENDPOINTS.auth}/login`, payload);
+  }
+
+  register(payload: AuthRegisterRequestDto): Observable<void> {
+    return this.http.post<void>(`${REST_ENDPOINTS.auth}/register`, payload);
   }
 }

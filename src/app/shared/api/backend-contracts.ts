@@ -96,6 +96,14 @@ export interface AuthLoginRequestDto {
   contrasenia: string;
 }
 
+export interface AuthRegisterRequestDto {
+  nombre: string;
+  apellido: string;
+  correo: string;
+  celular: string;
+  contrasenia: string;
+}
+
 export interface AuthLoginResponseDto {
   id: EntityId;
   nombre: string;
