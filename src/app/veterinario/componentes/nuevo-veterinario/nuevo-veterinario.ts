@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { VeterinarioCreateDto } from '../../../shared/api/backend-contracts';
+import { VeterinarioCreateDto } from '../../../shared/api/backend-contracts.ts';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { VeterinarioRestService } from '../../services/veterinario-rest.service';
 

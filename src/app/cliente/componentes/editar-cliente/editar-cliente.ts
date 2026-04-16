@@ -1,105 +1,103 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ClienteUpdateDto } from '../../../shared/api/backend-contracts';
-import { ClienteMapper } from '../../../shared/api/model-mappers';
-import { Navbar } from '../../../shared/components/navbar/navbar';
-import { AuthService } from '../../../user/services/auth.service';
+import { Cliente, ClienteRequest } from '../../../shared/api/backend-contracts';
 import { ClienteRestService } from '../../services/cliente-rest.service';
-
-interface ClienteEditable {
-  id: number;
-  nombre: string;
-  apellido: string;
-  correo: string;
-  celular: string;
-  contrasenia: string;
-}
 
 @Component({
   selector: 'app-editar-cliente',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, Navbar],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './editar-cliente.html',
-  styleUrl: './editar-cliente.css',
+  styleUrls: ['./editar-cliente.css']
 })
-export class EditarCliente implements OnInit {
-  formData: ClienteEditable = { id: 0, nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
-  mensaje = '';
-  error = '';
-  noEncontrado = false;
-  esPerfil = false;
+export class EditarClienteComponent implements OnInit {
+  
+  clienteForm: FormGroup;
+  loading = false;
+  error: string | null = null;
+  clienteId: number | null = null;
+  cliente: Cliente | null = null;
 
   constructor(
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
-    private readonly clienteRestService: ClienteRestService,
-    private readonly authService: AuthService,
-  ) {}
+    private fb: FormBuilder,
+    private clienteService: ClienteRestService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    this.clienteForm = this.fb.group({
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      correo: ['', [Validators.required, Validators.email]],
+      celular: ['', [Validators.required, Validators.minLength(10)]],
+      contrasenia: ['', Validators.minLength(6)]
+    });
+  }
 
   ngOnInit(): void {
-    const paramId = this.route.snapshot.paramMap.get('id');
-    const sesion = this.authService.getSesion();
-    const id = paramId ? Number(paramId) : sesion?.id ?? 0;
-    this.esPerfil = !paramId;
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.clienteId = +id;
+      this.cargarCliente();
+    }
+  }
 
-    this.clienteRestService.getById(id).subscribe({
-      next: (clienteDto) => {
-        const cliente = ClienteMapper.fromDto(clienteDto);
-        this.formData = {
-          id: cliente.id,
+  cargarCliente(): void {
+    if (!this.clienteId) return;
+    
+    this.loading = true;
+    this.clienteService.findById(this.clienteId).subscribe({
+      next: (cliente: Cliente) => {
+        this.cliente = cliente;
+        this.clienteForm.patchValue({
           nombre: cliente.nombre,
           apellido: cliente.apellido,
           correo: cliente.correo,
-          celular: cliente.celular,
-          contrasenia: '',
-        };
+          celular: cliente.celular
+        });
+        this.loading = false;
       },
-      error: () => {
-        this.noEncontrado = true;
-        this.error = 'No se encontró el cliente solicitado.';
-      },
+      error: (err: Error) => {
+        this.error = 'Error al cargar el cliente';
+        console.error(err);
+        this.loading = false;
+      }
     });
   }
 
-  guardarCambios(): void {
-    const { id, nombre, apellido, correo, celular, contrasenia } = this.formData;
-    if (!nombre || !apellido || !correo || !celular) {
-      this.error = 'Los campos nombre, apellido, correo y celular son obligatorios.';
+  onSubmit(): void {
+    if (this.clienteForm.invalid || !this.clienteId) {
+      this.clienteForm.markAllAsTouched();
       return;
     }
 
-    const cambios: ClienteUpdateDto = {
-      nombre,
-      apellido,
-      correo,
-      celular,
+    this.loading = true;
+    this.error = null;
+
+    const clienteData: ClienteRequest = {
+      ...this.clienteForm.value
     };
 
-    if (contrasenia) {
-      cambios.contrasenia = contrasenia;
+    // No enviar contraseña si está vacía
+    if (!clienteData.contrasenia) {
+      delete clienteData.contrasenia;
     }
 
-    this.clienteRestService.update(id, cambios).subscribe({
+    this.clienteService.update(this.clienteId, clienteData).subscribe({
       next: () => {
-        this.mensaje = `Los datos de ${nombre} ${apellido} fueron actualizados.`;
-        this.error = '';
+        this.router.navigate(['/clientes']);
       },
-      error: () => {
-        this.error = 'No se pudo actualizar el cliente.';
-      },
+      error: (err: Error) => {
+        this.error = 'Error al actualizar el cliente';
+        console.error(err);
+        this.loading = false;
+      }
     });
   }
 
-  volver(): void {
-    const sesion = this.authService.getSesion();
-    if (sesion?.rol === 'admin') {
-      this.router.navigate(this.esPerfil ? ['/dashboard'] : ['/clientes']);
-    } else if (sesion?.rol === 'cliente') {
-      this.router.navigate(['/mis-mascotas']);
-    } else {
-      this.router.navigate(['/inicio']);
-    }
+  isInvalid(controlName: string): boolean {
+    const control = this.clienteForm.get(controlName);
+    return !!(control && control.invalid && control.touched);
   }
 }

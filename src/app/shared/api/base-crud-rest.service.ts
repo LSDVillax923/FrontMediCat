@@ -1,33 +1,40 @@
-import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-export abstract class BaseCrudRestService<TRead, TCreate, TUpdate> {
-  protected readonly http = inject(HttpClient);
+@Injectable({ providedIn: 'root' })
+export abstract class BaseCrudRestService<T, TRequest = Partial<T>> {
+  
+  constructor(
+    protected http: HttpClient,
+    protected baseUrl: string
+  ) {}
 
-  protected constructor(protected readonly endpoint: string) {}
-
-  getAll(): Observable<TRead[]> {
-    return this.http.get<TRead[]>(this.endpoint);
+  findAll(params?: HttpParams | { [param: string]: string | number | boolean }): Observable<T[]> {
+    return this.http.get<T[]>(this.baseUrl, { params });
   }
 
-  getById(id: number): Observable<TRead> {
-    return this.http.get<TRead>(`${this.endpoint}/${id}`);
+  findById(id: number): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}/${id}`);
   }
 
-  create(payload: TCreate): Observable<TRead> {
-    return this.http.post<TRead>(this.endpoint, payload);
+  create(data: TRequest, extraParams?: Record<string, any>): Observable<T> {
+    let params: HttpParams | undefined;
+    if (extraParams) {
+      params = new HttpParams({ fromObject: extraParams as any });
+    }
+    return this.http.post<T>(this.baseUrl, data, { params });
   }
 
-  update(id: number, payload: TUpdate): Observable<TRead> {
-    return this.http.put<TRead>(`${this.endpoint}/${id}`, payload);
-  }
-
-  patch(id: number, payload: Partial<TUpdate>): Observable<TRead> {
-    return this.http.patch<TRead>(`${this.endpoint}/${id}`, payload);
+  update(id: number, data: TRequest): Observable<T> {
+    return this.http.put<T>(`${this.baseUrl}/${id}`, data);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.endpoint}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  patch(id: number, data: Partial<T>): Observable<T> {
+    return this.http.patch<T>(`${this.baseUrl}/${id}`, data);
   }
 }

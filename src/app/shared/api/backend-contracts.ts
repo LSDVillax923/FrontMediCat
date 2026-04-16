@@ -1,14 +1,34 @@
-import { Cliente } from '../../cliente/cliente';
-import { Droga } from '../../droga/droga';
-import { Mascota } from '../../mascota/mascota';
-import { Tratamiento } from '../../tratamiento/tratamiento';
-import { TratamientoDroga } from '../../tratamiento-droga/tratamiento-droga';
-import { Veterinario } from '../../veterinario/veterinario';
+// ============================================
+// ENTIDAD: Admin
+// ============================================
+export interface Admin {
+  id: number;
+  nombre: string;
+  correo: string;
+  contrasenia: string;
+}
 
-export type EntityId = number;
+export interface AdminRequest {
+  nombre: string;
+  correo: string;
+  contrasenia: string;
+}
 
-export interface ClienteDto {
-  id: EntityId;
+// ============================================
+// ENTIDAD: Cliente
+// ============================================
+export interface Cliente {
+  id: number;
+  nombre: string;
+  apellido: string;
+  correo: string;
+  contrasenia: string;
+  celular: string;
+  mascotas?: Mascota[];
+  citas?: Cita[];
+}
+
+export interface ClienteRequest {
   nombre: string;
   apellido: string;
   correo: string;
@@ -16,107 +36,201 @@ export interface ClienteDto {
   celular: string;
 }
 
-export type ClienteCreateDto = Omit<ClienteDto, 'id'>;
-export type ClienteUpdateDto = Partial<ClienteCreateDto>;
-
-export interface VeterinarioDto {
-  id: EntityId;
+// ============================================
+// ENTIDAD: Veterinario
+// ============================================
+export interface Veterinario {
+  id: number;
   nombre: string;
-  apellido: string;
-  correo: string;
-  contrasenia: string;
+  cedula: string;
   celular: string;
+  correo: string;
   especialidad: string;
-  numeroLicencia: string;
+  contrasenia: string;
+  imageUrl: string;
+  estado: 'activo' | 'inactivo';
+  numAtenciones: number;
 }
 
-export type VeterinarioCreateDto = Omit<VeterinarioDto, 'id'>;
-export type VeterinarioUpdateDto = Partial<VeterinarioCreateDto>;
+export interface VeterinarioRequest {
+  nombre: string;
+  cedula: string;
+  celular: string;
+  correo: string;
+  especialidad: string;
+  contrasenia: string;
+  imageUrl?: string;
+  estado?: 'activo' | 'inactivo';
+}
 
-export interface MascotaDto {
-  id: EntityId;
+// ============================================
+// ENTIDAD: Mascota
+// ============================================
+export interface Mascota {
+  id: number;
   nombre: string;
   especie: string;
   raza: string;
-  sexo: string;
-  fechaNacimiento: string;
+  sexo: 'Macho' | 'Hembra';
+  fechaNacimiento: string;  // ISO Date: "YYYY-MM-DD"
   edad: number;
+  peso: number;
+  enfermedad: string;
+  observaciones: string;
+  foto: string;
+  estado: 'ACTIVA' | 'TRATAMIENTO' | 'INACTIVA';
+  veterinarioAsignado?: string;
+  cliente: Cliente | null;
+}
+
+export interface MascotaRequest {
+  nombre: string;
+  especie: string;
+  raza: string;
+  sexo: 'Macho' | 'Hembra';
+  fechaNacimiento: string;  // ISO Date: "YYYY-MM-DD"
   peso: number;
   enfermedad?: string;
   observaciones?: string;
   foto?: string;
+  estado?: 'ACTIVA' | 'TRATAMIENTO' | 'INACTIVA';
   veterinarioAsignado?: string;
-  estado: Mascota['estado'];
-  clienteId: EntityId;
 }
 
-export type MascotaCreateDto = Omit<MascotaDto, 'id'>;
-export type MascotaUpdateDto = Partial<MascotaCreateDto>;
-
-export interface DrogaDto {
-  id: EntityId;
+// ============================================
+// ENTIDAD: Droga
+// ============================================
+export interface Droga {
+  id: number;
   nombre: string;
-  descripcion: string;
-  unidad: string;
-  stock: number;
-  dosis: string;
+  precioCompra: number;
+  precioVenta: number;
+  unidadesDisponibles: number;
+  unidadesVendidas: number;
 }
 
-export type DrogaCreateDto = Omit<DrogaDto, 'id'>;
-export type DrogaUpdateDto = Partial<DrogaCreateDto>;
-
-export interface TratamientoDrogaDto {
-  id: EntityId;
-  drogaId: EntityId;
-  nombreDroga: string;
-  dosis: string;
-  frecuencia: string;
-  duracion: string;
+export interface DrogaRequest {
+  nombre: string;
+  precioCompra: number;
+  precioVenta: number;
+  unidadesDisponibles: number;
 }
 
-export interface TratamientoDto {
-  id: EntityId;
-  mascotaId: EntityId;
-  mascota: string;
-  clienteId: EntityId;
-  veterinarioId: EntityId;
-  veterinario: string;
+// ============================================
+// ENTIDAD: Tratamiento
+// ============================================
+export interface Tratamiento {
+  id: number;
   diagnostico: string;
   observaciones: string;
-  fecha: string;
-  estado: Tratamiento['estado'];
-  drogas: TratamientoDrogaDto[];
+  fecha: string;  // ISO Date: "YYYY-MM-DD"
+  estado: 'PENDIENTE' | 'COMPLETADO' | 'CANCELADO';
+  mascota: Mascota;
+  veterinario: Veterinario;
+  drogas: TratamientoDroga[];
 }
 
-export type TratamientoCreateDto = Omit<TratamientoDto, 'id'>;
-export type TratamientoUpdateDto = Partial<TratamientoCreateDto>;
+export interface TratamientoRequest {
+  diagnostico: string;
+  observaciones: string;
+  fecha: string;  // ISO Date: "YYYY-MM-DD"
+  estado?: 'PENDIENTE' | 'COMPLETADO' | 'CANCELADO';
+}
 
-export interface AuthLoginRequestDto {
+// ============================================
+// ENTIDAD: TratamientoDroga
+// ============================================
+export interface TratamientoDroga {
+  id: number;
+  tratamiento: Tratamiento;
+  droga: Droga;
+  cantidad: number;
+}
+
+export interface TratamientoDrogaRequest {
+  tratamientoId: number;
+  drogaId: number;
+  cantidad: number;
+}
+
+// ============================================
+// ENTIDAD: Cita
+// ============================================
+export interface Cita {
+  id: number;
+  fechaInicio: string;  // ISO DateTime: "YYYY-MM-DDTHH:mm:ss"
+  fechaFin: string;     // ISO DateTime: "YYYY-MM-DDTHH:mm:ss"
+  motivo: string;
+  estado: 'PENDIENTE' | 'CONFIRMADA' | 'REALIZADA' | 'CANCELADA';
+  cliente: Cliente;
+  mascota: Mascota;
+  veterinario: Veterinario;
+}
+
+export interface CitaRequest {
+  fechaInicio: string;  // ISO DateTime: "YYYY-MM-DDTHH:mm:ss"
+  fechaFin: string;     // ISO DateTime: "YYYY-MM-DDTHH:mm:ss"
+  motivo: string;
+  estado?: 'PENDIENTE' | 'CONFIRMADA' | 'REALIZADA' | 'CANCELADA';
+}
+
+// ============================================
+// LOGIN / AUTENTICACIÓN
+// ============================================
+export interface LoginRequest {
   correo: string;
   contrasenia: string;
 }
 
-export interface AuthRegisterRequestDto {
-  nombre: string;
-  apellido: string;
-  correo: string;
-  celular: string;
-  contrasenia: string;
-}
-
-export interface AuthLoginResponseDto {
-  id: EntityId;
+export interface LoginResponse {
+  id: number;
   nombre: string;
   correo: string;
-  rol: 'admin' | 'cliente' | 'veterinario';
-  token: string;
+  rol: 'ADMIN' | 'VETERINARIO' | 'CLIENTE';
+  token?: string;  // Para cuando implementemos JWT
 }
 
-export type FrontModel =
-  | Cliente
-  | Veterinario
-  | Mascota
-  | Droga
-  | Tratamiento
-  | TratamientoDroga;
+// ============================================
+// RESPUESTAS DE ERROR (GlobalExceptionHandler)
+// ============================================
+export interface ErrorResponse {
+  timestamp: string;
+  status: number;
+  error: string;
+  message: string;
+  path: string;
+}
 
+export interface ValidationErrorResponse extends ErrorResponse {
+  validationErrors: Record<string, string>;
+}
+
+// ============================================
+// FILTROS DE BÚSQUEDA
+// ============================================
+export interface MascotaFiltros {
+  query?: string;
+  estado?: 'ACTIVA' | 'TRATAMIENTO' | 'INACTIVA';
+}
+
+export interface CitaFiltros {
+  inicio?: string;
+  fin?: string;
+  veterinarioId?: number;
+  mascotaId?: number;
+  clienteId?: number;
+}
+
+export interface ClienteFiltros {
+  query?: string;
+}
+
+// ============================================
+// TIPOS PARA ACTUALIZACIÓN (PARCIAL)
+// ============================================
+export type ClienteUpdateDto = Partial<ClienteRequest>;
+export type MascotaUpdateDto = Partial<MascotaRequest>;
+export type VeterinarioUpdateDto = Partial<VeterinarioRequest>;
+export type DrogaUpdateDto = Partial<DrogaRequest>;
+export type TratamientoUpdateDto = Partial<TratamientoRequest>;
+export type CitaUpdateDto = Partial<CitaRequest>;

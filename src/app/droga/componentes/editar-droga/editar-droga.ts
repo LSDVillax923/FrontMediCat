@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { DrogaUpdateDto } from '../../../shared/api/backend-contracts';
+import { DrogaUpdateDto } from '../../../shared/api/backend-contracts.ts';
 import { DrogaMapper } from '../../../shared/api/model-mappers';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { AuthService } from '../../../user/services/auth.service';

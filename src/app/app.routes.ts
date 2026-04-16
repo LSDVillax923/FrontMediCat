@@ -36,6 +36,13 @@ import { NuevoTratamiento }   from './tratamiento/componentes/nuevo-tratamiento/
 import { EditarTratamiento }  from './tratamiento/componentes/editar-tratamiento/editar-tratamiento';
 import { VerTratamiento }     from './tratamiento/componentes/ver-tratamiento/ver-tratamiento';
 
+import { ListarCitasComponent } from './cita/componentes/listar-citas/listar-citas';
+import { NuevaCitaComponent } from './cita/componentes/nueva-cita/nueva-cita';
+import { VerCitaComponent } from './cita/componentes/ver-cita/ver-cita';
+import { EditarCitaComponent } from './cita/componentes/editar-cita/editar-cita';
+
+import { PerfilUsuarioComponent } from './user/componentes/perfil-usuario/perfil-usuario';
+
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
 
@@ -87,6 +94,15 @@ export const routes: Routes = [
   { path: 'tratamientos/nuevo',      component: NuevoTratamiento,   canActivate: [authGuard, veterinarioGuard] },
   { path: 'tratamientos/:id',        component: VerTratamiento,     canActivate: [authGuard] },
   { path: 'tratamientos/:id/editar', component: EditarTratamiento,  canActivate: [authGuard, veterinarioGuard] },
+
+
+    // Citas
+  { path: 'citas', component: ListarCitasComponent },
+  { path: 'citas/nueva', component: NuevaCitaComponent },
+  { path: 'citas/:id', component: VerCitaComponent },
+  { path: 'citas/:id/editar', component: EditarCitaComponent },
+
+  { path: 'perfil', component: PerfilUsuarioComponent },
 
   { path: '**', redirectTo: 'inicio' },
 ];

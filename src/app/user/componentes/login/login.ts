@@ -1,65 +1,78 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { AuthRestService } from '../../../shared/auth/auth-rest.service';
+import { AuthRestService } from '../../services/auth-rest.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrls: ['./login.css']
 })
-export class Login {
-  correo = '';
-  contrasenia = '';
-  error = '';
-  cargando = false;
-  mostrarContrasenia = false;
+export class LoginComponent {
+  
+  loginForm: FormGroup;
+  loading = false;
+  error: string | null = null;
+  tipoUsuario: 'CLIENTE' | 'VETERINARIO' | 'ADMIN' = 'CLIENTE';
 
   constructor(
-    private readonly router: Router,
-    private readonly authService: AuthService,
-      private readonly authRestService: AuthRestService,
-  ) {}
+    private fb: FormBuilder,
+    private authService: AuthRestService,
+    private router: Router
+  ) {
+    this.loginForm = this.fb.group({
+      correo: ['', [Validators.required, Validators.email]],
+      contrasenia: ['', Validators.required]
+    });
+  }
 
-  iniciarSesion(): void {
-    this.error = '';
-    const correo = this.correo.trim().toLowerCase();
-    const { contrasenia } = this;
-
-    if (!correo || !contrasenia) {
-      this.error = 'Ingresa tu correo y contraseña.';
+  onSubmit(): void {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
       return;
     }
 
-    this.cargando = true;
+    this.loading = true;
+    this.error = null;
 
-      this.authRestService.login({ correo, contrasenia }).subscribe({
+    const credentials = this.loginForm.value;
+
+    this.authService.login(credentials, this.tipoUsuario).subscribe({
       next: (sesion) => {
-        this.authService.setSesion({
-          id: sesion.id,
-          nombre: sesion.nombre,
-          correo: sesion.correo,
-          rol: sesion.rol,
-          token: sesion.token,
-        });
-               if (sesion.rol === 'admin') {
-          this.router.navigate(['/dashboard']);
-          return;
+        this.loading = false;
+        
+        // Redirigir según el rol
+        switch (sesion.rol) {
+          case 'ADMIN':
+            this.router.navigate(['/dashboard']);
+            break;
+          case 'VETERINARIO':
+            this.router.navigate(['/veterinario/dashboard']);
+            break;
+          case 'CLIENTE':
+            this.router.navigate(['/cliente/mis-mascotas']);
+            break;
+          default:
+            this.router.navigate(['/inicio']);
         }
-        if (sesion.rol === 'veterinario') {
-          this.router.navigate(['/mascotas']);
-          return;
-        }
-        this.router.navigate(['/mis-mascotas']);
       },
-      error: () => {
-        this.error = 'Correo o contraseña incorrectos.';
-        this.cargando = false;
-      },
+      error: (err: Error) => {
+        this.error = 'Credenciales inválidas. Intenta de nuevo.';
+        console.error(err);
+        this.loading = false;
+      }
     });
+  }
+
+  isInvalid(controlName: string): boolean {
+    const control = this.loginForm.get(controlName);
+    return !!(control && control.invalid && control.touched);
+  }
+
+  setTipoUsuario(tipo: 'CLIENTE' | 'VETERINARIO' | 'ADMIN'): void {
+    this.tipoUsuario = tipo;
   }
 }

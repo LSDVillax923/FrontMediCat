@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { DrogaCreateDto } from '../../../shared/api/backend-contracts';
+import { DrogaCreateDto } from '../../../shared/api/backend-contracts.ts';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { DrogaRestService } from '../../services/droga-rest.service';
 

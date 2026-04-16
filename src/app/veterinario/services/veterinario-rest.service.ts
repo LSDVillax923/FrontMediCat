@@ -1,19 +1,43 @@
 import { Injectable } from '@angular/core';
-import {
-  VeterinarioCreateDto,
-  VeterinarioDto,
-  VeterinarioUpdateDto,
-} from '../../shared/api/backend-contracts';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { BaseCrudRestService } from '../../shared/api/base-crud-rest.service';
-import { REST_ENDPOINTS } from '../../shared/api/rest-endpoints';
+import { Veterinario, VeterinarioRequest } from '../../shared/api/backend-contracts';
+import { ENDPOINTS } from '../../shared/api/rest-endpoints';
 
 @Injectable({ providedIn: 'root' })
-export class VeterinarioRestService extends BaseCrudRestService<
-  VeterinarioDto,
-  VeterinarioCreateDto,
-  VeterinarioUpdateDto
-> {
-  constructor() {
-    super(REST_ENDPOINTS.veterinarios);
+export class VeterinarioRestService extends BaseCrudRestService<Veterinario, VeterinarioRequest> {
+  
+  constructor(http: HttpClient) {
+    super(http, ENDPOINTS.VETERINARIOS);
+  }
+
+  override findAll(filtros?: { estado?: string }): Observable<Veterinario[]> {
+    let params = new HttpParams();
+    if (filtros?.estado) {
+      params = params.set('estado', filtros.estado);
+    }
+    return this.http.get<Veterinario[]>(this.baseUrl, { params });
+  }
+
+  cambiarEstado(id: number, estado: string): Observable<Veterinario> {
+    const params = new HttpParams().set('estado', estado);
+    return this.http.patch<Veterinario>(ENDPOINTS.VETERINARIOS_ESTADO(id), null, { params });
+  }
+
+  override findById(id: number): Observable<Veterinario> {
+    return super.findById(id);
+  }
+
+  override create(data: VeterinarioRequest): Observable<Veterinario> {
+    return super.create(data);
+  }
+
+  override update(id: number, data: VeterinarioRequest): Observable<Veterinario> {
+    return super.update(id, data);
+  }
+
+  override delete(id: number): Observable<void> {
+    return super.delete(id);
   }
 }

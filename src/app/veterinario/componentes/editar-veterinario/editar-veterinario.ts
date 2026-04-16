@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { VeterinarioUpdateDto } from '../../../shared/api/backend-contracts';
+import { VeterinarioUpdateDto } from '../../../shared/api/backend-contracts.ts';
 import { VeterinarioMapper } from '../../../shared/api/model-mappers';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { VeterinarioRestService } from '../../services/veterinario-rest.service';
