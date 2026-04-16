@@ -66,7 +66,7 @@
           </td>
           <td>{{ cliente.correo }}</td>
           <td>{{ cliente.celular }}</td>
-          <td>{{ cliente.mascotas.length }}</td>
+          <td>{{ cliente.mascotas?.length ?? 0 }}</td>
           <td><span class="badge badge-activo">Activo</span></td>
           <td>
             <div class="acciones">

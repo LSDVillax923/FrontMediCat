@@ -23,12 +23,14 @@ export class CitaRestService extends BaseCrudRestService<Cita, CitaRequest> {
     return this.http.get<Cita[]>(this.baseUrl, { params });
   }
 
-  override create(cita: CitaRequest, clienteId: number, mascotaId: number, veterinarioId: number): Observable<Cita> {
-    const params = new HttpParams()
-      .set('clienteId', clienteId.toString())
-      .set('mascotaId', mascotaId.toString())
-      .set('veterinarioId', veterinarioId.toString());
-    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  override create(cita: CitaRequest, extraParams?: Record<string, any>): Observable<Cita> {
+    let params = new HttpParams();
+    if (extraParams) {
+      Object.entries(extraParams).forEach(([key, value]) => {
+        params = params.set(key, String(value));
+      });
+    }
     return this.http.post<Cita>(this.baseUrl, cita, { params });
   }
 

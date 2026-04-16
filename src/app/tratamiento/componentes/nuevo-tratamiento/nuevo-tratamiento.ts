@@ -8,16 +8,10 @@ import { Droga } from '../../../droga/droga';
 import { TratamientoDroga } from '../../../tratamiento-droga/tratamiento-droga';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { TratamientoRestService } from '../../services/tratamiento-rest.service';
-import { MascotaRestService } from '../../../mascota/services/mascota-rest.service';
+import { MascotaRestService } from '../../../mascota/services/mascota.service';
 import { VeterinarioRestService } from '../../../veterinario/services/veterinario-rest.service';
-import { DrogaRestService } from '../../../droga/services/droga-rest.service';
-
-import {
-  DrogaMapper,
-  MascotaMapper,
-  TratamientoMapper,
-  VeterinarioMapper,
-} from '../../../shared/api/model-mappers';
+import { DrogaRestService } from '../../../droga/services/droga.service';
+import { DrogaMapper, MascotaMapper, TratamientoMapper, VeterinarioMapper } from '../../../shared/api/model-mappers';
 
 interface NuevoTratamientoForm {
   mascotaId: number;
@@ -50,7 +44,6 @@ export class NuevoTratamiento implements OnInit {
 
   formData: NuevoTratamientoForm = this.crearFormularioInicial();
 
-
   constructor(
     private readonly tratamientoRestService: TratamientoRestService,
     private readonly mascotaRestService: MascotaRestService,
@@ -64,83 +57,44 @@ export class NuevoTratamiento implements OnInit {
 
   private crearFormularioInicial(): NuevoTratamientoForm {
     return {
-      mascotaId: 0,
-      mascota: '',
-      clienteId: 0,
-      veterinarioId: 0,
-      veterinario: '',
-      diagnostico: '',
-      observaciones: '',
+      mascotaId: 0, mascota: '', clienteId: 0,
+      veterinarioId: 0, veterinario: '',
+      diagnostico: '', observaciones: '',
       fecha: new Date().toISOString().split('T')[0],
-      estado: 'Pendiente',
-      drogas: [],
+      estado: 'Pendiente', drogas: [],
     };
   }
 
   private cargarCatalogos(): void {
     this.cargando = true;
-    this.error = '';
-
     this.mascotaRestService.getAll().subscribe({
-      next: (mascotasDto) => {
-        this.mascotas = mascotasDto.map(MascotaMapper.fromDto);
-      },
-      error: () => {
-        this.error = 'No se pudieron cargar las mascotas.';
-      },
+      next: (dto) => { this.mascotas = dto.map(MascotaMapper.fromDto); },
+      error: () => { this.error = 'No se pudieron cargar las mascotas.'; },
     });
-
     this.veterinarioRestService.getAll().subscribe({
-      next: (veterinariosDto) => {
-        this.veterinarios = veterinariosDto.map(VeterinarioMapper.fromDto);
-      },
-      error: () => {
-        this.error = 'No se pudieron cargar los veterinarios.';
-      },
+      next: (dto) => { this.veterinarios = dto.map(VeterinarioMapper.fromDto); },
+      error: () => { this.error = 'No se pudieron cargar los veterinarios.'; },
     });
-
     this.drogaRestService.getAll().subscribe({
-      next: (drogasDto) => {
-        this.drogas = drogasDto.map(DrogaMapper.fromDto);
-        this.cargando = false;
-      },
-      error: () => {
-        this.error = 'No se pudieron cargar las drogas.';
-        this.cargando = false;
-      },
+      next: (dto) => { this.drogas = dto.map(DrogaMapper.fromDto); this.cargando = false; },
+      error: () => { this.error = 'No se pudieron cargar las drogas.'; this.cargando = false; },
     });
   }
 
   onMascotaChange(id: number): void {
     const mascota = this.mascotas.find((m) => m.id === id);
-    if (mascota) {
-      this.formData.mascota = mascota.nombre;
-      this.formData.clienteId = mascota.clienteId;
-      return;
-    }
-    this.formData.mascota = '';
-    this.formData.clienteId = 0;
+    this.formData.mascota = mascota?.nombre ?? '';
+    this.formData.clienteId = mascota?.clienteId ?? 0;
   }
 
   onVetChange(id: number): void {
     const vet = this.veterinarios.find((v) => v.id === id);
-    if (vet) {
-      this.formData.veterinario = `${vet.nombre} ${vet.apellido}`;
-      return;
-    }
-    this.formData.veterinario = '';
+    this.formData.veterinario = vet ? `${vet.nombre} ${vet.apellido}` : '';
   }
 
   agregarDroga(): void {
-    const nuevoId = Math.max(0, ...this.formData.drogas.map((d) => d.id || 0)) + 1;
-    this.formData.drogas.push({
-      id: nuevoId,
-      drogaId: 0,
-      nombreDroga: '',
-      dosis: '',
-      frecuencia: '',
-      duracion: '',
-    });
+    const nuevoId = Math.max(0, ...this.formData.drogas.map((d) => d.id ?? 0)) + 1;
+    this.formData.drogas.push({ id: nuevoId, drogaId: 0, nombreDroga: '', dosis: '', frecuencia: '', duracion: '' });
   }
 
   onDrogaChange(index: number, id: number): void {
@@ -157,15 +111,13 @@ export class NuevoTratamiento implements OnInit {
 
   guardarTratamiento(): void {
     const { mascotaId, veterinarioId, diagnostico, fecha } = this.formData;
-
     if (!mascotaId || !veterinarioId || !diagnostico || !fecha) {
       this.error = 'Mascota, veterinario, diagnóstico y fecha son obligatorios.';
       return;
     }
-
     this.cargando = true;
     const payload = TratamientoMapper.toDto({ ...this.formData, id: 0 });
-    this.tratamientoRestService.create(payload).subscribe({
+    this.tratamientoRestService.create(payload, { mascotaId, veterinarioId }).subscribe({
       next: () => {
         this.mensaje = 'El tratamiento fue registrado correctamente.';
         this.error = '';
@@ -177,6 +129,5 @@ export class NuevoTratamiento implements OnInit {
         this.cargando = false;
       },
     });
-
   }
 }

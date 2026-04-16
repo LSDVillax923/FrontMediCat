@@ -32,7 +32,7 @@ export interface ClienteRequest {
   nombre: string;
   apellido: string;
   correo: string;
-  contrasenia: string;
+  contrasenia?: string;
   celular: string;
 }
 

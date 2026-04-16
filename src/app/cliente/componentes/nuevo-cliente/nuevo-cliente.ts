@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ClienteCreateDto } from '../../../shared/api/backend-contracts.ts';
+import { ClienteRequest } from '../../../shared/api/backend-contracts';
 import { Navbar } from '../../../shared/components/navbar/navbar';
-import { ClienteRestService } from '../../services/cliente-rest.service';
+import { ClienteRestService } from '../../services/cliente.service';
 
 interface NuevoClienteForm {
   nombre: string;
@@ -44,7 +44,7 @@ export class NuevoCliente {
       return;
     }
 
-    const payload: ClienteCreateDto = { nombre, apellido, correo, celular, contrasenia };
+    const payload: ClienteRequest = { nombre, apellido, correo, celular, contrasenia };
     this.clienteRestService.create(payload).subscribe({
       next: () => {
         this.mensaje = `${nombre} ${apellido} se registró correctamente.`;

@@ -6,16 +6,11 @@ import { AuthService } from '../../../user/services/auth.service';
 import { Tratamiento } from '../../tratamiento';
 import { Veterinario } from '../../../veterinario/veterinario';
 import { Droga } from '../../../droga/droga';
-
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { TratamientoRestService } from '../../services/tratamiento-rest.service';
 import { VeterinarioRestService } from '../../../veterinario/services/veterinario-rest.service';
-import { DrogaRestService } from '../../../droga/services/droga-rest.service';
-import {
-  DrogaMapper,
-  TratamientoMapper,
-  VeterinarioMapper,
-} from '../../../shared/api/model-mappers';
+import { DrogaRestService } from '../../../droga/services/droga.service';
+import { DrogaMapper, TratamientoMapper, VeterinarioMapper } from '../../../shared/api/model-mappers';
 
 @Component({
   selector: 'app-editar-tratamiento',
@@ -24,20 +19,12 @@ import {
   templateUrl: './editar-tratamiento.html',
   styleUrl: './editar-tratamiento.css',
 })
-
 export class EditarTratamiento implements OnInit {
   formData: Tratamiento = {
-    id: 0,
-    mascotaId: 0,
-    mascota: '',
-    clienteId: 0,
-    veterinarioId: 0,
-    veterinario: '',
-    diagnostico: '',
-    observaciones: '',
-    fecha: '',
-    estado: 'Pendiente',
-    drogas: [],
+    id: 0, mascotaId: 0, mascota: '', clienteId: 0,
+    veterinarioId: 0, veterinario: '',
+    diagnostico: '', observaciones: '', fecha: '',
+    estado: 'Pendiente', drogas: [],
   };
 
   mensaje = '';
@@ -55,47 +42,35 @@ export class EditarTratamiento implements OnInit {
     private readonly veterinarioRestService: VeterinarioRestService,
     private readonly drogaRestService: DrogaRestService,
     private readonly authService: AuthService,
-
-     ) {}
+  ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-
-      if (!id) {
+    if (!id) {
       this.noEncontrado = true;
       this.error = 'No se encontró el tratamiento solicitado.';
       return;
     }
-
     this.cargarCatalogos();
     this.cargarTratamiento(id);
   }
 
   private cargarCatalogos(): void {
     this.veterinarioRestService.getAll().subscribe({
-      next: (veterinariosDto) => {
-        this.veterinarios = veterinariosDto.map(VeterinarioMapper.fromDto);
-      },
-      error: () => {
-        this.error = 'No se pudieron cargar los veterinarios.';
-      },
+      next: (dto) => { this.veterinarios = dto.map(VeterinarioMapper.fromDto); },
+      error: () => { this.error = 'No se pudieron cargar los veterinarios.'; },
     });
-
     this.drogaRestService.getAll().subscribe({
-      next: (drogasDto) => {
-        this.drogas = drogasDto.map(DrogaMapper.fromDto);
-      },
-      error: () => {
-        this.error = 'No se pudieron cargar las drogas.';
-      },
+      next: (dto) => { this.drogas = dto.map(DrogaMapper.fromDto); },
+      error: () => { this.error = 'No se pudieron cargar las drogas.'; },
     });
   }
 
   private cargarTratamiento(id: number): void {
     this.cargando = true;
     this.tratamientoRestService.getById(id).subscribe({
-      next: (tratamientoDto) => {
-        const tratamiento = TratamientoMapper.fromDto(tratamientoDto);
+      next: (dto) => {
+        const tratamiento = TratamientoMapper.fromDto(dto);
         this.tratamientoOriginal = tratamiento;
         this.formData = { ...tratamiento, drogas: tratamiento.drogas.map((d) => ({ ...d })) };
         this.cargando = false;
@@ -109,38 +84,24 @@ export class EditarTratamiento implements OnInit {
   }
 
   get esAdmin(): boolean {
-    return this.authService.getSesion()?.rol === 'admin';
+    return this.authService.getSesion()?.rol === 'ADMIN';
   }
 
-  onVetChange(id: number): void { 
-    
+  onVetChange(id: number): void {
     const vet = this.veterinarios.find((v) => v.id === id);
-    if (vet) {
-      this.formData.veterinario = `${vet.nombre} ${vet.apellido}`;
-      return;
-    }
-    this.formData.veterinario = '';
+    this.formData.veterinario = vet ? `${vet.nombre} ${vet.apellido}` : '';
   }
 
   agregarDroga(): void {
-
-    const nuevoId = Math.max(0, ...this.formData.drogas.map((d) => d.id || 0)) + 1;
-    this.formData.drogas.push({
-      id: nuevoId,
-      drogaId: 0,
-      nombreDroga: '',
-      dosis: '',
-      frecuencia: '',
-      duracion: '',
-    });
+    const nuevoId = Math.max(0, ...this.formData.drogas.map((d) => d.id ?? 0)) + 1;
+    this.formData.drogas.push({ id: nuevoId, drogaId: 0, nombreDroga: '', dosis: '', frecuencia: '', duracion: '' });
   }
 
   onDrogaChange(index: number, id: number): void {
     const droga = this.drogas.find((d) => d.id === id);
     if (droga) {
       this.formData.drogas[index].nombreDroga = droga.nombre;
-
-        if (!this.esAdmin) {
+      if (!this.esAdmin) {
         this.formData.drogas[index].dosis = droga.dosis ?? '';
       }
     }
@@ -151,21 +112,17 @@ export class EditarTratamiento implements OnInit {
   }
 
   guardarCambios(): void {
-
-       const { id, veterinarioId, diagnostico, fecha } = this.formData;
-
+    const { id, veterinarioId, diagnostico, fecha } = this.formData;
     if (!veterinarioId || !diagnostico || !fecha) {
       this.error = 'Veterinario, diagnóstico y fecha son obligatorios.';
       return;
     }
-
-       if (this.esAdmin && this.tratamientoOriginal) {
-      this.formData.drogas = this.formData.drogas.map((d, i) => ({
+    if (this.esAdmin && this.tratamientoOriginal) {
+      this.formData.drogas = this.formData.drogas.map((d: typeof this.formData.drogas[0], i: number) => ({
         ...d,
-
-               dosis: this.tratamientoOriginal?.drogas[i]?.dosis ?? d.dosis,
+        dosis: this.tratamientoOriginal?.drogas[i]?.dosis ?? d.dosis,
       }));
-       }
+    }
     this.cargando = true;
     this.tratamientoRestService.update(id, TratamientoMapper.toDto(this.formData)).subscribe({
       next: () => {

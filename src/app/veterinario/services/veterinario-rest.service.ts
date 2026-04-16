@@ -25,6 +25,10 @@ export class VeterinarioRestService extends BaseCrudRestService<Veterinario, Vet
     return this.http.patch<Veterinario>(ENDPOINTS.VETERINARIOS_ESTADO(id), null, { params });
   }
 
+  getAll(): Observable<Veterinario[]> {
+    return this.findAll();
+  }
+
   override findById(id: number): Observable<Veterinario> {
     return super.findById(id);
   }

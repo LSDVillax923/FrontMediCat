@@ -4,15 +4,15 @@ import { authGuard }                              from './shared/guards/auth-gua
 import { adminGuard, veterinarioGuard, clienteGuard } from './shared/guards/role-guard.guard';
 
 import { Inicio }             from './inicio/inicio/inicio';
-import { Login }              from './user/componentes/login/login';
+import { LoginComponent as Login } from './user/componentes/login/login';
 import { ForgotPassword }     from './user/componentes/forgot-password/forgot-password';
 import { SignUp }             from './user/componentes/sign-up/sign-up';
 
 import { Dashboard }          from './admin/componentes/dashboard/dashboard';
 
-import { ListarCliente }      from './cliente/componentes/listar-cliente/listar-cliente';
+import { ListarClienteComponent as ListarCliente } from './cliente/componentes/listar-cliente/listar-cliente';
 import { NuevoCliente }       from './cliente/componentes/nuevo-cliente/nuevo-cliente';
-import { EditarCliente }      from './cliente/componentes/editar-cliente/editar-cliente';
+import { EditarClienteComponent as EditarCliente } from './cliente/componentes/editar-cliente/editar-cliente';
 import { VerCliente }         from './cliente/componentes/ver-cliente/ver-cliente';
 
 import { MisMascotas }        from './mascota/componentes/mis-mascotas/mis-mascotas';

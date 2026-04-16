@@ -1,15 +1,12 @@
 import { CommonModule } from '@angular/common';
-
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-
 import { DrogaMapper } from '../../../shared/api/model-mappers';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { AuthService } from '../../../user/services/auth.service';
 import { Droga } from '../../droga';
-
-import { DrogaRestService } from '../../services/droga-rest.service';
+import { DrogaRestService } from '../../services/droga.service';
 
 @Component({
   selector: 'app-listar-drogas',
@@ -18,7 +15,6 @@ import { DrogaRestService } from '../../services/droga-rest.service';
   templateUrl: './listar-drogas.html',
   styleUrl: './listar-drogas.css',
 })
-
 export class ListarDrogas implements OnInit {
   busqueda = '';
   mensaje = '';
@@ -47,19 +43,17 @@ export class ListarDrogas implements OnInit {
   }
 
   get esAdmin(): boolean {
-    return this.authService.getSesion()?.rol === 'admin';
+    return this.authService.getSesion()?.rol === 'ADMIN';
   }
 
   get puedeEditar(): boolean {
     const rol = this.authService.getSesion()?.rol;
-    return rol === 'admin' || rol === 'veterinario';
+    return rol === 'ADMIN' || rol === 'VETERINARIO';
   }
 
   get drogasFiltradas(): Droga[] {
-    
     const filtro = this.busqueda.trim().toLowerCase();
     if (!filtro) return this.drogas;
-
     return this.drogas.filter(
       (d) =>
         d.nombre.toLowerCase().includes(filtro) ||
@@ -76,7 +70,6 @@ export class ListarDrogas implements OnInit {
 
   eliminarDroga(droga: Droga): void {
     if (!confirm(`¿Eliminar ${droga.nombre} del inventario?`)) return;
-
     this.drogaRestService.delete(droga.id).subscribe({
       next: () => {
         this.mensaje = `${droga.nombre} fue eliminado del inventario.`;

@@ -43,17 +43,15 @@ export class LoginComponent {
     this.authService.login(credentials, this.tipoUsuario).subscribe({
       next: (sesion) => {
         this.loading = false;
-        
-        // Redirigir según el rol
         switch (sesion.rol) {
           case 'ADMIN':
             this.router.navigate(['/dashboard']);
             break;
           case 'VETERINARIO':
-            this.router.navigate(['/veterinario/dashboard']);
+            this.router.navigate(['/mascotas']);
             break;
           case 'CLIENTE':
-            this.router.navigate(['/cliente/mis-mascotas']);
+            this.router.navigate(['/mis-mascotas']);
             break;
           default:
             this.router.navigate(['/inicio']);

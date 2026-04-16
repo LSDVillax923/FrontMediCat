@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthRestService, SesionActiva } from '../../../user/services/auth-rest.service';
-import { ClienteRestService } from '../../../cliente/services/cliente-rest.service';
-import { MascotaRestService } from '../../../mascota/services/mascota-rest.service';
+import { ClienteRestService } from '../../../cliente/services/cliente.service';
+import { MascotaRestService } from '../../../mascota/services/mascota.service';
 import { CitaRestService } from '../../../cita/services/cita-rest.service';
 import { Cita, Cliente, Mascota } from '../../../shared/api/backend-contracts';
 import { 

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MascotaService } from '../../../mascota/services/mascota-rest.service';
-import { ClienteService } from '../../../cliente/services/cliente-rest.service';
-import { VeterinarioService } from '../../../veterinario/services/veterinario.service';
-import { Veterinario } from '../../../veterinario/veterinario';
-import { AuthService } from '../../../user/services/auth.service';
+import { Cliente, MascotaRequest, Veterinario } from '../../../shared/api/backend-contracts';
 import { Navbar } from '../../../shared/components/navbar/navbar';
+import { ClienteRestService } from '../../../cliente/services/cliente.service';
+import { MascotaRestService } from '../../services/mascota.service';
+import { VeterinarioRestService } from '../../../veterinario/services/veterinario-rest.service';
+import { AuthRestService } from '../../../user/services/auth-rest.service';
 
 interface NuevaMascotaForm {
   nombre: string;
@@ -15,7 +15,6 @@ interface NuevaMascotaForm {
   raza: string;
   sexo: string;
   fechaNacimiento: string;
-  edad: number | null;
   peso: number | null;
   estado: string;
   clienteId: number | null;
@@ -31,85 +30,86 @@ interface NuevaMascotaForm {
   templateUrl: './nueva-mascota.html',
   styleUrl: './nueva-mascota.css',
 })
-export class NuevaMascota {
+export class NuevaMascota implements OnInit {
   clientes: Cliente[] = [];
   veterinariosDisponibles: Veterinario[] = [];
-
   mascotaForm: NuevaMascotaForm = this.formInicial();
   mascotaRegistrada = '';
   error = '';
+  loading = false;
 
   constructor(
-    private readonly mascotaService: MascotaService,
-    private readonly clienteService: ClienteService,
-    private readonly veterinarioService: VeterinarioService,
-    private readonly authService: AuthService,
-  ) {
+    private readonly mascotaService: MascotaRestService,
+    private readonly clienteService: ClienteRestService,
+    private readonly veterinarioService: VeterinarioRestService,
+    private readonly authService: AuthRestService,
+  ) {}
+
+  ngOnInit(): void {
     const sesion = this.authService.getSesion();
-
-    // Si es un cliente registrando su propia mascota, pre-selecciona su id
-    if (sesion?.rol === 'cliente') {
+    if (sesion?.rol === 'CLIENTE') {
       this.mascotaForm.clienteId = sesion.id;
-      this.clientes = this.clienteService.getAll().filter((c) => c.id === sesion.id);
+      this.clienteService.findById(sesion.id).subscribe({
+        next: (c) => this.clientes = [c],
+        error: () => {},
+      });
     } else {
-      this.clientes = this.clienteService.getAll();
+      this.clienteService.findAll().subscribe({
+        next: (c) => this.clientes = c,
+        error: () => {},
+      });
     }
-
-    this.veterinariosDisponibles = this.veterinarioService.getActivos();
+    this.veterinarioService.findAll({ estado: 'activo' }).subscribe({
+      next: (v) => this.veterinariosDisponibles = v,
+      error: () => {},
+    });
   }
 
   registrarMascota(): void {
-    const { clienteId, nombre, especie, raza, sexo, fechaNacimiento, edad, peso, estado, enfermedad, veterinarioAsignado, observaciones } = this.mascotaForm;
+    const { clienteId, nombre, especie, raza, sexo, fechaNacimiento, peso, estado, enfermedad, veterinarioAsignado, observaciones } = this.mascotaForm;
 
     if (!clienteId || !nombre || !especie || !raza || !estado) {
       this.error = 'Completa todos los campos obligatorios.';
       return;
     }
 
-    const cliente = this.clienteService.getById(clienteId);
-    const propietario = cliente ? `${cliente.nombre} ${cliente.apellido}` : '';
-
-    this.mascotaService.add({
+    const request: MascotaRequest = {
       nombre,
       especie,
       raza,
-      sexo,
+      sexo: sexo as 'Macho' | 'Hembra',
       fechaNacimiento,
-      edad: edad ?? 0,
       peso: peso ?? 0,
-      estado: estado as 'Activa' | 'Tratamiento' | 'Inactiva', 
+      estado: estado as 'ACTIVA' | 'TRATAMIENTO' | 'INACTIVA',
       enfermedad,
       observaciones,
       veterinarioAsignado,
-      clienteId,
-      propietario,
+    };
+
+    this.loading = true;
+    this.mascotaService.crearMascota(request, clienteId).subscribe({
+      next: () => {
+        this.mascotaRegistrada = `La mascota "${nombre}" fue registrada correctamente.`;
+        this.error = '';
+        this.mascotaForm = this.formInicial();
+        this.loading = false;
+        const sesion = this.authService.getSesion();
+        if (sesion?.rol === 'CLIENTE') {
+          this.mascotaForm.clienteId = sesion.id;
+        }
+      },
+      error: () => {
+        this.error = 'No se pudo registrar la mascota.';
+        this.loading = false;
+      },
     });
-
-    this.mascotaRegistrada = `La mascota "${nombre}" fue registrada correctamente.`;
-    this.error = '';
-    this.mascotaForm = this.formInicial();
-
-    // Restaurar clienteId si es cliente
-    const sesion = this.authService.getSesion();
-    if (sesion?.rol === 'cliente') {
-      this.mascotaForm.clienteId = sesion.id;
-    }
   }
 
   private formInicial(): NuevaMascotaForm {
     return {
-      nombre: '',
-      especie: '',
-      raza: '',
-      sexo: '',
-      fechaNacimiento: '',
-      edad: null,
-      peso: null,
-      estado: '',
-      clienteId: null,
-      enfermedad: '',
-      veterinarioAsignado: '',
-      observaciones: '',
+      nombre: '', especie: '', raza: '', sexo: '', fechaNacimiento: '',
+      peso: null, estado: '', clienteId: null, enfermedad: '',
+      veterinarioAsignado: '', observaciones: '',
     };
   }
 }

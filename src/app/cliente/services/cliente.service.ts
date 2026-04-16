@@ -12,12 +12,11 @@ export class ClienteRestService extends BaseCrudRestService<Cliente, ClienteRequ
     super(http, ENDPOINTS.CLIENTES);
   }
 
-getById(id: number): Observable<T> {
+getById(id: number): Observable<Cliente> {
   return this.findById(id);
 }
 
-
-getAll(): Observable<T[]> {
+getAll(): Observable<Cliente[]> {
   return this.findAll();
 }
 

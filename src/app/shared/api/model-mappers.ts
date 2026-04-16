@@ -1,4 +1,5 @@
-import { Cliente, Mascota, MascotaRequest, Cita, Veterinario, Tratamiento } from './backend-contracts';
+import { Cliente, Mascota as BackendMascota, MascotaRequest, Veterinario as BackendVeterinario, Tratamiento as BackendTratamiento, Droga as BackendDroga } from './backend-contracts';
+import { TratamientoRequest } from './backend-contracts';
 
 // ============================================
 // CONVERSIÓN DE MODELOS
@@ -7,7 +8,7 @@ import { Cliente, Mascota, MascotaRequest, Cita, Veterinario, Tratamiento } from
 /**
  * Convierte un objeto Mascota del backend a un formato para formulario
  */
-export function mascotaToRequest(mascota: Mascota): MascotaRequest {
+export function mascotaToRequest(mascota: BackendMascota): MascotaRequest {
   return {
     nombre: mascota.nombre,
     especie: mascota.especie,
@@ -202,7 +203,7 @@ export function getManianaISO(): string {
 /**
  * Obtiene el nombre completo de un cliente
  */
-export function nombreCompletoCliente(cliente: Cliente | null | undefined): string {
+export function nombreCompletoCliente(cliente: Cliente | null | undefined): string { // eslint-disable-line @typescript-eslint/no-unused-vars
   if (!cliente) return 'Sin cliente';
   return `${cliente.nombre} ${cliente.apellido || ''}`.trim();
 }
@@ -210,7 +211,7 @@ export function nombreCompletoCliente(cliente: Cliente | null | undefined): stri
 /**
  * Obtiene el nombre completo de un veterinario
  */
-export function nombreCompletoVeterinario(veterinario: Veterinario | null | undefined): string {
+export function nombreCompletoVeterinario(veterinario: BackendVeterinario | null | undefined): string {
   if (!veterinario) return 'No asignado';
   return veterinario.nombre;
 }
@@ -532,4 +533,105 @@ export default {
   calcularDuracionMinutos,
   formatearDuracion,
   tiempoRelativo
+};
+
+// ============================================
+// MAPPERS LEGACY (OLD ↔ NEW)
+// ============================================
+
+export const ClienteMapper = {
+  fromDto(dto: Cliente): Cliente {
+    return { ...dto };
+  },
+};
+
+export const MascotaMapper = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fromDto(dto: BackendMascota): any {
+    const estadoMap: Record<string, string> = {
+      ACTIVA: 'Activa',
+      TRATAMIENTO: 'Tratamiento',
+      INACTIVA: 'Inactiva',
+    };
+    return {
+      id: dto.id,
+      nombre: dto.nombre,
+      especie: dto.especie,
+      raza: dto.raza,
+      sexo: dto.sexo,
+      fechaNacimiento: dto.fechaNacimiento,
+      edad: dto.edad,
+      peso: dto.peso,
+      enfermedad: dto.enfermedad ?? '',
+      observaciones: dto.observaciones ?? '',
+      foto: dto.foto,
+      estado: estadoMap[dto.estado] ?? 'Activa',
+      clienteId: dto.cliente?.id ?? 0,
+      propietario: dto.cliente
+        ? `${dto.cliente.nombre} ${dto.cliente.apellido}`.trim()
+        : '',
+      veterinarioAsignado: dto.veterinarioAsignado,
+    };
+  },
+};
+
+export const VeterinarioMapper = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fromDto(dto: BackendVeterinario): any {
+    return {
+      id: dto.id,
+      nombre: dto.nombre,
+      apellido: '',
+      cedula: dto.cedula,
+      celular: dto.celular,
+      correo: dto.correo,
+      especialidad: dto.especialidad,
+      contrasenia: dto.contrasenia,
+      imageUrl: dto.imageUrl,
+      estado: dto.estado,
+      numAtenciones: dto.numAtenciones,
+    };
+  },
+};
+
+export const DrogaMapper = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fromDto(dto: BackendDroga): any {
+    return {
+      id: dto.id,
+      nombre: dto.nombre,
+      descripcion: '',
+      unidad: '',
+      stock: dto.unidadesDisponibles,
+      dosis: '',
+    };
+  },
+};
+
+export const TratamientoMapper = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fromDto(dto: BackendTratamiento): any {
+    return {
+      id: dto.id,
+      mascotaId: dto.mascota?.id ?? 0,
+      mascota: dto.mascota?.nombre ?? '',
+      clienteId: dto.mascota?.cliente?.id ?? 0,
+      veterinarioId: dto.veterinario?.id ?? 0,
+      veterinario: dto.veterinario?.nombre ?? '',
+      diagnostico: dto.diagnostico,
+      observaciones: dto.observaciones,
+      fecha: dto.fecha,
+      estado: 'Pendiente',
+      drogas: [],
+    };
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  toDto(tratamiento: any): TratamientoRequest {
+    return {
+      diagnostico: tratamiento.diagnostico ?? '',
+      observaciones: tratamiento.observaciones ?? '',
+      fecha: tratamiento.fecha ?? '',
+      estado: 'PENDIENTE',
+    };
+  },
 };

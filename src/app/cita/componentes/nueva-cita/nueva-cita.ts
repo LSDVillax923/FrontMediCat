@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CitaRestService } from '../../services/cita-rest.service';
-import { ClienteRestService } from '../../../cliente/services/cliente-rest.service';
-import { MascotaRestService } from '../../../mascota/services/mascota-rest.service';
+import { ClienteRestService } from '../../../cliente/services/cliente.service';
+import { MascotaRestService } from '../../../mascota/services/mascota.service';
 import { VeterinarioRestService } from '../../../veterinario/services/veterinario-rest.service';
 import { Cliente, Mascota, Veterinario } from '../../../shared/api/backend-contracts';
 
@@ -108,7 +108,7 @@ export class NuevaCitaComponent implements OnInit {
     };
 
     this.loading = true;
-    this.citaService.create(citaData, formValue.clienteId, formValue.mascotaId, formValue.veterinarioId).subscribe({
+    this.citaService.create(citaData, { clienteId: formValue.clienteId, mascotaId: formValue.mascotaId, veterinarioId: formValue.veterinarioId }).subscribe({
       next: () => {
         this.loading = false;
         this.router.navigate(['/citas']);

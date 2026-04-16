@@ -29,6 +29,14 @@ export class DrogaRestService extends BaseCrudRestService<Droga, DrogaRequest> {
     return this.http.patch<void>(ENDPOINTS.DROGAS_DESCONTAR(id), null, { params });
   }
 
+  getAll(): Observable<Droga[]> {
+    return this.findAll();
+  }
+
+  getById(id: number): Observable<Droga> {
+    return this.findById(id);
+  }
+
   override findById(id: number): Observable<Droga> {
     return super.findById(id);
   }

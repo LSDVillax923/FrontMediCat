@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthRestService, SesionActiva } from '../../services/auth-rest.service';
-import { ClienteRestService } from '../../../cliente/services/cliente-rest.service';
+import { ClienteRestService } from '../../../cliente/services/cliente.service';
 import { VeterinarioRestService } from '../../../veterinario/services/veterinario-rest.service';
 import { AdminRestService } from '../../../admin/services/admin-rest.service';
 import { Cliente, Veterinario, Admin } from '../../../shared/api/backend-contracts';

@@ -10,8 +10,9 @@ export abstract class BaseCrudRestService<T, TRequest = Partial<T>> {
     protected baseUrl: string
   ) {}
 
-  findAll(params?: HttpParams | { [param: string]: string | number | boolean }): Observable<T[]> {
-    return this.http.get<T[]>(this.baseUrl, { params });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  findAll(params?: any): Observable<T[]> {
+    return this.http.get<T[]>(this.baseUrl, typeof params === 'object' && !(params instanceof HttpParams) ? { params: new HttpParams({ fromObject: params }) } : { params });
   }
 
   findById(id: number): Observable<T> {

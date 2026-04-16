@@ -12,13 +12,13 @@ export class MascotaRestService extends BaseCrudRestService<Mascota, MascotaRequ
     super(http, ENDPOINTS.MASCOTAS);
   }
 
-  getById(id: number): Observable<T> {
-  return this.findById(id);
-}
+  getById(id: number): Observable<Mascota> {
+    return this.findById(id);
+  }
 
-getAll(): Observable<T[]> {
-  return this.findAll();
-}
+  getAll(): Observable<Mascota[]> {
+    return this.findAll();
+  }
 
   override findAll(filtros?: MascotaFiltros): Observable<Mascota[]> {
     let params = new HttpParams();

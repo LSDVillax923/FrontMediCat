@@ -1,103 +1,109 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Cliente, ClienteRequest } from '../../../shared/api/backend-contracts';
-import { ClienteRestService } from '../../services/cliente-rest.service';
+import { ClienteRequest } from '../../../shared/api/backend-contracts';
+import { ClienteRestService } from '../../services/cliente.service';
+import { AuthRestService } from '../../../user/services/auth-rest.service';
+import { Navbar } from '../../../shared/components/navbar/navbar';
+
+interface ClienteForm {
+  nombre: string;
+  apellido: string;
+  correo: string;
+  celular: string;
+  contrasenia: string;
+}
 
 @Component({
   selector: 'app-editar-cliente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, Navbar],
   templateUrl: './editar-cliente.html',
   styleUrls: ['./editar-cliente.css']
 })
 export class EditarClienteComponent implements OnInit {
-  
-  clienteForm: FormGroup;
+
+  formData: ClienteForm = { nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
   loading = false;
   error: string | null = null;
+  mensaje = '';
+  noEncontrado = false;
+  esPerfil = false;
   clienteId: number | null = null;
-  cliente: Cliente | null = null;
 
   constructor(
-    private fb: FormBuilder,
     private clienteService: ClienteRestService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.clienteForm = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      correo: ['', [Validators.required, Validators.email]],
-      celular: ['', [Validators.required, Validators.minLength(10)]],
-      contrasenia: ['', Validators.minLength(6)]
-    });
-  }
+    private router: Router,
+    private authService: AuthRestService,
+  ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.clienteId = +id;
+    } else {
+      const sesion = this.authService.getSesion();
+      if (sesion) {
+        this.clienteId = sesion.id;
+        this.esPerfil = true;
+      }
+    }
+    if (this.clienteId) {
       this.cargarCliente();
     }
   }
 
   cargarCliente(): void {
     if (!this.clienteId) return;
-    
     this.loading = true;
     this.clienteService.findById(this.clienteId).subscribe({
-      next: (cliente: Cliente) => {
-        this.cliente = cliente;
-        this.clienteForm.patchValue({
+      next: (cliente) => {
+        this.formData = {
           nombre: cliente.nombre,
           apellido: cliente.apellido,
           correo: cliente.correo,
-          celular: cliente.celular
-        });
+          celular: cliente.celular,
+          contrasenia: '',
+        };
         this.loading = false;
       },
-      error: (err: Error) => {
-        this.error = 'Error al cargar el cliente';
-        console.error(err);
+      error: () => {
+        this.noEncontrado = true;
+        this.error = 'No se encontró el cliente';
         this.loading = false;
       }
     });
   }
 
-  onSubmit(): void {
-    if (this.clienteForm.invalid || !this.clienteId) {
-      this.clienteForm.markAllAsTouched();
-      return;
-    }
-
+  guardarCambios(): void {
+    if (!this.clienteId) return;
     this.loading = true;
     this.error = null;
+    this.mensaje = '';
 
-    const clienteData: ClienteRequest = {
-      ...this.clienteForm.value
+    const payload: ClienteRequest = {
+      nombre: this.formData.nombre,
+      apellido: this.formData.apellido,
+      correo: this.formData.correo,
+      celular: this.formData.celular,
+      ...(this.formData.contrasenia ? { contrasenia: this.formData.contrasenia } : {}),
     };
 
-    // No enviar contraseña si está vacía
-    if (!clienteData.contrasenia) {
-      delete clienteData.contrasenia;
-    }
-
-    this.clienteService.update(this.clienteId, clienteData).subscribe({
+    this.clienteService.update(this.clienteId, payload).subscribe({
       next: () => {
-        this.router.navigate(['/clientes']);
+        this.mensaje = 'Cambios guardados correctamente.';
+        this.loading = false;
       },
-      error: (err: Error) => {
+      error: () => {
         this.error = 'Error al actualizar el cliente';
-        console.error(err);
         this.loading = false;
       }
     });
   }
 
-  isInvalid(controlName: string): boolean {
-    const control = this.clienteForm.get(controlName);
-    return !!(control && control.invalid && control.touched);
+  volver(): void {
+    this.router.navigate(this.esPerfil ? ['/mis-mascotas'] : ['/clientes']);
   }
 }

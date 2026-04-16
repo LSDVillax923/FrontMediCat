@@ -20,10 +20,14 @@ export class TratamientoRestService extends BaseCrudRestService<Tratamiento, Tra
     return this.http.get<Tratamiento[]>(this.baseUrl, { params });
   }
 
-  override create(tratamiento: TratamientoRequest, mascotaId: number, veterinarioId: number): Observable<Tratamiento> {
-    const params = new HttpParams()
-      .set('mascotaId', mascotaId.toString())
-      .set('veterinarioId', veterinarioId.toString());
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  override create(tratamiento: TratamientoRequest, extraParams?: Record<string, any>): Observable<Tratamiento> {
+    let params = new HttpParams();
+    if (extraParams) {
+      Object.entries(extraParams).forEach(([key, value]) => {
+        params = params.set(key, String(value));
+      });
+    }
     return this.http.post<Tratamiento>(this.baseUrl, tratamiento, { params });
   }
 
@@ -37,6 +41,10 @@ export class TratamientoRestService extends BaseCrudRestService<Tratamiento, Tra
 
   findProgramados(): Observable<Tratamiento[]> {
     return this.http.get<Tratamiento[]>(ENDPOINTS.TRATAMIENTOS_PROGRAMADOS);
+  }
+
+  getById(id: number): Observable<Tratamiento> {
+    return this.findById(id);
   }
 
   override findById(id: number): Observable<Tratamiento> {
