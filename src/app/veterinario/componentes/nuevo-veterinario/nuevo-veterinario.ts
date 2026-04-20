@@ -2,18 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { VeterinarioCreateDto } from '../../../shared/api/backend-contracts.ts';
+import { VeterinarioRequest } from '../../../shared/api/backend-contracts';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { VeterinarioRestService } from '../../services/veterinario-rest.service';
 
 interface NuevoVeterinarioForm {
   nombre: string;
-  apellido: string;
+  cedula: string;
   correo: string;
   celular: string;
   contrasenia: string;
   especialidad: string;
-  numeroLicencia: string;
 }
 
 @Component({
@@ -42,53 +41,62 @@ export class NuevoVeterinario {
 
   formData: NuevoVeterinarioForm = {
     nombre: '',
-    apellido: '',
+    cedula: '',
     correo: '',
     celular: '',
     contrasenia: '',
     especialidad: '',
-    numeroLicencia: '',
   };
 
   constructor(private readonly veterinarioRestService: VeterinarioRestService) {}
 
   guardarVeterinario(): void {
-    const { nombre, apellido, correo, celular, contrasenia, especialidad, numeroLicencia } = this.formData;
+    const { nombre, cedula, correo, celular, contrasenia, especialidad } = this.formData;
 
-    if (!nombre || !apellido || !correo || !celular || !contrasenia || !especialidad || !numeroLicencia) {
+    if (!nombre || !cedula || !correo || !celular || !contrasenia || !especialidad) {
       this.error = 'Todos los campos son obligatorios.';
       this.mensaje = '';
       return;
     }
 
-    const payload: VeterinarioCreateDto = {
+    const payload: VeterinarioRequest = {
       nombre,
-      apellido,
+      cedula,
       correo,
       celular,
       contrasenia,
       especialidad,
-      numeroLicencia,
+      imageUrl: '',
+      estado: 'activo',
     };
 
     this.veterinarioRestService.create(payload).subscribe({
       next: () => {
-        this.mensaje = `${nombre} ${apellido} fue registrado correctamente.`;
+        this.mensaje = `${nombre} fue registrado correctamente.`;
         this.error = '';
         this.formData = {
           nombre: '',
-          apellido: '',
+          cedula: '',
           correo: '',
           celular: '',
           contrasenia: '',
           especialidad: '',
-          numeroLicencia: '',
         };
       },
-      error: () => {
-        this.error = 'No se pudo registrar el veterinario.';
+      error: (err) => {
+        this.error = this.extraerMensajeError(err) || 'No se pudo registrar el veterinario.';
         this.mensaje = '';
       },
     });
+  }
+
+  private extraerMensajeError(err: any): string {
+    if (!err?.error) return '';
+    if (typeof err.error === 'string') return err.error;
+    if (err.error.message) return err.error.message;
+    if (err.error.validationErrors) {
+      return Object.values(err.error.validationErrors).join(' · ');
+    }
+    return '';
   }
 }

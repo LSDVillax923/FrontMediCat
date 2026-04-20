@@ -55,7 +55,6 @@ export class VeterinarioService {
     return this.veterinarios.filter(
       (v) =>
         v.nombre.toLowerCase().includes(filtro) ||
-        v.apellido.toLowerCase().includes(filtro) ||
         v.correo.toLowerCase().includes(filtro) ||
         v.especialidad.toLowerCase().includes(filtro),
     );

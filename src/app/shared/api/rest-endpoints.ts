@@ -41,6 +41,7 @@ export const ENDPOINTS = {
   TRATAMIENTOS_PROGRAMADOS: `${API_BASE_URL}/tratamientos?programados=true`,
   TRATAMIENTOS_BY_MASCOTA: (mascotaId: number) => `${API_BASE_URL}/tratamientos/mascota/${mascotaId}`,
   TRATAMIENTOS_BY_VETERINARIO: (veterinarioId: number) => `${API_BASE_URL}/tratamientos/veterinario/${veterinarioId}`,
+  TRATAMIENTOS_BY_CLIENTE: (clienteId: number) => `${API_BASE_URL}/tratamientos/cliente/${clienteId}`,
 
   // TratamientoDroga
   TRATAMIENTO_DROGAS: `${API_BASE_URL}/tratamiento-drogas`,

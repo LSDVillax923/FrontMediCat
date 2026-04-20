@@ -60,9 +60,9 @@
         <tr *ngFor="let cita of citasFiltradas">
           <td>{{ formatearFecha(cita.fechaInicio).split(' ')[0] }}</td>
           <td>{{ formatearHora(cita.fechaInicio) }} - {{ formatearHora(cita.fechaFin) }}</td>
-          <td>{{ cita.mascota?.nombre || 'N/A' }}</td>
+          <td>{{ cita.mascota.nombre || 'N/A' }}</td>
           <td>{{ nombreCompleto(cita.cliente) }}</td>
-          <td>{{ cita.veterinario?.nombre || 'No asignado' }}</td>
+          <td>{{ cita.veterinario.nombre || 'No asignado' }}</td>
           <td>{{ cita.motivo }}</td>
           <td>
             <span class="estado-badge" [ngClass]="getClaseEstado(cita.estado)">

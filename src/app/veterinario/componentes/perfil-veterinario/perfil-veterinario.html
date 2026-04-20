@@ -17,17 +17,17 @@
     <form (ngSubmit)="guardarCambios()">
       <div class="form-grid">
 
-        <div class="form-group">
-          <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" name="nombre" [(ngModel)]="formData.nombre" autocomplete="given-name" required />
-        </div>
-
-        <div class="form-group">
-          <label for="apellido">Apellido</label>
-          <input type="text" id="apellido" name="apellido" [(ngModel)]="formData.apellido" autocomplete="family-name" required />
-        </div>
-
         <div class="form-group full-width">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" name="nombre" [(ngModel)]="formData.nombre" autocomplete="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="cedula">Cédula</label>
+          <input type="text" id="cedula" name="cedula" [(ngModel)]="formData.cedula" required />
+        </div>
+
+        <div class="form-group">
           <label for="correo">Correo electrónico</label>
           <input type="email" id="correo" name="correo" [(ngModel)]="formData.correo" autocomplete="email" required />
         </div>
@@ -43,16 +43,11 @@
           <small class="form-hint">Deja en blanco para no cambiar la contraseña</small>
         </div>
 
-        <div class="form-group">
+        <div class="form-group full-width">
           <label for="especialidad">Especialidad</label>
           <select id="especialidad" name="especialidad" [(ngModel)]="formData.especialidad" required>
             <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
           </select>
-        </div>
-
-        <div class="form-group">
-          <label for="numeroLicencia">Número de licencia</label>
-          <input type="text" id="numeroLicencia" name="numeroLicencia" [(ngModel)]="formData.numeroLicencia" required />
         </div>
 
       </div>

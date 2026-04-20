@@ -6,9 +6,10 @@ import { ClienteRestService } from '../../../cliente/services/cliente.service';
 import { MascotaRestService } from '../../../mascota/services/mascota.service';
 import { CitaRestService } from '../../../cita/services/cita-rest.service';
 import { Cita, Cliente, Mascota } from '../../../shared/api/backend-contracts';
-import { 
-  formatearFecha, 
-  getClaseEstadoCita, 
+import { Navbar } from '../../../shared/components/navbar/navbar';
+import {
+  formatearFecha,
+  getClaseEstadoCita,
   getTextoEstadoCita,
   nombreCompletoCliente,
   getIniciales
@@ -46,7 +47,7 @@ interface AccesoRapido {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, Navbar],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })
@@ -111,8 +112,7 @@ export class Dashboard implements OnInit {
   constructor(
     private readonly authService: AuthRestService,
     private readonly clienteService: ClienteRestService,
-    private readonly mascotaService: MascotaRestService,
-    private readonly citaService: CitaRestService,
+private readonly mascotaService: MascotaRestService,    private readonly citaService: CitaRestService,
     private readonly router: Router
   ) {
     this.sesion = this.authService.getSesion();

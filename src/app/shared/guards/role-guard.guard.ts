@@ -1,12 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../../user/services/auth.service';
+import { AuthRestService } from '../../user/services/auth-rest.service';
 
 export const adminGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
+  const auth = inject(AuthRestService);
   const router = inject(Router);
 
-  if (auth.esAdmin()) {
+  if (auth.hasRole('ADMIN')) {
     return true;
   }
 
@@ -15,10 +15,10 @@ export const adminGuard: CanActivateFn = () => {
 };
 
 export const veterinarioGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
+  const auth = inject(AuthRestService);
   const router = inject(Router);
 
-  if (auth.esVeterinario() || auth.esAdmin()) {
+  if (auth.hasRole('VETERINARIO') || auth.hasRole('ADMIN')) {
     return true;
   }
 
@@ -27,10 +27,10 @@ export const veterinarioGuard: CanActivateFn = () => {
 };
 
 export const clienteGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
+  const auth = inject(AuthRestService);
   const router = inject(Router);
 
-  if (auth.esCliente()) {
+  if (auth.hasRole('CLIENTE')) {
     return true;
   }
 

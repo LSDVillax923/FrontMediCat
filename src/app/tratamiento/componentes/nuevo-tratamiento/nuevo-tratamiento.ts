@@ -22,7 +22,7 @@ interface NuevoTratamientoForm {
   diagnostico: string;
   observaciones: string;
   fecha: string;
-  estado: 'Activo' | 'Completado' | 'Pendiente' | 'Cancelado';
+  estado: 'PENDIENTE' | 'COMPLETADO' | 'CANCELADO';
   drogas: TratamientoDroga[];
 }
 
@@ -61,7 +61,7 @@ export class NuevoTratamiento implements OnInit {
       veterinarioId: 0, veterinario: '',
       diagnostico: '', observaciones: '',
       fecha: new Date().toISOString().split('T')[0],
-      estado: 'Pendiente', drogas: [],
+      estado: 'PENDIENTE', drogas: [],
     };
   }
 
@@ -89,19 +89,18 @@ export class NuevoTratamiento implements OnInit {
 
   onVetChange(id: number): void {
     const vet = this.veterinarios.find((v) => v.id === id);
-    this.formData.veterinario = vet ? `${vet.nombre} ${vet.apellido}` : '';
+    this.formData.veterinario = vet ? vet.nombre : '';
   }
 
   agregarDroga(): void {
     const nuevoId = Math.max(0, ...this.formData.drogas.map((d) => d.id ?? 0)) + 1;
-    this.formData.drogas.push({ id: nuevoId, drogaId: 0, nombreDroga: '', dosis: '', frecuencia: '', duracion: '' });
+    this.formData.drogas.push({ id: nuevoId, drogaId: 0, nombreDroga: '', cantidad: 1 });
   }
 
   onDrogaChange(index: number, id: number): void {
     const droga = this.drogas.find((d) => d.id === id);
     if (droga) {
       this.formData.drogas[index].nombreDroga = droga.nombre;
-      this.formData.drogas[index].dosis = droga.dosis ?? '';
     }
   }
 

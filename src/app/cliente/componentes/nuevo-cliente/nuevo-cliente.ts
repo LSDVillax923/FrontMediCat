@@ -51,10 +51,20 @@ export class NuevoCliente {
         this.error = '';
         this.formData = { nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
       },
-      error: () => {
-        this.error = 'No se pudo registrar el cliente.';
+      error: (err) => {
+        this.error = this.extraerMensajeError(err) || 'No se pudo registrar el cliente.';
         this.mensaje = '';
       },
     });
+  }
+
+  private extraerMensajeError(err: any): string {
+    if (!err?.error) return '';
+    if (typeof err.error === 'string') return err.error;
+    if (err.error.message) return err.error.message;
+    if (err.error.validationErrors) {
+      return Object.values(err.error.validationErrors).join(' · ');
+    }
+    return '';
   }
 }

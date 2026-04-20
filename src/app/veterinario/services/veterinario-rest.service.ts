@@ -37,8 +37,8 @@ export class VeterinarioRestService extends BaseCrudRestService<Veterinario, Vet
     return super.create(data);
   }
 
-  override update(id: number, data: VeterinarioRequest): Observable<Veterinario> {
-    return super.update(id, data);
+  override update(id: number, data: Partial<VeterinarioRequest>): Observable<Veterinario> {
+    return this.http.put<Veterinario>(`${this.baseUrl}/${id}`, data);
   }
 
   override delete(id: number): Observable<void> {

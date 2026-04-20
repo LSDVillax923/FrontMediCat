@@ -17,6 +17,7 @@ export class LoginComponent {
   loading = false;
   error: string | null = null;
   tipoUsuario: 'CLIENTE' | 'VETERINARIO' | 'ADMIN' = 'CLIENTE';
+  mostrarContrasenia = false;
 
   constructor(
     private fb: FormBuilder,

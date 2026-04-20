@@ -6,6 +6,7 @@ import { AuthService } from '../../../user/services/auth.service';
 import { Tratamiento } from '../../tratamiento';
 import { Veterinario } from '../../../veterinario/veterinario';
 import { Droga } from '../../../droga/droga';
+import { TratamientoDroga } from '../../../tratamiento-droga/tratamiento-droga';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 import { TratamientoRestService } from '../../services/tratamiento-rest.service';
 import { VeterinarioRestService } from '../../../veterinario/services/veterinario-rest.service';
@@ -24,7 +25,7 @@ export class EditarTratamiento implements OnInit {
     id: 0, mascotaId: 0, mascota: '', clienteId: 0,
     veterinarioId: 0, veterinario: '',
     diagnostico: '', observaciones: '', fecha: '',
-    estado: 'Pendiente', drogas: [],
+    estado: 'PENDIENTE', drogas: [],
   };
 
   mensaje = '';
@@ -72,7 +73,7 @@ export class EditarTratamiento implements OnInit {
       next: (dto) => {
         const tratamiento = TratamientoMapper.fromDto(dto);
         this.tratamientoOriginal = tratamiento;
-        this.formData = { ...tratamiento, drogas: tratamiento.drogas.map((d) => ({ ...d })) };
+        this.formData = { ...tratamiento, drogas: tratamiento.drogas.map((d: TratamientoDroga) => ({ ...d })) };
         this.cargando = false;
       },
       error: () => {
@@ -89,21 +90,18 @@ export class EditarTratamiento implements OnInit {
 
   onVetChange(id: number): void {
     const vet = this.veterinarios.find((v) => v.id === id);
-    this.formData.veterinario = vet ? `${vet.nombre} ${vet.apellido}` : '';
+    this.formData.veterinario = vet ? vet.nombre : '';
   }
 
   agregarDroga(): void {
     const nuevoId = Math.max(0, ...this.formData.drogas.map((d) => d.id ?? 0)) + 1;
-    this.formData.drogas.push({ id: nuevoId, drogaId: 0, nombreDroga: '', dosis: '', frecuencia: '', duracion: '' });
+    this.formData.drogas.push({ id: nuevoId, drogaId: 0, nombreDroga: '', cantidad: 1 });
   }
 
   onDrogaChange(index: number, id: number): void {
     const droga = this.drogas.find((d) => d.id === id);
     if (droga) {
       this.formData.drogas[index].nombreDroga = droga.nombre;
-      if (!this.esAdmin) {
-        this.formData.drogas[index].dosis = droga.dosis ?? '';
-      }
     }
   }
 
@@ -116,12 +114,6 @@ export class EditarTratamiento implements OnInit {
     if (!veterinarioId || !diagnostico || !fecha) {
       this.error = 'Veterinario, diagnóstico y fecha son obligatorios.';
       return;
-    }
-    if (this.esAdmin && this.tratamientoOriginal) {
-      this.formData.drogas = this.formData.drogas.map((d: typeof this.formData.drogas[0], i: number) => ({
-        ...d,
-        dosis: this.tratamientoOriginal?.drogas[i]?.dosis ?? d.dosis,
-      }));
     }
     this.cargando = true;
     this.tratamientoRestService.update(id, TratamientoMapper.toDto(this.formData)).subscribe({

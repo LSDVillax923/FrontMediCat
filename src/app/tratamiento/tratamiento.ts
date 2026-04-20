@@ -10,6 +10,6 @@ export interface Tratamiento {
   diagnostico: string;
   observaciones: string;
   fecha: string;
-  estado: 'Pendiente' | 'Activo' | 'Completado' | 'Cancelado';
+  estado: 'PENDIENTE' | 'COMPLETADO' | 'CANCELADO';
   drogas: TratamientoDroga[];
 }

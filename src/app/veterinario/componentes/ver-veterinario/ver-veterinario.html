@@ -14,7 +14,7 @@
       <div class="detalle-header">
         <div class="avatar-lg">{{ veterinario.nombre.charAt(0) }}</div>
         <div>
-          <h2>{{ veterinario.nombre }} {{ veterinario.apellido }}</h2>
+          <h2>{{ veterinario.nombre }}</h2>
           <span class="badge badge-especialidad">{{ veterinario.especialidad }}</span>
         </div>
         <a [routerLink]="['/veterinarios', veterinario.id, 'editar']" class="btn-accion btn-accion--outline">
@@ -37,8 +37,8 @@
           <span>{{ veterinario.celular }}</span>
         </div>
         <div class="detalle-campo">
-          <span class="detalle-label">N° Licencia</span>
-          <span>{{ veterinario.numeroLicencia }}</span>
+          <span class="detalle-label">Cédula</span>
+          <span>{{ veterinario.cedula }}</span>
         </div>
       </div>
     </section>

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Cliente } from '../../../shared/api/backend-contracts';
+import { Cliente, Mascota } from '../../../shared/api/backend-contracts';
 import { ClienteRestService } from '../../services/cliente.service';
+import { MascotaRestService } from '../../../mascota/services/mascota.service';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 
 @Component({
@@ -14,10 +15,12 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
 })
 export class VerCliente implements OnInit {
   cliente: Cliente | null = null;
+  mascotas: Mascota[] = [];
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly clienteRestService: ClienteRestService,
+    private readonly mascotaRestService: MascotaRestService,
   ) {}
 
   ngOnInit(): void {
@@ -30,9 +33,17 @@ export class VerCliente implements OnInit {
         this.cliente = null;
       },
     });
+    this.mascotaRestService.findByClienteId(id).subscribe({
+      next: (mascotas) => {
+        this.mascotas = mascotas;
+      },
+      error: () => {
+        this.mascotas = [];
+      },
+    });
   }
 
   get totalMascotas(): number {
-    return this.cliente?.mascotas?.length ?? 0;
+    return this.mascotas.length;
   }
 }

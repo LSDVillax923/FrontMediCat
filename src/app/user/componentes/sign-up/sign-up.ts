@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthRestService } from '../../../shared/auth/auth-rest.service';
+import { AuthRestService } from '../../services/auth-rest.service';
 
 interface RegistroForm {
   nombre: string;

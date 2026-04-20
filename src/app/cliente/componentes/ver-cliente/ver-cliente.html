@@ -60,10 +60,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="cliente.mascotas.length === 0">
+          <tr *ngIf="mascotas.length === 0">
             <td colspan="4" class="sin-resultados">Este cliente no tiene mascotas registradas.</td>
           </tr>
-          <tr *ngFor="let mascota of cliente.mascotas">
+          <tr *ngFor="let mascota of mascotas">
             <td>{{ mascota.nombre }}</td>
             <td>{{ mascota.especie }}</td>
             <td>{{ mascota.raza }}</td>

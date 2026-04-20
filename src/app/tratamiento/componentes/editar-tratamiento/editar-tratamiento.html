@@ -26,7 +26,7 @@
         <div class="form-group">
           <label for="veterinarioId">Veterinario responsable</label>
           <select id="veterinarioId" name="veterinarioId" [(ngModel)]="formData.veterinarioId" (ngModelChange)="onVetChange($event)">
-            <option *ngFor="let v of veterinarios" [ngValue]="v.id">{{ v.nombre }} {{ v.apellido }}</option>
+            <option *ngFor="let v of veterinarios" [ngValue]="v.id">{{ v.nombre }}</option>
           </select>
         </div>
 
@@ -48,10 +48,9 @@
         <div class="form-group">
           <label for="estado">Estado</label>
           <select id="estado" name="estado" [(ngModel)]="formData.estado">
-            <option value="Pendiente">Pendiente</option>
-            <option value="Activo">Activo</option>
-            <option value="Completado">Completado</option>
-            <option value="Cancelado">Cancelado</option>
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="COMPLETADO">Completado</option>
+            <option value="CANCELADO">Cancelado</option>
           </select>
         </div>
 
@@ -74,30 +73,9 @@
               <option *ngFor="let d of drogas" [ngValue]="d.id">{{ d.nombre }}</option>
             </select>
           </div>
-          <div class="form-group" [class.campo-bloqueado]="esAdmin">
-            <label>
-              Dosis
-              <span *ngIf="esAdmin" class="campo-bloqueado__aviso">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                Solo veterinarios
-              </span>
-            </label>
-            <input
-              type="text"
-              [(ngModel)]="droga.dosis"
-              [name]="'dosis_' + i"
-              [disabled]="esAdmin"
-              [attr.readonly]="esAdmin ? true : null"
-              placeholder="Ej: 5mg/kg"
-            />
-          </div>
           <div class="form-group">
-            <label>Frecuencia</label>
-            <input type="text" [(ngModel)]="droga.frecuencia" [name]="'frecuencia_' + i" placeholder="Ej: Cada 8 horas" />
-          </div>
-          <div class="form-group">
-            <label>Duración</label>
-            <input type="text" [(ngModel)]="droga.duracion" [name]="'duracion_' + i" placeholder="Ej: 7 días" />
+            <label>Cantidad</label>
+            <input type="number" [(ngModel)]="droga.cantidad" [name]="'cantidad_' + i" min="1" />
           </div>
           <button type="button" class="btn-eliminar-droga" (click)="quitarDroga(i)" title="Quitar medicamento">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>

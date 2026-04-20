@@ -54,12 +54,7 @@ export class ListarDrogas implements OnInit {
   get drogasFiltradas(): Droga[] {
     const filtro = this.busqueda.trim().toLowerCase();
     if (!filtro) return this.drogas;
-    return this.drogas.filter(
-      (d) =>
-        d.nombre.toLowerCase().includes(filtro) ||
-        d.descripcion.toLowerCase().includes(filtro) ||
-        d.unidad.toLowerCase().includes(filtro),
-    );
+    return this.drogas.filter((d) => d.nombre.toLowerCase().includes(filtro));
   }
 
   stockClase(stock: number): string {

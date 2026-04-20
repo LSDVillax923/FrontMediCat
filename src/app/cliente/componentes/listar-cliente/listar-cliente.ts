@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClienteRestService } from '../../services/cliente.service';
-import { Cliente } from '../../../shared/api/backend-contracts';
+import { MascotaRestService } from '../../../mascota/services/mascota.service';
+import { Cliente, Mascota } from '../../../shared/api/backend-contracts';
 import { nombreCompletoCliente } from '../../../shared/api/model-mappers';
 import { Navbar } from '../../../shared/components/navbar/navbar';
 
@@ -18,15 +19,20 @@ export class ListarClienteComponent implements OnInit {
 
   clientes: Cliente[] = [];
   clientesFiltrados: Cliente[] = [];
+  mascotasPorCliente: Record<number, number> = {};
   loading = false;
   error: string | null = null;
   mensaje = '';
   busqueda = '';
 
-  constructor(private clienteService: ClienteRestService) {}
+  constructor(
+    private clienteService: ClienteRestService,
+    private mascotaService: MascotaRestService,
+  ) {}
 
   ngOnInit(): void {
     this.cargarClientes();
+    this.cargarContadoresMascotas();
   }
 
   cargarClientes(): void {
@@ -42,6 +48,28 @@ export class ListarClienteComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  private cargarContadoresMascotas(): void {
+    this.mascotaService.findAll().subscribe({
+      next: (mascotas: Mascota[]) => {
+        const contador: Record<number, number> = {};
+        for (const m of mascotas) {
+          const cid = m.cliente?.id;
+          if (cid != null) {
+            contador[cid] = (contador[cid] ?? 0) + 1;
+          }
+        }
+        this.mascotasPorCliente = contador;
+      },
+      error: () => {
+        this.mascotasPorCliente = {};
+      }
+    });
+  }
+
+  contarMascotas(clienteId: number): number {
+    return this.mascotasPorCliente[clienteId] ?? 0;
   }
 
   aplicarFiltro(): void {

@@ -30,7 +30,7 @@
           <label for="veterinarioId">Veterinario responsable</label>
           <select id="veterinarioId" name="veterinarioId" [(ngModel)]="formData.veterinarioId" (ngModelChange)="onVetChange($event)" required>
             <option [ngValue]="0">Selecciona un veterinario</option>
-            <option *ngFor="let v of veterinarios" [ngValue]="v.id">{{ v.nombre }} {{ v.apellido }}</option>
+            <option *ngFor="let v of veterinarios" [ngValue]="v.id">{{ v.nombre }}</option>
           </select>
         </div>
 
@@ -52,10 +52,9 @@
         <div class="form-group">
           <label for="estado">Estado</label>
           <select id="estado" name="estado" [(ngModel)]="formData.estado" required>
-            <option value="Pendiente">Pendiente</option>
-            <option value="Activo">Activo</option>
-            <option value="Completado">Completado</option>
-            <option value="Cancelado">Cancelado</option>
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="COMPLETADO">Completado</option>
+            <option value="CANCELADO">Cancelado</option>
           </select>
         </div>
 
@@ -80,12 +79,8 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Frecuencia</label>
-            <input type="text" [(ngModel)]="droga.frecuencia" [name]="'frecuencia_' + i" placeholder="Ej: Cada 8 horas" />
-          </div>
-          <div class="form-group">
-            <label>Duración</label>
-            <input type="text" [(ngModel)]="droga.duracion" [name]="'duracion_' + i" placeholder="Ej: 7 días" />
+            <label>Cantidad</label>
+            <input type="number" [(ngModel)]="droga.cantidad" [name]="'cantidad_' + i" min="1" />
           </div>
           <button type="button" class="btn-eliminar-droga" (click)="quitarDroga(i)" title="Quitar medicamento">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>

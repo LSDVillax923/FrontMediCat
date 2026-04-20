@@ -45,19 +45,18 @@ export class ListarVeterinarios implements OnInit {
     return this.veterinarios.filter(
       (v) =>
         v.nombre.toLowerCase().includes(filtro) ||
-        v.apellido.toLowerCase().includes(filtro) ||
         v.correo.toLowerCase().includes(filtro) ||
         v.especialidad.toLowerCase().includes(filtro) ||
-        v.numeroLicencia.toLowerCase().includes(filtro),
+        (v.cedula?.toLowerCase().includes(filtro) ?? false),
     );
   }
 
   eliminarVeterinario(vet: Veterinario): void {
-    if (!confirm(`¿Eliminar a ${vet.nombre} ${vet.apellido}?`)) return;
+    if (!confirm(`¿Eliminar a ${vet.nombre}?`)) return;
 
     this.veterinarioRestService.delete(vet.id).subscribe({
       next: () => {
-        this.mensaje = `${vet.nombre} ${vet.apellido} fue eliminado correctamente.`;
+        this.mensaje = `${vet.nombre} fue eliminado correctamente.`;
         this.error = '';
         this.cargarVeterinarios();
       },

@@ -1,8 +1,8 @@
 export interface Droga {
   id: number;
   nombre: string;
-  descripcion: string;
-  unidad: string;
-  stock: number;
-  dosis?: string;
+  precioCompra: number;
+  precioVenta: number;
+  unidadesDisponibles: number;
+  unidadesVendidas: number;
 }

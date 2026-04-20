@@ -1,1 +1,1 @@
-export { Cliente } from '../shared/api/backend-contracts';
+export type { Cliente } from '../shared/api/backend-contracts';

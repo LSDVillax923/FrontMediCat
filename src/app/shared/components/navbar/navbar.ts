@@ -22,23 +22,23 @@ export class Navbar {
   }
 
   get esAdmin(): boolean {
-    return this.sesion?.rol === 'admin';
+    return this.sesion?.rol === 'ADMIN';
   }
 
   get esVeterinario(): boolean {
-    return this.sesion?.rol === 'veterinario';
+    return this.sesion?.rol === 'VETERINARIO';
   }
 
   get esCliente(): boolean {
-    return this.sesion?.rol === 'cliente';
+    return this.sesion?.rol === 'CLIENTE';
   }
 
   /** Ruta de perfil según el rol */
   get rutaPerfil(): string {
     switch (this.sesion?.rol) {
-      case 'admin':       return '/perfil-admin';
-      case 'veterinario': return '/perfil-veterinario';
-      case 'cliente':     return '/perfil';
+      case 'ADMIN':       return '/perfil-admin';
+      case 'VETERINARIO': return '/perfil-veterinario';
+      case 'CLIENTE':     return '/perfil';
       default:            return '/perfil';
     }
   }
@@ -46,9 +46,9 @@ export class Navbar {
   /** Etiqueta visible del rol */
   get etiquetaRol(): string {
     switch (this.sesion?.rol) {
-      case 'admin':       return 'Administrador';
-      case 'veterinario': return 'Veterinario';
-      case 'cliente':     return 'Cliente';
+      case 'ADMIN':       return 'Administrador';
+      case 'VETERINARIO': return 'Veterinario';
+      case 'CLIENTE':     return 'Cliente';
       default:            return '';
     }
   }

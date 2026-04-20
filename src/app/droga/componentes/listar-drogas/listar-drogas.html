@@ -16,7 +16,7 @@
         <input
           type="text"
           [(ngModel)]="busqueda"
-          placeholder="Buscar por nombre o descripción..."
+          placeholder="Buscar por nombre..."
         />
         <button *ngIf="busqueda" type="button" class="btn-limpiar" (click)="busqueda = ''">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -38,10 +38,10 @@
       <thead>
         <tr>
           <th>Medicamento</th>
-          <th>Descripción</th>
-          <th>Dosis</th>
-          <th>Unidad</th>
-          <th>Stock</th>
+          <th>Precio compra</th>
+          <th>Precio venta</th>
+          <th>Disponibles</th>
+          <th>Vendidas</th>
           <th *ngIf="puedeEditar">Acciones</th>
         </tr>
       </thead>
@@ -53,12 +53,12 @@
           <td>
             <strong>{{ droga.nombre }}</strong>
           </td>
-          <td class="descripcion-cell">{{ droga.descripcion || '—' }}</td>
-          <td>{{ droga.dosis || '—' }}</td>
-          <td>{{ droga.unidad || '—' }}</td>
+          <td>{{ droga.precioCompra | currency:'COP':'symbol':'1.0-0' }}</td>
+          <td>{{ droga.precioVenta | currency:'COP':'symbol':'1.0-0' }}</td>
           <td>
-            <span class="badge" [ngClass]="stockClase(droga.stock)">{{ droga.stock }}</span>
+            <span class="badge" [ngClass]="stockClase(droga.unidadesDisponibles)">{{ droga.unidadesDisponibles }}</span>
           </td>
+          <td>{{ droga.unidadesVendidas }}</td>
           <td *ngIf="puedeEditar">
             <div class="acciones">
               <a [routerLink]="['/drogas', droga.id, 'editar']" class="btn-accion">

@@ -15,6 +15,7 @@ interface NuevaMascotaForm {
   raza: string;
   sexo: string;
   fechaNacimiento: string;
+  edad: number | null;
   peso: number | null;
   estado: string;
   clienteId: number | null;
@@ -66,7 +67,7 @@ export class NuevaMascota implements OnInit {
   }
 
   registrarMascota(): void {
-    const { clienteId, nombre, especie, raza, sexo, fechaNacimiento, peso, estado, enfermedad, veterinarioAsignado, observaciones } = this.mascotaForm;
+    const { clienteId, nombre, especie, raza, sexo, fechaNacimiento, edad, peso, estado, enfermedad, veterinarioAsignado, observaciones } = this.mascotaForm;
 
     if (!clienteId || !nombre || !especie || !raza || !estado) {
       this.error = 'Completa todos los campos obligatorios.';
@@ -79,6 +80,7 @@ export class NuevaMascota implements OnInit {
       raza,
       sexo: sexo as 'Macho' | 'Hembra',
       fechaNacimiento,
+      edad: edad ?? 0,
       peso: peso ?? 0,
       estado: estado as 'ACTIVA' | 'TRATAMIENTO' | 'INACTIVA',
       enfermedad,
@@ -108,7 +110,7 @@ export class NuevaMascota implements OnInit {
   private formInicial(): NuevaMascotaForm {
     return {
       nombre: '', especie: '', raza: '', sexo: '', fechaNacimiento: '',
-      peso: null, estado: '', clienteId: null, enfermedad: '',
+      edad: null, peso: null, estado: '', clienteId: null, enfermedad: '',
       veterinarioAsignado: '', observaciones: '',
     };
   }

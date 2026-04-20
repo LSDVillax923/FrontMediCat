@@ -25,6 +25,7 @@ interface ClienteForm {
 export class EditarClienteComponent implements OnInit {
 
   formData: ClienteForm = { nombre: '', apellido: '', correo: '', celular: '', contrasenia: '' };
+  contraseniaOriginal = '';
   loading = false;
   error: string | null = null;
   mensaje = '';
@@ -67,6 +68,7 @@ export class EditarClienteComponent implements OnInit {
           celular: cliente.celular,
           contrasenia: '',
         };
+        this.contraseniaOriginal = cliente.contrasenia ?? '';
         this.loading = false;
       },
       error: () => {
@@ -88,7 +90,7 @@ export class EditarClienteComponent implements OnInit {
       apellido: this.formData.apellido,
       correo: this.formData.correo,
       celular: this.formData.celular,
-      ...(this.formData.contrasenia ? { contrasenia: this.formData.contrasenia } : {}),
+      contrasenia: this.formData.contrasenia || this.contraseniaOriginal,
     };
 
     this.clienteService.update(this.clienteId, payload).subscribe({
@@ -96,8 +98,8 @@ export class EditarClienteComponent implements OnInit {
         this.mensaje = 'Cambios guardados correctamente.';
         this.loading = false;
       },
-      error: () => {
-        this.error = 'Error al actualizar el cliente';
+      error: (err) => {
+        this.error = err?.error?.message || 'Error al actualizar el cliente';
         this.loading = false;
       }
     });

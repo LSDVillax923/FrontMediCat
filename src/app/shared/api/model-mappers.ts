@@ -548,11 +548,6 @@ export const ClienteMapper = {
 export const MascotaMapper = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fromDto(dto: BackendMascota): any {
-    const estadoMap: Record<string, string> = {
-      ACTIVA: 'Activa',
-      TRATAMIENTO: 'Tratamiento',
-      INACTIVA: 'Inactiva',
-    };
     return {
       id: dto.id,
       nombre: dto.nombre,
@@ -565,7 +560,7 @@ export const MascotaMapper = {
       enfermedad: dto.enfermedad ?? '',
       observaciones: dto.observaciones ?? '',
       foto: dto.foto,
-      estado: estadoMap[dto.estado] ?? 'Activa',
+      estado: dto.estado ?? 'ACTIVA',
       clienteId: dto.cliente?.id ?? 0,
       propietario: dto.cliente
         ? `${dto.cliente.nombre} ${dto.cliente.apellido}`.trim()
@@ -581,7 +576,6 @@ export const VeterinarioMapper = {
     return {
       id: dto.id,
       nombre: dto.nombre,
-      apellido: '',
       cedula: dto.cedula,
       celular: dto.celular,
       correo: dto.correo,
@@ -600,10 +594,10 @@ export const DrogaMapper = {
     return {
       id: dto.id,
       nombre: dto.nombre,
-      descripcion: '',
-      unidad: '',
-      stock: dto.unidadesDisponibles,
-      dosis: '',
+      precioCompra: dto.precioCompra,
+      precioVenta: dto.precioVenta,
+      unidadesDisponibles: dto.unidadesDisponibles,
+      unidadesVendidas: dto.unidadesVendidas,
     };
   },
 };
@@ -621,8 +615,13 @@ export const TratamientoMapper = {
       diagnostico: dto.diagnostico,
       observaciones: dto.observaciones,
       fecha: dto.fecha,
-      estado: 'Pendiente',
-      drogas: [],
+      estado: dto.estado ?? 'PENDIENTE',
+      drogas: (dto.drogas ?? []).map((td) => ({
+        id: td.id,
+        drogaId: td.droga?.id ?? 0,
+        nombreDroga: td.droga?.nombre ?? '',
+        cantidad: td.cantidad,
+      })),
     };
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -631,7 +630,7 @@ export const TratamientoMapper = {
       diagnostico: tratamiento.diagnostico ?? '',
       observaciones: tratamiento.observaciones ?? '',
       fecha: tratamiento.fecha ?? '',
-      estado: 'PENDIENTE',
+      estado: tratamiento.estado ?? 'PENDIENTE',
     };
   },
 };

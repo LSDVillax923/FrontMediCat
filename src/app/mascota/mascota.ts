@@ -10,7 +10,7 @@ export interface Mascota {
   enfermedad: string;
   observaciones: string;
   foto?: string;
-  estado: 'Activa' | 'Tratamiento' | 'Inactiva';
+  estado: 'ACTIVA' | 'TRATAMIENTO' | 'INACTIVA';
   clienteId: number;
   propietario?: string;
   veterinarioAsignado?: string;

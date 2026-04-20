@@ -9,12 +9,11 @@ import { Navbar } from '../../../shared/components/navbar/navbar';
 interface VeterinarioEditable {
   id: number;
   nombre: string;
-  apellido: string;
+  cedula: string;
   correo: string;
   celular: string;
   contrasenia: string;
   especialidad: string;
-  numeroLicencia: string;
 }
 
 @Component({
@@ -28,12 +27,11 @@ export class PerfilVeterinario {
   formData: VeterinarioEditable = {
     id: 0,
     nombre: '',
-    apellido: '',
+    cedula: '',
     correo: '',
     celular: '',
     contrasenia: '',
     especialidad: '',
-    numeroLicencia: '',
   };
 
   mensaje = '';
@@ -69,12 +67,11 @@ export class PerfilVeterinario {
       this.formData = {
         id: vet.id,
         nombre: vet.nombre,
-        apellido: vet.apellido,
+        cedula: vet.cedula,
         correo: vet.correo,
         celular: vet.celular,
         contrasenia: '',
         especialidad: vet.especialidad,
-        numeroLicencia: vet.numeroLicencia,
       };
     } else {
       this.noEncontrado = true;
@@ -83,22 +80,21 @@ export class PerfilVeterinario {
   }
 
   guardarCambios(): void {
-    const { id, nombre, apellido, correo, celular, contrasenia, especialidad, numeroLicencia } = this.formData;
+    const { id, nombre, cedula, correo, celular, contrasenia, especialidad } = this.formData;
 
-    if (!nombre || !apellido || !correo || !celular || !especialidad || !numeroLicencia) {
+    if (!nombre || !cedula || !correo || !celular || !especialidad) {
       this.error = 'Todos los campos son obligatorios excepto la contraseña.';
       return;
     }
 
-    const cambios: Partial<VeterinarioEditable> = { nombre, apellido, correo, celular, especialidad, numeroLicencia };
+    const cambios: Partial<VeterinarioEditable> = { nombre, cedula, correo, celular, especialidad };
     if (contrasenia) cambios['contrasenia'] = contrasenia;
 
     this.veterinarioService.update(id, cambios);
 
-    // Actualizar nombre en sesión
     this.authService.setSesion({
       ...this.authService.getSesion()!,
-      nombre: `${nombre} ${apellido}`,
+      nombre,
       correo,
     });
 

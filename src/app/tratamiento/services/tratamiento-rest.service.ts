@@ -39,6 +39,10 @@ export class TratamientoRestService extends BaseCrudRestService<Tratamiento, Tra
     return this.http.get<Tratamiento[]>(ENDPOINTS.TRATAMIENTOS_BY_VETERINARIO(veterinarioId));
   }
 
+  findByClienteId(clienteId: number): Observable<Tratamiento[]> {
+    return this.http.get<Tratamiento[]>(ENDPOINTS.TRATAMIENTOS_BY_CLIENTE(clienteId));
+  }
+
   findProgramados(): Observable<Tratamiento[]> {
     return this.http.get<Tratamiento[]>(ENDPOINTS.TRATAMIENTOS_PROGRAMADOS);
   }

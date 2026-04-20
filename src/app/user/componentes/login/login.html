@@ -7,19 +7,26 @@
     <h1 class="login-titulo">Iniciar sesión</h1>
     <p class="login-subtitulo">Bienvenido a Medicat</p>
 
+    <div class="login-tabs" role="tablist">
+      <button type="button" role="tab" class="login-tab" [class.activa]="tipoUsuario === 'CLIENTE'"
+        (click)="setTipoUsuario('CLIENTE')">Cliente</button>
+      <button type="button" role="tab" class="login-tab" [class.activa]="tipoUsuario === 'VETERINARIO'"
+        (click)="setTipoUsuario('VETERINARIO')">Veterinario</button>
+      <button type="button" role="tab" class="login-tab" [class.activa]="tipoUsuario === 'ADMIN'"
+        (click)="setTipoUsuario('ADMIN')">Administrador</button>
+    </div>
+
     <p *ngIf="error" class="alert alert-error">{{ error }}</p>
 
-    <form (ngSubmit)="iniciarSesion()">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="correo">Correo electrónico</label>
         <input
           type="email"
           id="correo"
-          name="correo"
-          [(ngModel)]="correo"
+          formControlName="correo"
           autocomplete="email"
           placeholder="tu@correo.com"
-          required
         />
       </div>
 
@@ -32,11 +39,9 @@
           <input
             [type]="mostrarContrasenia ? 'text' : 'password'"
             id="contrasenia"
-            name="contrasenia"
-            [(ngModel)]="contrasenia"
+            formControlName="contrasenia"
             autocomplete="current-password"
             placeholder="••••••••"
-            required
           />
           <button type="button" class="btn-toggle-password" (click)="mostrarContrasenia = !mostrarContrasenia">
             <svg *ngIf="!mostrarContrasenia" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -45,9 +50,9 @@
         </div>
       </div>
 
-      <button type="submit" class="btn-login" [disabled]="cargando">
-        <span *ngIf="!cargando">Iniciar sesión</span>
-        <span *ngIf="cargando">Verificando...</span>
+      <button type="submit" class="btn-login" [disabled]="loading">
+        <span *ngIf="!loading">Iniciar sesión</span>
+        <span *ngIf="loading">Verificando...</span>
       </button>
     </form>
 

@@ -44,7 +44,7 @@
           <th>Especialidad</th>
           <th>Correo</th>
           <th>Celular</th>
-          <th>N.º Licencia</th>
+          <th>Cédula</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -60,7 +60,7 @@
             <div class="cliente-info">
               <div class="avatar">{{ vet.nombre.charAt(0) }}</div>
               <div class="vet-nombre-wrap">
-                <span>{{ vet.nombre }} {{ vet.apellido }}</span>
+                <span>{{ vet.nombre }}</span>
               </div>
             </div>
           </td>
@@ -69,7 +69,7 @@
           </td>
           <td>{{ vet.correo }}</td>
           <td>{{ vet.celular }}</td>
-          <td class="text-mono">{{ vet.numeroLicencia }}</td>
+          <td class="text-mono">{{ vet.cedula }}</td>
           <td>
             <div class="acciones">
               <a [routerLink]="['/veterinarios', vet.id]" class="btn-accion">

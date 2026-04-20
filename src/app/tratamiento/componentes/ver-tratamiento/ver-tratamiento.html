@@ -54,17 +54,13 @@
         <thead>
           <tr>
             <th>Medicamento</th>
-            <th>Dosis</th>
-            <th>Frecuencia</th>
-            <th>Duración</th>
+            <th>Cantidad</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let droga of tratamiento.drogas">
             <td>{{ droga.nombreDroga }}</td>
-            <td>{{ droga.dosis || '—' }}</td>
-            <td>{{ droga.frecuencia || '—' }}</td>
-            <td>{{ droga.duracion || '—' }}</td>
+            <td>{{ droga.cantidad }}</td>
           </tr>
         </tbody>
       </table>

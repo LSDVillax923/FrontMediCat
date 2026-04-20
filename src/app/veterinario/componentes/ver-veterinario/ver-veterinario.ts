@@ -24,7 +24,7 @@ export class VerVeterinario implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
-    this.veterinarioRestService.getById(id).subscribe({
+    this.veterinarioRestService.findById(id).subscribe({
       next: (vetDto) => {
         this.veterinario = VeterinarioMapper.fromDto(vetDto);
       },

@@ -59,9 +59,9 @@
         <div class="form-group">
   <label for="estado">Estado</label>
   <select id="estado" name="estado" [(ngModel)]="mascotaForm.estado" required> <option value="" disabled>Selecciona un estado</option>
-    <option value="Activa">Activa</option>
-    <option value="Tratamiento">En Tratamiento</option>
-    <option value="Inactiva">Inactiva</option>
+    <option value="ACTIVA">Activa</option>
+    <option value="TRATAMIENTO">En Tratamiento</option>
+    <option value="INACTIVA">Inactiva</option>
   </select>
 </div>
 
@@ -84,8 +84,8 @@
           <label for="veterinarioAsignado">Veterinario asignado</label>
           <select id="veterinarioAsignado" name="veterinarioAsignado" [(ngModel)]="mascotaForm.veterinarioAsignado">
             <option value="">Sin veterinario asignado</option>
-            <option *ngFor="let vet of veterinariosDisponibles" [value]="vet.nombre + ' ' + vet.apellido">
-              {{ vet.nombre }} {{ vet.apellido }} — {{ vet.especialidad }}
+            <option *ngFor="let vet of veterinariosDisponibles" [value]="vet.nombre">
+              {{ vet.nombre }} — {{ vet.especialidad }}
             </option>
           </select>
         </div>

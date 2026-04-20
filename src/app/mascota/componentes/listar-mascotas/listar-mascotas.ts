@@ -74,9 +74,9 @@ export class ListarMascotas implements OnInit {
   }
 
   get totalMascotas(): number { return this.mascotasFiltradas.length; }
-  get saludables(): number { return this.mascotasFiltradas.filter((m) => m.estado === 'Activa').length; }
-  get enTratamiento(): number { return this.mascotasFiltradas.filter((m) => m.estado === 'Tratamiento').length; }
-  get inactivas(): number { return this.mascotasFiltradas.filter((m) => m.estado === 'Inactiva').length; }
+  get saludables(): number { return this.mascotasFiltradas.filter((m) => m.estado === 'ACTIVA').length; }
+  get enTratamiento(): number { return this.mascotasFiltradas.filter((m) => m.estado === 'TRATAMIENTO').length; }
+  get inactivas(): number { return this.mascotasFiltradas.filter((m) => m.estado === 'INACTIVA').length; }
 
   get filtroNombre(): string { return this.busqueda; }
   set filtroNombre(value: string) { this.busqueda = value; }

@@ -89,6 +89,7 @@ export interface MascotaRequest {
   raza: string;
   sexo: 'Macho' | 'Hembra';
   fechaNacimiento: string;  // ISO Date: "YYYY-MM-DD"
+  edad?: number;
   peso: number;
   enfermedad?: string;
   observaciones?: string;

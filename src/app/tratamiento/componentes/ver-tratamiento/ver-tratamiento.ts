@@ -45,15 +45,14 @@ export class VerTratamiento implements OnInit {
 
   get puedeEditar(): boolean {
     const rol = this.authService.getSesion()?.rol;
-    return rol === 'veterinario' || rol === 'admin';
+    return rol === 'VETERINARIO' || rol === 'ADMIN';
   }
 
   estadoClase(estado: string): string {
     const map: Record<string, string> = {
-      Activo: 'badge-activo',
-      Completado: 'badge-activo',
-      Pendiente: 'badge-warning',
-      Cancelado: 'badge-danger',
+      COMPLETADO: 'badge-activo',
+      PENDIENTE: 'badge-warning',
+      CANCELADO: 'badge-danger',
     };
     return map[estado] ?? '';
   }

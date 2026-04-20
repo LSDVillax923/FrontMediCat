@@ -17,6 +17,7 @@
           type="text"
           name="busqueda"
           [(ngModel)]="busqueda"
+          (ngModelChange)="aplicarFiltro()"
           placeholder="Buscar por nombre, apellido, correo o celular..."
         />
         <button *ngIf="busqueda" type="button" class="btn-limpiar" (click)="limpiarBusqueda()">
@@ -66,7 +67,7 @@
           </td>
           <td>{{ cliente.correo }}</td>
           <td>{{ cliente.celular }}</td>
-          <td>{{ cliente.mascotas?.length ?? 0 }}</td>
+          <td>{{ contarMascotas(cliente.id) }}</td>
           <td><span class="badge badge-activo">Activo</span></td>
           <td>
             <div class="acciones">

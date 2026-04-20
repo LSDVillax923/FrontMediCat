@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LoginRequest, Cliente, Veterinario, Admin } from '../../shared/api/backend-contracts';
+import { LoginRequest, Cliente, ClienteRequest, Veterinario, Admin } from '../../shared/api/backend-contracts';
 import { ENDPOINTS } from '../../shared/api/rest-endpoints';
 
 export interface SesionActiva {
@@ -51,6 +51,10 @@ export class AuthRestService {
     return this.sesion?.rol === rol;
   }
 
+  setSesion(sesion: SesionActiva): void {
+    this.guardarSesion(sesion);
+  }
+
 // Agregar este método a AuthRestService
 
 /**
@@ -69,23 +73,9 @@ login(credentials: LoginRequest, tipoUsuario: 'CLIENTE' | 'VETERINARIO' | 'ADMIN
   }
 }
 
-// Alias para compatibilidad
-getById(id: number): Observable<any> {
-  // Implementar según el rol guardado
-  const sesion = this.getSesion();
-  if (!sesion) throw new Error('No hay sesión activa');
-  
-  switch (sesion.rol) {
-    case 'CLIENTE':
-      return this.clienteService.findById(id);
-    case 'VETERINARIO':
-      return this.veterinarioService.findById(id);
-    case 'ADMIN':
-      return this.adminService.findById(id);
-    default:
-      throw new Error('Rol no válido');
+  register(data: ClienteRequest): Observable<Cliente> {
+    return this.http.post<Cliente>(ENDPOINTS.CLIENTES, data);
   }
-}
 
   loginCliente(credentials: LoginRequest): Observable<SesionActiva> {
     const params = new HttpParams()
