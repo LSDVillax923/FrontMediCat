@@ -33,11 +33,11 @@ body {
 .dashboard-title {
   font-size: 26px;
   margin: 10px 0 5px;
-  color: var(--color-texto);
+  color: #000000
 }
 
 .dashboard-subtitle {
-  color: var(--color-text-secondary);
+  color: #777;
   font-size: 14px;
 }
 
@@ -47,17 +47,21 @@ body {
   align-items: center;
   gap: 5px;
   text-decoration: none;
-  color: var(--color-primario);
+  color: #ffffff;
+  background-color: #07686d;
+  padding: 10px 15px;
+  border-radius: 8px;
   font-size: 14px;
 }
 
 .btn-volver:hover {
-  color: var(--color-primario-oscuro);
+  background-color: #ffffff;
+  color: #07686d;
 }
 
 /* Card */
 .form-card {
-  background: var(--blanco);
+  background: #ffffff;
   border-radius: 14px;
   padding: 25px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
@@ -93,15 +97,16 @@ label {
   font-weight: 400;
   color: var(--color-text-secondary);
   margin-left: 6px;
+  background-color:  #07686d;
 }
 
 /* Inputs */
 input, textarea, select {
   padding: 10px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid #07686d;
   font-size: 14px;
-  background-color: #fafafa;
+  background-color:  #f2ede7;
   transition: all 0.2s ease;
 }
 
@@ -131,7 +136,7 @@ input:focus, textarea:focus, select:focus {
   display: flex;
   align-items: center;
   gap: 5px;
-  background-color: var(--color-primario);
+  background-color: #07686d;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -142,7 +147,8 @@ input:focus, textarea:focus, select:focus {
 }
 
 .btn-guardar:hover {
-  background-color: var(--color-primario-oscuro);
+  background: #2e9297;
+  color:#ffffff;
 }
 
 /* Cancelar */
@@ -151,15 +157,16 @@ input:focus, textarea:focus, select:focus {
   align-items: center;
   gap: 5px;
   text-decoration: none;
-  background-color: var(--color-fondo-nav);
-  color: #333;
+  background-color: #07686d;
+  color: #ffffff;
   padding: 10px 15px;
   border-radius: 8px;
   font-size: 14px;
 }
 
 .btn-cancelar:hover {
-  background-color: #ddd;
+  background: #2e9297;
+  color:#ffffff;
 }
 
 /* Alertas */
@@ -171,7 +178,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .alert-success {
-  background-color: #e0f2f3;
+  background-color: #bfff9c;
   color: var(--color-primario-oscuro);
 }
 

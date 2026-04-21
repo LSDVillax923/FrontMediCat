@@ -1,64 +1,64 @@
 <div class="login-page">
-  <div class="login-card">
-    <div class="login-logo">
-      <img src="assets/img/Medicat.png" alt="Medicat" />
+  <div class="login-container">
+
+    <!-- LADO IZQUIERDO (IMAGEN) -->
+    <div class="login-illustration">
+      <img src="assets/img/labrador1.png" alt="Login ilustración" />
     </div>
 
-    <h1 class="login-titulo">Iniciar sesión</h1>
-    <p class="login-subtitulo">Bienvenido a Medicat</p>
-
-    <div class="login-tabs" role="tablist">
-      <button type="button" role="tab" class="login-tab" [class.activa]="tipoUsuario === 'CLIENTE'"
-        (click)="setTipoUsuario('CLIENTE')">Cliente</button>
-      <button type="button" role="tab" class="login-tab" [class.activa]="tipoUsuario === 'VETERINARIO'"
-        (click)="setTipoUsuario('VETERINARIO')">Veterinario</button>
-      <button type="button" role="tab" class="login-tab" [class.activa]="tipoUsuario === 'ADMIN'"
-        (click)="setTipoUsuario('ADMIN')">Administrador</button>
-    </div>
-
-    <p *ngIf="error" class="alert alert-error">{{ error }}</p>
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="correo">Correo electrónico</label>
-        <input
-          type="email"
-          id="correo"
-          formControlName="correo"
-          autocomplete="email"
-          placeholder="tu@correo.com"
-        />
+    <!-- LADO DERECHO (FORMULARIO) -->
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="assets/img/Medicat.png" alt="Medicat" />
       </div>
 
-      <div class="form-group">
-        <label for="contrasenia">
-          Contraseña
-          <a routerLink="/inicio/forgot-password" class="login-forgot">¿Olvidaste tu contraseña?</a>
-        </label>
-        <div class="input-password">
-          <input
-            [type]="mostrarContrasenia ? 'text' : 'password'"
-            id="contrasenia"
-            formControlName="contrasenia"
-            autocomplete="current-password"
-            placeholder="••••••••"
-          />
-          <button type="button" class="btn-toggle-password" (click)="mostrarContrasenia = !mostrarContrasenia">
-            <svg *ngIf="!mostrarContrasenia" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            <svg *ngIf="mostrarContrasenia" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-          </button>
+      <h1 class="login-titulo">Iniciar sesión</h1>
+      <p class="login-subtitulo">Bienvenido a Medicat</p>
+
+      <div class="login-tabs">
+        <button type="button" class="login-tab" [class.activa]="tipoUsuario === 'CLIENTE'"
+          (click)="setTipoUsuario('CLIENTE')">Cliente</button>
+        <button type="button" class="login-tab" [class.activa]="tipoUsuario === 'VETERINARIO'"
+          (click)="setTipoUsuario('VETERINARIO')">Veterinario</button>
+        <button type="button" class="login-tab" [class.activa]="tipoUsuario === 'ADMIN'"
+          (click)="setTipoUsuario('ADMIN')">Administrador</button>
+      </div>
+
+      <p *ngIf="error" class="alert alert-error">{{ error }}</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label>Correo electrónico</label>
+          <input type="email" formControlName="correo" placeholder="tu@correo.com" />
         </div>
-      </div>
 
-      <button type="submit" class="btn-login" [disabled]="loading">
-        <span *ngIf="!loading">Iniciar sesión</span>
-        <span *ngIf="loading">Verificando...</span>
-      </button>
-    </form>
+        <div class="form-group">
+          <label>
+            Contraseña
+            <a routerLink="/inicio/forgot-password" class="login-forgot">¿Olvidaste?</a>
+          </label>
 
-    <p class="login-registro">
-      ¿No tienes cuenta?
-      <a routerLink="/inicio/registro">Regístrate aquí</a>
-    </p>
+          <div class="input-password">
+            <input [type]="mostrarContrasenia ? 'text' : 'password'"
+              formControlName="contrasenia" placeholder="••••••••" />
+
+            <button type="button" class="btn-toggle-password"
+              (click)="mostrarContrasenia = !mostrarContrasenia">
+              👁
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" [disabled]="loading">
+          {{ loading ? 'Verificando...' : 'Iniciar sesión' }}
+        </button>
+      </form>
+
+      <p class="login-registro">
+        ¿No tienes cuenta?
+        <a routerLink="/inicio/registro">Regístrate aquí</a>
+      </p>
+    </div>
+
   </div>
 </div>
