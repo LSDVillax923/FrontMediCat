@@ -181,6 +181,27 @@
   background: #fee2e2;
 }
 
+
+.alert {
+  margin: 15px auto;
+  padding: 14px 20px;
+  border-radius: 10px;
+  max-width: 900px;
+  font-size: 14px;
+}
+
+.alert-success {
+  color: #2e7d32;
+  background: #e6f4ea;
+}
+
+.alert-error {
+  color: #c62828;
+  background: #fdecea;
+}
+
+
+
 /* Responsivo */
 @media (max-width: 900px) {
   .tabla thead { display: none; }

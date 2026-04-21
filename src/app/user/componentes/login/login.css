@@ -133,7 +133,8 @@
   padding: 0.75rem 0.9rem;
   border-radius: 10px;
   border: 1px solid #d6d3d1;
-  background: var(--blanco);
+  background-color: #f2ede7;
+  color: #2f2f2f;
   font-size: 0.9rem;
   box-sizing: border-box;
   transition: all 0.2s ease;
@@ -144,6 +145,7 @@
   border-color: var(--color-primario);
   box-shadow: 0 0 0 3px rgba(10,127,134,0.15);
   outline: none;
+  background-color: #f2ede7;
 }
 
 /* PASSWORD */
@@ -151,11 +153,13 @@
   position: relative;
   display: flex;
   align-items: center;
+  background-color: #f2ede7;
 }
 
 /* INPUT PASSWORD */
 .input-password input {
   padding-right: 2.7rem; /* 👈 espacio para el ojo */
+  background-color: #f2ede7;
 }
 
 /* ICONO */
@@ -184,7 +188,7 @@
   border: none;
   background: none;
   cursor: pointer;
-  color: #777;
+  color: #07686d;
 }
 
 /* BOTÓN */
@@ -193,22 +197,22 @@
   padding: 0.75rem;
   border-radius: 10px;
   border: none;
-  background: var(--color-primario);
-  color: var(--blanco);
+  background: #07686d;
+  color: #ffffff;
   font-weight: 600;
   margin-top: 1rem;
   transition: all 0.2s;
 }
 
 .btn-login:hover {
-  background: var(--color-primario-oscuro);
-  transform: translateY(-1px);
+  background: #0da7af;
+  color:#ffffff;
 }
 
 /* LINKS */
 .login-forgot {
   font-size: 0.75rem;
-  color: var(--color-primario);
+  color: #07686d;
   text-decoration: none;
 }
 
@@ -223,7 +227,7 @@
 }
 
 .login-registro a {
-  color: var(--color-primario);
+  color: #07686d;
   font-weight: 500;
 }
 
